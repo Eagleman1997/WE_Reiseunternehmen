@@ -1,0 +1,1 @@
+views: This folder will contain all the php files which will act as “views”, which basically means these are the files which are showing some form or some webpage.
