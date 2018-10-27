@@ -5,7 +5,7 @@ namespace controllers;
 use entities\User;
 
 /**
- * Controlls the Login and Logout of a User
+ * Controls the Login and Logout of a User
  *
  * @author Lukas
  */
@@ -19,9 +19,8 @@ class UserController {
      */
     public static function login(){
         $user = new User();
-        $user->setEmail($_SESSION['email']);
-        $user->setPassword($_SESSION['password']);
-        $user->setId($_SESSION['user_id']);
+        $user->setEmail(filter_input(INPUT_POST, $_POST['email'], FILTER_VALIDATE_EMAIL));
+        $user->setPassword(filter_input(INPUT_POST, $_POST['password'], FILTER_DEFAULT));
         
         $user->login();
         //return html after login

@@ -25,10 +25,7 @@ class Trip {
     }
     
     public function storeTrip(){
-        if(isset($this)){
-            $this->dbConnection->storeTrip($this);
-        }
-            
+        $_SESSION['tripId'] = $this->dbConnection->storeTrip($this);    
     }
 
     

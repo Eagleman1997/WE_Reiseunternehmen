@@ -1,7 +1,8 @@
 <?php
 
-
 namespace entities;
+
+use helpers\database\DBConnection;
 
 /**
  * Dayprogram Entity
@@ -16,6 +17,18 @@ class Dayprogram {
     private $date;
     private $description;
     private $hotelName;
+    private $fk_trip_id;
+    private $dbConnection;
+    
+    public function __construct() {
+        $this->dbConnection = DBConnection::getDBConnection();
+    }
+    
+    public function storeDayprogram(){
+        $this->dbConnection->storeDayprogram($this);
+    }
+
+    
     
     public function getId() {
         return $this->id;
@@ -40,6 +53,10 @@ class Dayprogram {
     public function getHotelName() {
         return $this->hotelName;
     }
+    
+    public function getFkTripId(){
+        return $this->fk_trip_id;
+    }
 
     public function setId($id) {
         $this->id = $id;
@@ -63,6 +80,10 @@ class Dayprogram {
 
     public function setHotelName($hotelName) {
         $this->hotelName = $hotelName;
+    }
+    
+    public function setFkTripId($fkTripId){
+        $this->fk_trip_id = $fkTripId;
     }
     
 }

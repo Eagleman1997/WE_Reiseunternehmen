@@ -31,13 +31,9 @@ class User {
      * Registers a new User
      */
     public function register(){
-        if(isset($this)){
-            $this->password = password_hash($this->password, PASSWORD_DEFAULT);
-            if($this->dbConnection->registerUser($this)){
-                // start session
-            }else{
-                return false;
-            }
+        $this->password = password_hash($this->password, PASSWORD_DEFAULT);
+        if($this->dbConnection->registerUser($this)){
+            // start session
         }else{
             return false;
         }
@@ -47,37 +43,39 @@ class User {
      * Logs the User in if email and password are correct
      */
     public function login(){
-        if(isset($this)){
-            $this->password = password_hash($this->password, PASSWORD_DEFAULT);
-            $password = $this->dbConnection->getPasswordByEmail($this);
+        $this->password = password_hash($this->password, PASSWORD_DEFAULT);
+        $userObj = $this->dbConnection->getUserByEmail($this);
+        $password = $userObj->getPassword();
         
-            if (password_verify($password, $this->password)) {
-                if (password_needs_rehash($this->password, PASSWORD_DEFAULT)) {
-                $reHashedPassword = password_hash($password, PASSWORD_DEFAULT);
-                $this->password = $reHashedPassword;
-                $this->dbConnection->updatePassword($this);
-                }
-            }else{
-                return false;
+        if (password_verify($password, $this->password)) {
+            if (password_needs_rehash($this->password, PASSWORD_DEFAULT)) {
+            $reHashedPassword = password_hash($password, PASSWORD_DEFAULT);
+            $this->password = $reHashedPassword;
+            $this->dbConnection->updatePassword($this);
             }
-            // start session
         }else{
             return false;
         }
+        $_SESSION['userId'] = $userObj->getId();
+        // start session
     }
     
     /**
      * Logs the User out and kills the session if he is logged in
      */
     public function logout(){
+        //set this on starting page
+        session_unset();
+        session_destroy();
+        unset($_SESSION);
+
         if (ini_get("session.use_cookies")){
             $params = session_get_cookie_params();
             setcookie(session_name(), '', time() - 42000,
-            $params["path"], $params["domain"],
-            $params["secure"], $params["httponly"]);
+                $params["path"], $params["domain"],
+                $params["secure"], $params["httponly"]);
         }
-        session_destroy();
-        //go back to starting page page
+        //go back to starting page
     }
 
     

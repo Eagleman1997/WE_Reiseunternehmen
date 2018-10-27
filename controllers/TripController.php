@@ -13,15 +13,14 @@ class TripController {
     
     public static function storeTrip(){
         $trip = new Trip();
-        $trip->setName($_SESSION['name']);
-        $trip->setPicturePath($_SESSION['picturePath']);
-        $trip->setDescription($_SESSION['description']);
-        $trip->setDepartureDate($_SESSION['departureDate']);
-        $trip->setPrice($_SESSION['price']);
-        $trip->setDurationInDays($_SESSION['durationInDays']);
+        $trip->setName(filter_input(INPUT_POST, $_POST['name'], FILTER_DEFAULT));
+        $trip->setPicturePath(filter_input(INPUT_POST, $_POST['picturePath'], FILTER_DEFAULT));
+        $trip->setDescription(filter_input(INPUT_POST, $_POST['description'], FILTER_DEFAULT));
+        $trip->setDepartureDate(filter_input(INPUT_POST, $_POST['departureDate'], FILTER_DEFAULT));
+        $trip->setPrice(filter_input(INPUT_POST, $_POST['price'], FILTER_DEFAULT));
+        $trip->setDurationInDays(filter_input(INPUT_POST, $_POST['durationInDays'], FILTER_VALIDATE_INT));
         
         $trip->storeTrip();
-        //return html after trip storage
     }
     
 }

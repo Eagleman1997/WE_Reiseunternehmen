@@ -47,11 +47,12 @@ class DBConnection {
     
     private function executeInsert($stmt){
         $success = $stmt->execute();
+        $id = $stmt->insert_id;
         $stmt->close();
-        if(!$success){
-            return false;
+        if($success){
+            return $id;
         }
-        return true;
+        return false;
     }
     
     /** (tested)
@@ -60,7 +61,7 @@ class DBConnection {
      * @return String stored (hashed) password if query was successful
      *         boolean false if query failed (usually email is not stored in database)
      */
-    public function getPasswordByEmail($user){
+    public function getUserByEmail($user){
         $this->connect();
         $stmt = self::$mysqli->prepare("SELECT password FROM user where email = ?;");
         if(!$stmt){
@@ -74,7 +75,7 @@ class DBConnection {
         //checks whether the given email from a User exists
         $stmt->close();
         if($userObj){
-            return $userObj->getPassword();
+            return $userObj;
         }else{
             return false;
         }
@@ -136,6 +137,27 @@ class DBConnection {
         $departureDate = $trip->getDepartureDate();
         $price = $trip->getPrice();
         $durationInDays = $trip->getDurationInDays();
+        return $this->executeInsert($stmt);
+    }
+    
+    /** (tested)
+     *  Stores a new Dayprogram into the database
+     * @param type $dayprogram
+     * @return boolean
+     */
+    public function storeDayprogram($dayprogram){
+        $this->connect();
+        $stmt = self::$mysqli->prepare("INSERT INTO dayprogram VALUES (NULL, ?, ?, ?, ?, ?, ?)");
+        if(!$stmt){
+            return false;
+        }
+        $stmt->bind_param('sssssi', $name, $picturePath, $date, $description, $hotelName, $fk_trip_id);
+        $name = $dayprogram->getName();
+        $picturePath = $dayprogram->getPicturePath();
+        $date = $dayprogram->getDate();
+        $description = $dayprogram->getDescription();
+        $hotelName = $dayprogram->getHotelName();
+        $fk_trip_id = $dayprogram->getFkTripId();
         return $this->executeInsert($stmt);
     }
 }
