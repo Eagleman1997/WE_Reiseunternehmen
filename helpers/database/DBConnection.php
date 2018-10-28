@@ -50,8 +50,11 @@ class DBConnection {
         $id = $stmt->insert_id;
         $stmt->close();
         if($success){
+            echo "success, id: ".$id;
             return $id;
         }
+        echo "failure";
+        echo $stmt->errno;
         return false;
     }
     
@@ -179,11 +182,32 @@ class DBConnection {
         $trips = array();
         $result = $stmt->get_result();
         while($trip = $result->fetch_object("entities\Trip")){
+            $trip->setStaffedUsers($this->getStaffingnumberOfTrip($trip));
             array_push($trips, $trip);
         }
-        
+
         $stmt->close();
         return $trips;
+    }
+    
+    /** (tested)
+     * Gets the number of staffed Users of the given Trip
+     * @param type $trip
+     * @return boolean|int
+     */
+    private function getStaffingnumberOfTrip($trip){
+        $this->connect();
+        $stmt = self::$mysqli->prepare("SELECT id FROM usertrip WHERE fk_trip_id = ?");
+        if(!$stmt){
+            return false;
+        }
+        $stmt->bind_param('i', $id);    
+        $id = $trip->getId();
+        $stmt->execute();
+        $result = $stmt->get_result()->num_rows;
+        $stmt->close();
+        /* @var $result type int*/
+        return (int) $result;
     }
     
     /** (tested)
@@ -191,18 +215,20 @@ class DBConnection {
      * @param type $id
      * @return boolean|Trip
      */
-    public function getTripById($id){
+    public function getTripById($tripId){
         $this->connect();
          $stmt = self::$mysqli->prepare("SELECT * FROM trip where id = ?;");
         if(!$stmt){
             return false;
         }
         $stmt->bind_param('i', $id);
+        $id = $tripId;
         $stmt->execute();
-        $tripObj = $stmt->get_result()->fetch_object("entities\Trip");
+        $trip = $stmt->get_result()->fetch_object("entities\Trip");
         
         $stmt->close();
-        return $tripObj;
+        $trip->setStaffedUsers($this->getStaffingnumberOfTrip($trip));
+        return $trip;
     }
     
     /** (tested)
@@ -212,6 +238,7 @@ class DBConnection {
      */
     public function getDayProgramsByTrip($trip){
         $this->connect();
+        //explicit allocation of the variables to avoid conflicts caused by identical column 'name' of Trip and Dayprogram
          $stmt = self::$mysqli->prepare("SELECT d.id, d.name, d.picturePath, d.date, d.description, d.hotelName "
                  ."FROM dayprogram d JOIN trip t ON d.fk_trip_id = t.id WHERE t.id = ?");
         if(!$stmt){
@@ -224,12 +251,89 @@ class DBConnection {
         $dayprograms = array();
         $result = $stmt->get_result();
         while($dayprogram = $result->fetch_object("entities\Dayprogram")){
-            echo "Dayprogram in DBConnector: ".$dayprogram->getName()."</br>";
             array_push($dayprograms, $dayprogram);
         }
         
         $stmt->close();
         return $dayprograms;
+    }
+    
+    /** (tested)
+     * Stores a new Insurance
+     * @param type $insurance
+     * @return boolean
+     */
+    public function insertInsurance($insurance){
+        $this->connect();
+        $stmt = self::$mysqli->prepare("INSERT INTO insurance VALUES (NULL, ?, ?, ?)");
+        if(!$stmt){
+            return false;
+        }
+        $stmt->bind_param('ssd', $name, $description, $price);
+        $name = $insurance->getName();
+        $description = $insurance->getDescription();
+        $price = $insurance->getPrice();
+        return $this->executeInsert($stmt);
+    }
+    
+    /** (tested)
+     * Gets the Insurances
+     * @return boolean|array(entities\Insurance)
+     */
+    public function getInsurances(){
+        $this->connect();
+         $stmt = self::$mysqli->prepare("SELECT * FROM insurance;");
+        if(!$stmt){
+            return false;
+        }
+        $stmt->execute();
+        $insurances = array();
+        $result = $stmt->get_result();
+        while($insurance = $result->fetch_object("entities\Insurance")){
+            array_push($insurances, $insurance);
+        }
+        
+        $stmt->close();
+        return $insurances;
+    }
+    
+    /** (tested) ES MUES NO ABGFRÖGT WERDE OB DR USER SCHO OF DE TRIP BUECHT ESCH + ev. RÖCKGABE ÖBERDÄNKE FÖR GNAUERI ANTWORTE (ÖBERBUECHT, DOPPELBUECHIG ETC.)
+     * Tries to store a Booking for a User. 
+     * $insuranceId can be set (if chosen) or NULL if User doesn't require Insurance
+     * @param type $user
+     * @param type $trip
+     * @param type $insuranceId
+     * @return boolean|int
+     */
+    public function insertBooking($user, $trip, $insuranceId){
+        $actualTrip = $this->getTripById($trip->getId());
+        
+        $this->connect();
+        $stmt = null;
+        //This case if the User decided to take an Insurance for the chosen Trip
+        $stmt = self::$mysqli->prepare("INSERT INTO usertrip VALUES (NULL, ?, ?, ?)");
+        if(!$stmt){
+            return false;
+        }
+        $stmt->bind_param('iii', $fk_user_id, $fk_trip_id, $fk_insurance_id);
+        $fk_user_id = $user->getId();
+        $fk_trip_id = $trip->getId();
+        if($insuranceId){
+            $fk_insurance_id = $insuranceId;
+        }else{
+            $fk_insurance_id = null;
+        }
+            
+        //Validation if the Trip booked out (possible if multiple Users want to book in a short period of time)
+        if($actualTrip->getMaxStaffing() > $actualTrip->getStaffedUsers() and 
+                $actualTrip->getDepartureDate() > date("Y-m-d")){
+            //booking is valid
+            return $this->executeInsert($stmt);
+        }else{
+            //booking failed due to overbooking of this Trip
+            $stmt->close();
+            return false;
+        }
     }
     
     //JUST FOR TESTING PURPOSE
@@ -243,6 +347,6 @@ class DBConnection {
         $num1 = 4;
         $num2 = 11;
         $num3 = 1;
-        $this->executeInsert($stmt);
+        return $this->executeInsert($stmt);
     }
 }

@@ -5,11 +5,12 @@ use http\HTTPException;
 use http\HTTPHeader;
 use http\HTTPStatusCode;
 
-//just for testing
+//just for testing purpose
 use helpers\database\DBConnection;
 use entities\User;
 use entities\Trip;
 use entities\Dayprogram;
+use entities\Insurance;
 
 
 session_start();
@@ -17,8 +18,20 @@ require_once '.\helpers\Autoloader.php';
 
 
 //just for testing purpose
+$user = new User();
+$user->setId(4);
+$trip = new Trip();
+$trip->setId(11);
+$insurance = false;
+$user->bookTrip($trip, $insurance);
+/* Insert of an Insurance
 $db = DBConnection::getDBConnection();
-
+$insurance = new Insurance();
+$insurance->setName("travely");
+$insurance->setPrice(45.25);
+$insurance->setDescription("some insurance description");
+$db->insertInsurance($insurance);
+*/
 /*
 Test of getting a Trip object with the according Dayprograms by the given TripId
 $trip = $db->getTripById(12);

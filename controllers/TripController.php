@@ -60,6 +60,7 @@ class TripController {
         $trips = $dbConnection->getFreeTrips();
         //return html of free trips
     }
+
     
     /**
      * Gets the Dayprograms according to the given trip

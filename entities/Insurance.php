@@ -1,7 +1,8 @@
 <?php
 
-
 namespace entities;
+
+use helpers\database\DBConnection;
 
 /**
  * Insurance Entity
@@ -14,6 +15,16 @@ class Insurance {
     private $name;
     private $description;
     private $price;
+    private $dbConnection;
+    
+    public function __construct() {
+        $this->dbConnection = DBConnection::getDBConnection();
+    }
+    
+    public function storeInsurance(){
+        $this->dbConnection->insertInsurance($this);
+    }
+
     
     public function getId() {
         return $this->id;

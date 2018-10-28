@@ -19,6 +19,7 @@ class Trip {
     private $price;
     private $durationInDays;
     private $maxStaffing;
+    private $staffedUsers;
     private $dayprograms;//array
     private $dbConnection;
     
@@ -71,6 +72,10 @@ class Trip {
     public function getDayprograms(){
         return $this->dayprograms;
     }
+    
+    public function getStaffedUsers(){
+        return $this->staffedUsers;
+    }
 
     public function setId($id) {
         $this->id = $id;
@@ -105,6 +110,10 @@ class Trip {
     public function setMaxStaffing($maxStaffing){
         /* @var $durationInDays type int */
         $this->maxStaffing = (int) $maxStaffing;
+    }
+    
+    public function setStaffedUsers($staffedUsers){
+        $this->staffedUsers = $staffedUsers;
     }
  
 }

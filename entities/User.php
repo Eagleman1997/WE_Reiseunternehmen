@@ -32,7 +32,9 @@ class User {
      */
     public function register(){
         $this->password = password_hash($this->password, PASSWORD_DEFAULT);
-        if($this->dbConnection->registerUser($this)){
+        $userId = $this->dbConnection->registerUser($this);
+        if($userId){
+            $_SESSION['userId'] = $userId;
             // start session
         }else{
             return false;
@@ -76,6 +78,21 @@ class User {
                 $params["secure"], $params["httponly"]);
         }
         //go back to starting page
+    }
+    
+    /**
+     * Books a Trip
+     * @param type $trip
+     * @param type $insurance
+     */
+    public function bookTrip($trip, $insurance){
+        $insuranceId = null;
+        if($insurance){
+            $insurances = $this->dbConnection->getInsurances();
+            $insuranceInstance = $insurances[0];//this assumes that there is just one Insurance to consider
+            $insuranceId = $insuranceInstance->getId();
+        }
+        return $this->dbConnection->insertBooking($this, $trip, $insuranceId);
     }
 
     

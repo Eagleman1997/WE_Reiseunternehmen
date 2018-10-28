@@ -3,6 +3,8 @@
 namespace controllers;
 
 use entities\User;
+use entities\Trip;
+use controllers\TripController;
 
 /**
  * Controls the Login and Logout of a User
@@ -36,4 +38,17 @@ class UserController {
         //return html title page
     }
     
+    /**
+     * Books a Trip
+     */
+    public static function bookTrip(){
+        $user = new User();
+        $trip = new Trip();
+        
+        $trip->setId(filter_input(INPUT_POST, $_POST['tripId'], FILTER_VALIDATE_INT));
+        $insurance = filter_input(INPUT_POST, $_POST['insurance'], FILTER_VALIDATE_BOOLEAN);
+        $user->setId($_SESSION['userId']);
+        
+        $user->bookTrip($trip, $insurance);
+    }
 }
