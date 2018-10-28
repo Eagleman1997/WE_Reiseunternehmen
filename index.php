@@ -16,21 +16,30 @@ session_start();
 require_once '.\helpers\Autoloader.php';
 
 
-//just for testing
+//just for testing purpose
 $db = DBConnection::getDBConnection();
 
-
-
 /*
- * this code just works with a manually setting of the $_SESSION['tripId'] in the DBConnector
+Test of getting a Trip object with the according Dayprograms by the given TripId
+$trip = $db->getTripById(12);
+$trip->addDayprograms();
+echo "Tripname: ".$trip->getName();
+$dayprograms = $trip->getDayprograms();
+foreach($dayprograms as $value){
+    echo "</br>Dayprogramname: ".$value->getName();
+}
+*/
+/*
+Adds a new trip with some data to db (tested)
 $trip = new Trip();
-$trip->setDepartureDate("2018-11-05");
+$trip->setDepartureDate("2018-10-25");
 $trip->setDescription("some random description about germany");
 $trip->setDurationInDays(7);
-$trip->setName("Trip in Germany");
-$trip->setPicturePath("germany.jpg");
+$trip->setName("Trip in Austria");
+$trip->setPicturePath("austria.jpg");
 $trip->setPrice(2345.55);
-$db->storeTrip($trip);
+$trip->setMaxStaffing(12);
+$trip->storeTrip($trip);
 
 $names = ["firstTrip", "secondTrip", "thirdTrip", "fourthTrip", "fifthTrip"];
 $picturePaths = ["path1.jpg", "path2.jpg", "path3.jpg", "path4.jpg", "path5.jpg"];
@@ -46,9 +55,9 @@ for($i=0;$i<5;$i++){
     $dayprogram->setDescription($descriptions[$i]);
     $dayprogram->setHotelName($hotelNames[$i]);
     $dayprogram->setFkTripId($_SESSION['tripId']);
-    $db->storeDayprogram($dayprogram);
+    $dayprogram->storeDayprogram($dayprogram);
 }
- */
+*/
 
 
 

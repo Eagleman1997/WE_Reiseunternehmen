@@ -18,6 +18,8 @@ class Trip {
     private $departureDate;
     private $price;
     private $durationInDays;
+    private $maxStaffing;
+    private $dayprograms;//array
     private $dbConnection;
     
     function __construct() {
@@ -26,6 +28,10 @@ class Trip {
     
     public function storeTrip(){
         $_SESSION['tripId'] = $this->dbConnection->storeTrip($this);    
+    }
+    
+    public function addDayprograms(){
+        $this->dayprograms = $this->dbConnection->getDayprogramsByTrip($this);
     }
 
     
@@ -57,6 +63,14 @@ class Trip {
     public function getDurationInDays() {
         return $this->durationInDays;
     }
+    
+    public function getMaxStaffing(){
+        return $this->maxStaffing;
+    }
+    
+    public function getDayprograms(){
+        return $this->dayprograms;
+    }
 
     public function setId($id) {
         $this->id = $id;
@@ -84,10 +98,13 @@ class Trip {
     }
 
     public function setDurationInDays($durationInDays) {
-        /* @var $durationInDays type */
+        /* @var $durationInDays type int */
         $this->durationInDays = (int) $durationInDays;
     }
-
-
     
+    public function setMaxStaffing($maxStaffing){
+        /* @var $durationInDays type int */
+        $this->maxStaffing = (int) $maxStaffing;
+    }
+ 
 }

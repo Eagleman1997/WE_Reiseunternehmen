@@ -126,17 +126,18 @@ class DBConnection {
      */
     public function storeTrip($trip){
         $this->connect();
-        $stmt = self::$mysqli->prepare("INSERT INTO trip VALUES (NULL, ?, ?, ?, ?, ?, ?)");
+        $stmt = self::$mysqli->prepare("INSERT INTO trip VALUES (NULL, ?, ?, ?, ?, ?, ?, ?)");
         if(!$stmt){
             return false;
         }
-        $stmt->bind_param('ssssdi', $name, $picturePath, $description, $departureDate, $price, $durationInDays);
+        $stmt->bind_param('ssssdii', $name, $picturePath, $description, $departureDate, $price, $durationInDays, $maxStaffing);
         $name = $trip->getName();
         $picturePath = $trip->getPicturePath();
         $description = $trip->getDescription();
         $departureDate = $trip->getDepartureDate();
         $price = $trip->getPrice();
         $durationInDays = $trip->getDurationInDays();
+        $maxStaffing = $trip->getMaxStaffing();
         return $this->executeInsert($stmt);
     }
     
@@ -159,5 +160,89 @@ class DBConnection {
         $hotelName = $dayprogram->getHotelName();
         $fk_trip_id = $dayprogram->getFkTripId();
         return $this->executeInsert($stmt);
+    }
+    
+    /** (tested)
+     * Get an array of all available Trips (departureDate and maxStaffing considered)
+     * @return boolean|array(entities\Trip)
+     */
+    public function getFreeTrips(){
+        $this->connect();
+        $stmt = self::$mysqli->prepare("SELECT * FROM trip t1 WHERE departureDate >= '".date("Y-m-d")."' AND "
+                ."t1.maxStaffing > (SELECT COUNT(ut.id) FROM usertrip ut JOIN trip t2 ON ut.fk_trip_id = t2.id "
+                ."WHERE ut.fk_trip_id = t1.id)");
+        if(!$stmt){
+            return false;
+        }
+        $stmt->execute();
+            
+        $trips = array();
+        $result = $stmt->get_result();
+        while($trip = $result->fetch_object("entities\Trip")){
+            array_push($trips, $trip);
+        }
+        
+        $stmt->close();
+        return $trips;
+    }
+    
+    /** (tested)
+     * Gets a Trip object by the given id
+     * @param type $id
+     * @return boolean|Trip
+     */
+    public function getTripById($id){
+        $this->connect();
+         $stmt = self::$mysqli->prepare("SELECT * FROM trip where id = ?;");
+        if(!$stmt){
+            return false;
+        }
+        $stmt->bind_param('i', $id);
+        $stmt->execute();
+        $tripObj = $stmt->get_result()->fetch_object("entities\Trip");
+        
+        $stmt->close();
+        return $tripObj;
+    }
+    
+    /** (tested)
+     * Gets the Dayprograms of the given Trip
+     * @param type $trip
+     * @return boolean|array(entities\Dayprogram)
+     */
+    public function getDayProgramsByTrip($trip){
+        $this->connect();
+         $stmt = self::$mysqli->prepare("SELECT d.id, d.name, d.picturePath, d.date, d.description, d.hotelName "
+                 ."FROM dayprogram d JOIN trip t ON d.fk_trip_id = t.id WHERE t.id = ?");
+        if(!$stmt){
+            return false;
+        }
+        $stmt->bind_param('i', $id);
+        $id = $trip->getId();
+        $stmt->execute();
+        
+        $dayprograms = array();
+        $result = $stmt->get_result();
+        while($dayprogram = $result->fetch_object("entities\Dayprogram")){
+            echo "Dayprogram in DBConnector: ".$dayprogram->getName()."</br>";
+            array_push($dayprograms, $dayprogram);
+        }
+        
+        $stmt->close();
+        return $dayprograms;
+    }
+    
+    //JUST FOR TESTING PURPOSE
+    public function insertUserTrip(){
+        $this->connect();
+        $stmt = self::$mysqli->prepare("INSERT INTO usertrip VALUES (NULL, ?, ?, ?)");
+        if(!$stmt){
+            return false;
+        }
+        $stmt->bind_param('iii', $num1, $num2, $num3);
+        $num1 = 4;
+        $num2 = 11;
+        $num3 = 1;
+        $this->executeInsert($stmt);
     }
 }
