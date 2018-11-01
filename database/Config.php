@@ -1,11 +1,11 @@
 <?php
-namespace helpers\database;
+namespace database;
 /**
  * @author andreas.martin
  */
 class Config
 {
-    protected static $iniFile = "helpers/database/config.env";
+    protected static $iniFile = "database/config.env";
     protected static $config = [];
 
     public static function init()

@@ -2,7 +2,7 @@
 
 namespace entities;
 
-use helpers\database\DBConnection;
+use database\UserDBC;
 
 /**
  * User Entity
@@ -21,45 +21,62 @@ class User {
     private $role;
     private $birthDate;
     private $password;
-    private $dbConnection;
+    private $participants;
+    private $userDBC;
     
     public function __construct() {
-        $this->dbConnection = DBConnection::getDBConnection();
+        $this->userDBC = new UserDBC();
     }
 
-    /**
+    /** (tested)
      * Registers a new User
      */
     public function register(){
+        if($this->userDBC->findUserByEmail($this)){
+            //doublicate of e-mails are not allowed
+            return false;
+        }
+        
         $this->password = password_hash($this->password, PASSWORD_DEFAULT);
-        $userId = $this->dbConnection->registerUser($this);
+        $userId = $this->userDBC->createUser($this);
         if($userId){
             $_SESSION['userId'] = $userId;
-            // start session
+            $_SESSION['login'] = true;
+            $_SESSION['role'] = $this->role;
+            return $userId;
         }else{
+            //creation failed
             return false;
         }
     }
     
-    /**
+    /** (tested)
      * Logs the User in if email and password are correct
      */
     public function login(){
-        $this->password = password_hash($this->password, PASSWORD_DEFAULT);
-        $userObj = $this->dbConnection->getUserByEmail($this);
-        $password = $userObj->getPassword();
-        
-        if (password_verify($password, $this->password)) {
-            if (password_needs_rehash($this->password, PASSWORD_DEFAULT)) {
-            $reHashedPassword = password_hash($password, PASSWORD_DEFAULT);
-            $this->password = $reHashedPassword;
-            $this->dbConnection->updatePassword($this);
-            }
+        $userObj = $this->userDBC->findUserByEmail($this);
+        if($userObj){
+            $password = $userObj->getPassword();
         }else{
+            //User doesn't exist
             return false;
         }
-        $_SESSION['userId'] = $userObj->getId();
-        // start session
+        
+        if (password_verify($this->password, $password)) {
+            if (password_needs_rehash($password, PASSWORD_DEFAULT)) {
+                $reHashedPassword = password_hash($password, PASSWORD_DEFAULT);
+                $this->password = $reHashedPassword;
+                $this->userDBC->updatePassword($this);
+            }
+            echo "userId: ".$userObj->getId()."</br>";
+            $_SESSION['userId'] = $userObj->getId();
+            $_SESSION['login'] = true;
+            $_SESSION['role'] = $userObj->getRole();
+        return true;
+        }else{
+            //password is incorrect
+            return false;
+        }
     }
     
     /**
@@ -77,7 +94,30 @@ class User {
                 $params["path"], $params["domain"],
                 $params["secure"], $params["httponly"]);
         }
-        //go back to starting page
+        //logout succeeded
+        return true;
+    }
+    
+    /** (tested)
+     * Deletes the User
+     * @return type
+     */
+    public function delete(){
+        return $this->userDBC->deleteUser($this);
+    }
+    
+    /**
+     * Finds any Participant in relation to the User
+     * @return type
+     */
+    public function findParticipants(){
+        $user = $this->userDBC->findUserById($this);
+        if(!$user){
+            return false;
+        }
+        $participants = $this->userDBC->findParticipants($user);
+        $user->setParticipants($participants);
+        return $user;
     }
     
     /**
@@ -88,11 +128,11 @@ class User {
     public function bookTrip($trip, $insurance){
         $insuranceId = null;
         if($insurance){
-            $insurances = $this->dbConnection->getInsurances();
+            $insurances = $this->userDBC->getInsurances();
             $insuranceInstance = $insurances[0];//this assumes that there is just one Insurance to consider
             $insuranceId = $insuranceInstance->getId();
         }
-        return $this->dbConnection->insertBooking($this, $trip, $insuranceId);
+        return $this->userDBC->insertBooking($this, $trip, $insuranceId);
     }
 
     
@@ -137,7 +177,12 @@ class User {
     }
 
     public function setId($id) {
-        $this->id = $id;
+        /* @var $id type int*/
+        $this->id = (int) $id;
+    }
+    
+    public function getParticipants(){
+        return $this->participants;
     }
 
     public function setFirstName($firstName) {
@@ -153,7 +198,7 @@ class User {
     }
 
     public function setZipCode($zipCode) {
-        /* @var $zipCode type integer*/
+        /* @var $zipCode type int*/
         $this->zipCode = (int) $zipCode;
     }
 
@@ -176,6 +221,9 @@ class User {
     public function setPassword($password) {
         $this->password = $password;
     }
-
+    
+    public function setParticipants($participants){
+        $this->participants = $participants;
+    }
 
 }

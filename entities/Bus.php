@@ -2,30 +2,23 @@
 
 namespace entities;
 
-use helpers\database\DBConnection;
-
 /**
- * Insurance Entity
+ * Description of Bus
  *
  * @author Lukas
  */
-class Insurance {
+class Bus {
     
     private $id;
     private $name;
     private $description;
-    private $pricePerPerson;
-    private $dbConnection;
+    private $seats;
+    private $price;
+    private $picturePath;
     
     public function __construct() {
-        $this->dbConnection = DBConnection::getDBConnection();
+        
     }
-    
-    public function storeInsurance(){
-        $this->dbConnection->insertInsurance($this);
-    }
-
-    
     public function getId() {
         return $this->id;
     }
@@ -38,8 +31,16 @@ class Insurance {
         return $this->description;
     }
 
-    public function getPricePerPerson() {
-        return $this->pricePerPerson;
+    public function getSeats() {
+        return $this->seats;
+    }
+
+    public function getPrice() {
+        return $this->price;
+    }
+
+    public function getPicturePath() {
+        return $this->picturePath;
     }
 
     public function setId($id) {
@@ -54,8 +55,16 @@ class Insurance {
         $this->description = $description;
     }
 
-    public function setPricePerPerson($pricePerPerson) {
-        $this->pricePerPerson = $pricePerPerson;
+    public function setSeats($seats) {
+        $this->seats = $seats;
     }
-    
+
+    public function setPrice($price) {
+        $this->price = $price;
+    }
+
+    public function setPicturePath($picturePath) {
+        $this->picturePath = $picturePath;
+    }
+
 }

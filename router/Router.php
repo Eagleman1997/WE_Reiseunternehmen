@@ -2,6 +2,10 @@
 
 namespace router;
 
+use http\HTTPException;
+use http\HTTPHeader;
+use http\HTTPStatusCode;
+
 /**
  * @author Andreas Martin
  */

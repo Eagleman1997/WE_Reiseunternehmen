@@ -2,7 +2,7 @@
 
 namespace entities;
 
-use helpers\database\DBConnection;
+use database\TripDBC;
 
 /**
  * Trip Entity
@@ -12,108 +12,105 @@ use helpers\database\DBConnection;
 class Trip {
     
     private $id;
-    private $name;
-    private $picturePath;
-    private $description;
-    private $departureDate;
+    private $numOfParticipation;
     private $price;
-    private $durationInDays;
-    private $maxStaffing;
-    private $staffedUsers;
-    private $dayprograms;//array
-    private $dbConnection;
+    private $departureDate;
+    private $fk_user_id;
+    private $fk_insurance_id;
+    private $fk_tripTemplate_id;
+    private $tripTemplate;
+    private $invoices;
+    private $participants;
+    private $tripDBC;
     
-    function __construct() {
-        $this->dbConnection = DBConnection::getDBConnection();
+    public function __construct() {
+        $this->tripDBC = new TripDBC();
     }
-    
-    public function storeTrip(){
-        $_SESSION['tripId'] = $this->dbConnection->storeTrip($this);    
-    }
-    
-    public function addDayprograms(){
-        $this->dayprograms = $this->dbConnection->getDayprogramsByTrip($this);
-    }
-
     
     
     public function getId() {
         return $this->id;
     }
 
-    public function getName() {
-        return $this->name;
-    }
-
-    public function getPicturePath() {
-        return $this->picturePath;
-    }
-
-    public function getDescription() {
-        return $this->description;
-    }
-
-    public function getDepartureDate() {
-        return $this->departureDate;
+    public function getNumOfParticipation() {
+        return $this->numOfParticipation;
     }
 
     public function getPrice() {
         return $this->price;
     }
 
-    public function getDurationInDays() {
-        return $this->durationInDays;
-    }
-    
-    public function getMaxStaffing(){
-        return $this->maxStaffing;
-    }
-    
-    public function getDayprograms(){
-        return $this->dayprograms;
-    }
-    
-    public function getStaffedUsers(){
-        return $this->staffedUsers;
+    public function getDepartureDate() {
+        return $this->departureDate;
     }
 
+    public function getFk_user_id() {
+        return $this->fk_user_id;
+    }
+
+    public function getFk_insurance_id() {
+        return $this->fk_insurance_id;
+    }
+
+    public function getFk_tripTemplate_id() {
+        return $this->fk_tripTemplate_id;
+    }
+
+    public function getTripTemplate() {
+        return $this->tripTemplate;
+    }
+
+    public function getInvoices() {
+        return $this->invoices;
+    }
+
+    public function getParticipants() {
+        return $this->participants;
+    }
     public function setId($id) {
-        $this->id = $id;
+        /* @var $id type int*/
+        $this->id = (int) $id;
     }
 
-    public function setName($name) {
-        $this->name = $name;
+    public function setNumOfParticipation($numOfParticipation) {
+        /* @var $numOfParticipation type int*/
+        $this->numOfParticipation = (int) $numOfParticipation;
     }
 
-    public function setPicturePath($picturePath) {
-        $this->picturePath = $picturePath;
-    }
-
-    public function setDescription($description) {
-        $this->description = $description;
+    public function setPrice($price) {
+        /* @var $price type double*/
+        $this->price = (double) $price;
     }
 
     public function setDepartureDate($departureDate) {
         $this->departureDate = $departureDate;
     }
 
-    public function setPrice($price) {
-        /* @var $price type double */
-        $this->price = (double) $price;
+    public function setFk_user_id($fk_user_id) {
+        /* @var $fk_user_id type int*/
+        $this->fk_user_id = (int) $fk_user_id;
     }
 
-    public function setDurationInDays($durationInDays) {
-        /* @var $durationInDays type int */
-        $this->durationInDays = (int) $durationInDays;
+    public function setFk_insurance_id($fk_insurance_id) {
+        /* @var $fk_insurance_id type int*/
+        $this->fk_insurance_id = (int) $fk_insurance_id;
     }
-    
-    public function setMaxStaffing($maxStaffing){
-        /* @var $durationInDays type int */
-        $this->maxStaffing = (int) $maxStaffing;
+
+    public function setFk_tripTemplate_id($fk_tripTemplate_id) {
+        /* @var $fk_tripTemplate_id type int*/
+        $this->fk_tripTemplate_id = (int) $fk_tripTemplate_id;
     }
-    
-    public function setStaffedUsers($staffedUsers){
-        $this->staffedUsers = $staffedUsers;
+
+    public function setTripTemplate($tripTemplate) {
+        $this->tripTemplate = $tripTemplate;
+    }
+
+    public function setInvoices($invoices) {
+        $this->invoices = $invoices;
+    }
+
+    public function setParticipants($participants) {
+        $this->participants = $participants;
     }
  
 }

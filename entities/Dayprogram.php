@@ -2,7 +2,7 @@
 
 namespace entities;
 
-use helpers\database\DBConnection;
+use database\DBConnection;
 
 /**
  * Dayprogram Entity
@@ -16,8 +16,8 @@ class Dayprogram {
     private $picturePath;
     private $date;
     private $description;
-    private $hotelName;
     private $fk_trip_id;
+    private $fk_hotel_id;
     private $dbConnection;
     
     public function __construct() {
@@ -25,7 +25,7 @@ class Dayprogram {
     }
     
     public function storeDayprogram(){
-        $this->dbConnection->storeDayprogram($this);
+        return $this->dbConnection->createDayprogram($this);
     }
 
     
@@ -49,13 +49,13 @@ class Dayprogram {
     public function getDescription() {
         return $this->description;
     }
-
-    public function getHotelName() {
-        return $this->hotelName;
-    }
     
     public function getFkTripId(){
         return $this->fk_trip_id;
+    }
+    
+    public function getFkHotelId(){
+        return $this->fk_hotel_id;
     }
 
     public function setId($id) {
@@ -77,13 +77,13 @@ class Dayprogram {
     public function setDescription($description) {
         $this->description = $description;
     }
-
-    public function setHotelName($hotelName) {
-        $this->hotelName = $hotelName;
+    
+    public function setFkTripId($fk_trip_id){
+        $this->fk_trip_id = $fk_trip_id;
     }
     
-    public function setFkTripId($fkTripId){
-        $this->fk_trip_id = $fkTripId;
+    public function setFkHotelId($fk_hotel_id){
+        $this->fk_hotel_id = $fk_hotel_id;
     }
     
 }
