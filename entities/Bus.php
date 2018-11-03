@@ -2,6 +2,8 @@
 
 namespace entities;
 
+use database\BusDBC;
+
 /**
  * Description of Bus
  *
@@ -13,12 +15,39 @@ class Bus {
     private $name;
     private $description;
     private $seats;
-    private $price;
+    private $pricePerDay;
     private $picturePath;
+    private $busDBC;
     
     public function __construct() {
-        
+        $this->busDBC = new BusDBC();
     }
+    
+    /**
+     * Stores the Bus into the database
+     * @return type
+     */
+    public function create(){
+        return $this->busDBC->createBus($this);
+    }
+    
+    /**
+     * Gets the Bus from the database by the set id
+     * @return type boolean|Bus
+     */
+    public function find(){
+        return $this->busDBC->findBusById($this->id);
+    }
+    
+    /**
+     * Deletes the Bus from the database
+     * @return type
+     */
+    public function delete(){
+        return $this->busDBC->deleteBus($this);
+    }
+    
+    
     public function getId() {
         return $this->id;
     }
@@ -35,8 +64,8 @@ class Bus {
         return $this->seats;
     }
 
-    public function getPrice() {
-        return $this->price;
+    public function getPricePerDay() {
+        return $this->pricePerDay;
     }
 
     public function getPicturePath() {
@@ -44,7 +73,8 @@ class Bus {
     }
 
     public function setId($id) {
-        $this->id = $id;
+        /* @var $id type int*/
+        $this->id = (int) $id;
     }
 
     public function setName($name) {
@@ -56,11 +86,13 @@ class Bus {
     }
 
     public function setSeats($seats) {
-        $this->seats = $seats;
+        /* @var $seats type int*/
+        $this->seats = (int) $seats;
     }
 
-    public function setPrice($price) {
-        $this->price = $price;
+    public function setPricePerDay($pricePerDay) {
+        /* @var $pricePerDay type double*/
+        $this->pricePerDay = (double) $pricePerDay;
     }
 
     public function setPicturePath($picturePath) {

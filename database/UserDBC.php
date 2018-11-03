@@ -101,8 +101,7 @@ class UserDBC extends DBConnector {
         while($user = $result->fetch_object("entities\User")){
             array_push($users, $user);
         }
-        
-        
+
         $stmt->close();
         return $users;
     }
@@ -175,7 +174,6 @@ class UserDBC extends DBConnector {
             array_push($participants, $participant);
         }
         
-        
         //checks whether there is at least one Participant
         $stmt->close();
         if($participants){
@@ -183,6 +181,22 @@ class UserDBC extends DBConnector {
         }else{
             return false;
         }
+    }
+    
+    /** (tested)
+     * Updates the role of the given User
+     * @param type $user
+     * @return boolean
+     */
+    public function updateRole($user){
+        $stmt = $this->mysqliInstance->prepare("UPDATE user SET role = ? WHERE id = ?");
+        if(!$stmt){
+            return false;
+        }
+        $stmt->bind_param('si', $role, $id);
+        $role = $user->getRole();
+        $id = $user->getId();
+        return $this->executeInsert($stmt);
     }
     
 }

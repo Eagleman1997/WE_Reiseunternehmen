@@ -6,6 +6,7 @@ use entities\User;
 use entities\Trip;
 use entities\Participant;
 use database\UserDBC;
+use helpers\Validation;
 
 /**
  * Controls the Login and Logout of a User
@@ -23,10 +24,22 @@ class UserController {
         $user->setFirstName(filter_input(INPUT_POST, $_POST['firstName'], FILTER_DEFAULT));
         $user->setLastName(filter_input(INPUT_POST, $_POST['lastName'], FILTER_DEFAULT));
         $user->setStreet(filter_input(INPUT_POST, $_POST['street'], FILTER_DEFAULT));
-        $user->setZipCode(filter_input(INPUT_POST, $_POST['zipCode'], FILTER_VALIDATE_INT));
+        $zipCode = Validation::zipCode(filter_input(INPUT_POST, $_POST['zipCode'], FILTER_VALIDATE_INT));
+        if(!$zipCode){
+            return false;
+        }
+        $user->setZipCode($zipCode);
         $user->setLocation(filter_input(INPUT_POST, $_POST['location'], FILTER_DEFAULT));
-        $user->setEmail(filter_input(INPUT_POST, $_POST['email'], FILTER_VALIDATE_EMAIL));
-        $user->setBirthDate(filter_input(INPUT_POST, $_POST['birthDate'], FILTER_DEFAULT));
+        $email = filter_input(INPUT_POST, $_POST['email'], FILTER_VALIDATE_EMAIL);
+        if(!$email){
+            return false;
+        }
+        $user->setEmail($email);
+        $birthDate = Validation::date(filter_input(INPUT_POST, $_POST['birthDate'], FILTER_DEFAULT));
+        if(!$birthDate){
+            return false;
+        }
+        $user->setBirthDate($birthDate);
         $user->setPassword(filter_input(INPUT_POST, $_POST['password'], FILTER_DEFAULT));
         //default role user (not admin)
         $user->setRole("user");
@@ -42,7 +55,11 @@ class UserController {
      */
     public static function login(){
         $user = new User();
-        $user->setEmail(filter_input(INPUT_POST, $_POST['email'], FILTER_VALIDATE_EMAIL));
+        $email = filter_input(INPUT_POST, $_POST['email'], FILTER_VALIDATE_EMAIL);
+        if(!$email){
+            return false;
+        }
+        $user->setEmail($email);
         $user->setPassword(filter_input(INPUT_POST, $_POST['password'], FILTER_DEFAULT));
         
         return $user->login();
@@ -76,7 +93,11 @@ class UserController {
         $user = new User();
         
         if($_SESSION['role'] == "admin"){
-            $user->setId(filter_input(INPUT_POST, $_POST['userId'], FILTER_VALIDATE_INT));
+            $id = Validation::positiveInt(filter_input(INPUT_POST, $_POST['userId'], FILTER_VALIDATE_INT));
+            if(!$id){
+                return false;
+            }
+            $user->setId($id);
         }else{
             $user->setId($_SESSION['userId']);
         }
@@ -93,7 +114,11 @@ class UserController {
         
         $participant->setFirstName(filter_input(INPUT_POST, $_POST['firstName'], FILTER_DEFAULT));
         $participant->setLastName(filter_input(INPUT_POST, $_POST['lastName'], FILTER_DEFAULT));
-        $participant->setBirthDate(filter_input(INPUT_POST, $_POST['birthDate'], FILTER_DEFAULT));
+        $birthDate = Validation::date(filter_input(INPUT_POST, $_POST['birthDate'], FILTER_DEFAULT));
+        if(!$birthDate){
+            return false;
+        }
+        $participant->setBirthDate($birthDate);
         $participant->setFkUserId($_SESSION['userId']);
         
         return $participant->createParticipant();
@@ -107,11 +132,34 @@ class UserController {
         $user = new User();
         
         if($_SESSION['role'] == "admin"){
-            $user->setId(filter_input(INPUT_POST, $_POST['userId'], FILTER_VALIDATE_INT));
+            $id = Validation::positiveInt(filter_input(INPUT_POST, $_POST['userId'], FILTER_VALIDATE_INT));
+            if(!$id){
+                return false;
+            }
+            $user->setId($id);
         }else{
             $user->setId($_SESSION['userId']);
         }
         return $user->findParticipants();
+    }
+    
+    /**
+     * Updates the role of a given User to the given role
+     * @return boolean
+     */
+    public static function updateRole(){
+        if($_SESSION['role'] != "admin"){
+            return false;
+        }
+        $user = new User();
+        $id = Validation::positiveInt(filter_input(INPUT_POST, $_POST['userId'], FILTER_VALIDATE_INT));
+        if(!$id){
+            return false;
+        }
+        $user->setId($id);
+        $user->setRole(filter_input(INPUT_POST, $_POST['role'], FILTER_DEFAULT));
+        
+        return $user->updateRole();
     }
     
     /**

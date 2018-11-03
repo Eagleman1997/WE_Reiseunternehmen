@@ -22,7 +22,12 @@ use entities\Insurance;
 use entities\Invoice;
 use entities\Participant;
 use database\UserDBC;
+use database\HotelDBC;
 use entities\Hotel;
+use helpers\Validation;
+use entities\Bus;
+use database\BusDBC;
+use entities\TripTemplate;
 
 
 session_start();
@@ -30,8 +35,28 @@ require_once '.\helpers\Autoloader.php';
 
 //For testing purpose
 /*
+$tripTemplate = new TripTemplate();
+$tripTemplate->setName("Trip to Wonderland");
+$tripTemplate->setDescription("Alice wants to visit the Wonderland!");
+$tripTemplate->setDurationInDays(18);
+$tripTemplate->setFk_bus_id(1);
+$tripTemplate->setMinAllocation(2);
+$tripTemplate->setMaxAllocation(13);
+$tripTemplate->setPicturePath("assets/pictures/defaultTripTemplate.jpg");
+$tripTemplate->create();
+ */
+/*
+$bus = new Bus();
+$bus->setName("megaBus");
+$bus->setDescription("Bus is meeega!");
+$bus->setPicturePath("assets/pictures/megaBus.jpg");
+$bus->setPricePerDay(1456.35);
+$bus->setSeats(199);
+$bus->create();
+ */
+/*
 $hotel = new Hotel();
-$hotel->setName("PussyHOtel");
+$hotel->setName("TestHotel");
 $hotel->setDescription("Only schwoeschtere allowed!");
 $hotel->setPricePerPerson(145.25);
 $hotel->setPicturePath("someOtherPath.jpg");

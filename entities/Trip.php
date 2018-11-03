@@ -15,6 +15,7 @@ class Trip {
     private $numOfParticipation;
     private $price;
     private $departureDate;
+    private $invoicesRegistered;
     private $fk_user_id;
     private $fk_insurance_id;
     private $fk_tripTemplate_id;
@@ -42,6 +43,10 @@ class Trip {
 
     public function getDepartureDate() {
         return $this->departureDate;
+    }
+    
+    public function getInvoiceRegistered(){
+        return $this->invoicesRegistered;
     }
 
     public function getFk_user_id() {
@@ -84,6 +89,10 @@ class Trip {
 
     public function setDepartureDate($departureDate) {
         $this->departureDate = $departureDate;
+    }
+    
+    public function setInvoicesRegistered($invoicesRegistered){
+        $this->invoicesRegistered = $invoicesRegistered;
     }
 
     public function setFk_user_id($fk_user_id) {

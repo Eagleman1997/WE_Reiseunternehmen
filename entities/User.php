@@ -121,6 +121,18 @@ class User {
     }
     
     /**
+     * Updates a role of the User
+     * @return type
+     */
+    public function updateRole(){
+        $result = $this->userDBC->updateRole($this);
+        if($result){
+            $_SESSION['role'] = $this->getRole();
+        }
+        return $result;
+    }
+    
+    /**
      * Books a Trip
      * @param type $trip
      * @param type $insurance

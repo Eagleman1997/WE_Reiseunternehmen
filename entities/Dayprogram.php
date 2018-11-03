@@ -14,10 +14,11 @@ class Dayprogram {
     private $id;
     private $name;
     private $picturePath;
-    private $date;
+    private $dayNumber;
     private $description;
-    private $fk_trip_id;
+    private $fk_tripTemplate_id;
     private $fk_hotel_id;
+    private $hotel;
     private $dbConnection;
     
     public function __construct() {
@@ -42,24 +43,29 @@ class Dayprogram {
         return $this->picturePath;
     }
 
-    public function getDate() {
-        return $this->date;
+    public function getDayNumber() {
+        return $this->dayNumber;
     }
 
     public function getDescription() {
         return $this->description;
     }
     
-    public function getFkTripId(){
-        return $this->fk_trip_id;
+    public function getFkTripTemplateId(){
+        return $this->fk_tripTemplate_id;
     }
     
     public function getFkHotelId(){
         return $this->fk_hotel_id;
     }
+    
+    public function getHotel(){
+        return $this->hotel;
+    }
 
     public function setId($id) {
-        $this->id = $id;
+        /* @var $id type int*/
+        $this->id = (int) $id;
     }
 
     public function setName($name) {
@@ -70,20 +76,27 @@ class Dayprogram {
         $this->picturePath = $picturePath;
     }
 
-    public function setDate($date) {
-        $this->date = $date;
+    public function setDayNumber($dayNumber) {
+        /* @var $dayNumber type int*/
+        $this->dayNumber = (int) $dayNumber;
     }
 
     public function setDescription($description) {
         $this->description = $description;
     }
     
-    public function setFkTripId($fk_trip_id){
-        $this->fk_trip_id = $fk_trip_id;
+    public function setFkTripTemplateId($fk_tripTemplate_id){
+        /* @var $fk_tripTemplate_id type int*/
+        $this->fk_tripTemplate_id = (int) $fk_tripTemplate_id;
     }
     
     public function setFkHotelId($fk_hotel_id){
-        $this->fk_hotel_id = $fk_hotel_id;
+        /* @var $fk_hotel_id type int*/
+        $this->fk_hotel_id = (int) $fk_hotel_id;
+    }
+    
+    public function setHotel($hotel){
+        $this->hotel = $hotel;
     }
     
 }

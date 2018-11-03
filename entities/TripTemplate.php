@@ -3,6 +3,7 @@
 namespace entities;
 
 use database\TripDBC;
+use database\BusDBC;
 
 /**
  * Description of TripTemplate
@@ -19,13 +20,71 @@ class TripTemplate {
     private $durationInDays;
     private $price;
     private $picturePath;
+    private $bookable = false;
     private $fk_bus_id;
     private $dayprograms;//array
     private $bus;
     private $tripDBC;
+    private $busDBC;
     
     public function __construct() {
         $this->tripDBC = new TripDBC();
+        $this->busDBC = new BusDBC();
+    }
+    
+    /** (tested)
+     * Stores the TripTemplate into the database. The price is set by the busPricePerDay * durationInDays.
+     * Maxallocation is set if there is no definition clientside. 
+     * Otherwise, validation if seats and maxAllocation will be performed. 
+     * If maxAllocation is bigger than the number of seats according to the bus, maxAllocation will be set automatically to seatNumber of the given bus.
+     * If minAllocation is bigger than the number of seats according to the bus, minAllocation will be set automatically to seatNumber of the given bus.
+     * @return boolean|int
+     */
+    public function create(){
+        $this->bus = $this->busDBC->findBusById($this->fk_bus_id);
+        if(!$this->bus){
+            return false;
+        }
+        if(!$this->maxAllocation){
+            $this->maxAllocation = $this->bus->getSeats();
+        }else{
+            if($this->bus->getSeats() < $this->maxAllocation){
+                //maxAllocation is bigger than busSeats
+                $this->maxAllocation = $this->bus->getSeats();
+            }
+        }
+        if($this->minAllocation > $this->bus->getSeats()){
+            //minAllocation is bigger than busSeats
+            $this->minAllocation = $this->bus->getSeats();
+        }
+        if($this->getMinAllocation() > $this->getMaxAllocation()){
+            return false;
+        }
+        $this->price = $this->bus->getPricePerDay() * $this->durationInDays;
+        $this->price = round($this->price * 20, 0) / 20;//round to the nearest 0.05
+        return $this->tripDBC->createTripTemplate($this);
+    }
+    
+    /**
+     * Deletes the TripTemplate from the database
+     * @return boolean
+     */
+    public function delete(){
+        return $this->tripDBC->deleteTripTemplate($this);
+    }
+    
+    /**
+     * Finds the TripTemplate by the given id
+     * @return boolean|TripTemplate
+     */
+    public function find(){
+        $tripTemplate = $this->tripDBC->findTripTemplateById($this->id);
+        if(!$tripTemplate){
+            return false;
+        }
+        $tripTemplate->setDayprograms($this->tripDBC->getDayprogramsFromTemplate($tripTemplate));
+        
+        return $tripTemplate;
     }
     
     
@@ -59,6 +118,10 @@ class TripTemplate {
 
     public function getPicturePath() {
         return $this->picturePath;
+    }
+    
+    public function getBookable() {
+        return $this->bookable;
     }
 
     public function getFk_bus_id() {
@@ -108,6 +171,11 @@ class TripTemplate {
 
     public function setPicturePath($picturePath) {
         $this->picturePath = $picturePath;
+    }
+    
+    public function setBookable($bookable) {
+        /* @var $bookable type  boolean*/
+        $this->bookable = (boolean) $bookable;
     }
 
     public function setFk_bus_id($fk_bus_id) {

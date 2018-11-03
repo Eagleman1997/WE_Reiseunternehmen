@@ -26,6 +26,10 @@ class Hotel {
         return $this->hotelDBC->createHotel($this);
     }
     
+    public function delete(){
+        return $this->hotelDBC->deleteHotel($this);
+    }
+    
     
     public function getId() {
         return $this->id;

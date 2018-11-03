@@ -217,7 +217,7 @@ class DBConnection {
         $stmt->bind_param('sdssi', $description, $price, $date, $type, $fk_userTrip_id);
         $description = $invoice->getDescription();
         $price = $invoice->getPricePerPerson();
-        $date = $invoice->getDate();
+        $date = $invoice->getDayNumber();
         $type = $invoice->getType();
         $fk_userTrip_id = $_SESSION['userId'];//userTripId required, not userId
         return $this->executeInsert($stmt);
