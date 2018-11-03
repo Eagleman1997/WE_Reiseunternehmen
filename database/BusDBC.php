@@ -31,10 +31,10 @@ class BusDBC extends DBConnector {
     }
     /**
      * Finds the Bus by the given id
-     * @param type $busId
+     * @param type $busId, $close (false if closing of connection is NOT desired)
      * @return boolean|Bus
      */
-    public function findBusById($busId){
+    public function findBusById($busId, $close = true){
         $stmt = $this->mysqliInstance->prepare("SELECT * FROM bus where id = ?;");
         if(!$stmt){
             return false;
@@ -44,8 +44,11 @@ class BusDBC extends DBConnector {
         $stmt->execute();
         $busObj = $stmt->get_result()->fetch_object("entities\Bus");
         
+        if($close){
+            $stmt->close();
+        }
+        
         //checks whether the Bus exists
-        $stmt->close();
         if($busObj){
             return $busObj;
         }else{

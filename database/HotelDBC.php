@@ -64,5 +64,33 @@ class HotelDBC extends DBConnector {
         return $hotels;
     }
     
+    /**
+     * Finds the Hotel by the given id
+     * @param type $hotelId
+     * @param type $close (false if closing of the database connection is NOT desired)
+     * @return boolean
+     */
+    public function findHotelById($hotelId, $close = true){
+        $stmt = $this->mysqliInstance->prepare("SELECT * FROM hotel where id = ?;");
+        if(!$stmt){
+            return false;
+        }
+        $stmt->bind_param('i', $id);
+        $id = $hotelId;
+        $stmt->execute();
+        $hotelObj = $stmt->get_result()->fetch_object("entities\Hotel");
+        
+        if($close){
+            $stmt->close();
+        }
+        
+        //checks whether the User exists
+        if($hotelObj){
+            return $hotelObj;
+        }else{
+            return false;
+        }
+    }
+    
     
 }

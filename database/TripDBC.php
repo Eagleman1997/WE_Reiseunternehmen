@@ -6,6 +6,9 @@ use entities\Trip;
 use entities\TripTemplate;
 use entities\Dayprogram;
 use entities\Hotel;
+use entities\Bus;
+use database\BusDBC;
+use database\HotelDBC;
 
 /**
  * Description of TripDBC
@@ -38,19 +41,53 @@ class TripDBC extends DBConnector {
         return $this->executeInsert($stmt);
     }
     
-    /** (teste)
-     * Deletes the TripTemplate from the database
+    /** (tested)
+     * Deletes the TripTemplate and all related Dayprograms from the database
      * @param type $tripTemplate
      * @return boolean
      */
     public function deleteTripTemplate($tripTemplate){
+        //Begins the transaction
+        $this->mysqliInstance->begin_transaction();
+        $this->mysqliInstance->autocommit(false);
+        
+        //Deletes the TripTemplate
         $stmt = $this->mysqliInstance->prepare("DELETE FROM triptemplate WHERE id = ?");
         if(!$stmt){
-            return false;
+            // rollback if prep stat execution fails
+            $this->mysqliInstance->rollback();
+            exit();
         }
         $stmt->bind_param('i', $id);
         $id = $tripTemplate->getId();
-        return $this->executeDelete($stmt);
+        if(!$stmt->execute()){
+            // rollback if prep stat execution fails
+            $this->mysqliInstance->rollback();
+            exit();
+        }
+        
+        //Deletes the Dayprograms according to the TripTemplate
+        $dayprograms = $this->getDayprogramsFromTemplate($tripTemplate);
+        foreach($dayprograms as $dayprogram){
+            $stmt = $this->mysqliInstance->prepare("DELETE FROM dayprogram WHERE id = ?");
+            if(!$stmt){
+                // rollback if prep stat execution fails
+                $this->mysqliInstance->rollback();
+                exit();
+            }
+            $stmt->bind_param('i', $id);
+            $id = $dayprogram->getId();
+            if(!$stmt->execute()){
+                // rollback if prep stat execution fails
+                $this->mysqliInstance->rollback();
+                exit();
+            }
+        }
+        
+        $this->mysqliInstance->commit();
+        $this->mysqliInstance->autocommit(true);
+        $stmt->close();
+        return true;
     }
     
     /**
@@ -97,10 +134,10 @@ class TripDBC extends DBConnector {
     
     /** (tested)
      * Finds the TripTemplate by the given id from the database
-     * @param type $templateId
+     * @param type $templateId, $close (false if closing of connection is NOT desired)
      * @return boolean|TripTemplate
      */
-    public function findTripTemplateById($templateId){
+    public function findTripTemplateById($templateId, $close = true){
         $stmt = $this->mysqliInstance->prepare("SELECT * FROM triptemplate where id = ?;");
         if(!$stmt){
             return false;
@@ -110,8 +147,12 @@ class TripDBC extends DBConnector {
         $stmt->execute();
         $templateObj = $stmt->get_result()->fetch_object("entities\TripTemplate");
         
+        //closing of the connection if desired
+        if($close){
+            $stmt->close();
+        }
+        
         //checks whether the TripTemplate exists
-        $stmt->close();
         if($templateObj){
             return $templateObj;
         }else{
@@ -119,7 +160,7 @@ class TripDBC extends DBConnector {
         }
     }
     
-    /**
+    /** (tested)
      * Gets all Dayprograms from the database which belongs to the TripTemplate
      * @param type $tripTemplate
      * @return boolean|array
@@ -134,56 +175,207 @@ class TripDBC extends DBConnector {
         $stmt->execute();
         $dayprograms = array();
         $result = $stmt->get_result();
-        while($dayprogram = $result->fetch_object("entities\TripTemplate")){
+        while($dayprogram = $result->fetch_object("entities\Dayprogram")){
             array_push($dayprograms, $dayprogram);
         }
         $stmt->close();
         
         //Adds the Hotels to the Dayprograms
+        $hotelDBC = new HotelDBC();
         foreach($dayprograms as $daypgrm){
-        $stmt = $this->mysqliInstance->prepare("SELECT * FROM hotel where id = ?;");
-        if(!$stmt){
-            return false;
-        }
-        $stmt->bind_param('i', $fk_hotel_id);
-        $fk_hotel_id = $daypgrm->getFkHotelId();
-        $stmt->execute();
-        $daypgrm->setHotel($stmt->get_result()->fetch_object("entities\Hotel"));
-        $stmt->close();
+            $daypgrm->setHotel($hotelDBC->findHotelById($daypgrm->getFkHotelId()));
         }
 
         return $dayprograms;
     }
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    /**
-     *  Stores a new Dayprogram into the database
+
+    /** (tested)
+     *  Stores a new Dayprogram into the database and updates the price and dutationInDays of the according TripTemplate
      * @param type $dayprogram
      * @return boolean
      */
     public function createDayprogram($dayprogram){
-        $this->connect();
-        $stmt = self::$mysqli->prepare("INSERT INTO dayprogram VALUES (NULL, ?, ?, ?, ?, ?, ?, ?)");
+        //Begins the transaction
+        $this->mysqliInstance->begin_transaction();
+        $this->mysqliInstance->autocommit(false);
+        
+        //Insert of Dayprogram
+        $stmt = $this->mysqliInstance->prepare("INSERT INTO dayprogram VALUES (NULL, ?, ?, ?, ?, ?, ?)");
+        if(!$stmt){
+            // rollback if prep stat execution fails
+            $this->mysqliInstance->rollback();
+            exit();
+        }
+        $stmt->bind_param('ssisii', $name, $picturePath, $dayNumber, $description, 
+                $fk_tripTemplate_id, $fk_hotel_id);
+        $name = $dayprogram->getName();
+        $picturePath = $dayprogram->getPicturePath();
+        $dayNumber = $dayprogram->getDayNumber();
+        $description = $dayprogram->getDescription();
+        $fk_tripTemplate_id = $dayprogram->getFkTripTemplateId();
+        $fk_hotel_id = $dayprogram->getFkHotelId();
+        if(!$stmt->execute()){
+            // rollback if prep stat execution fails
+            $this->mysqliInstance->rollback();
+            exit();
+        }
+        
+        //Gets the TripTemplate to update
+        $tripTemplate = $this->findTripTemplateById($fk_tripTemplate_id, false);
+        if(!$tripTemplate){
+            // rollback if prep stat execution fails
+            $this->mysqliInstance->rollback();
+            exit();
+        }
+        
+        //Gets the Bus of the TripTemplate to calculate with pricePerDay
+        $busDBC = new BusDBC();
+        $bus = $busDBC->findBusById($tripTemplate->getFk_bus_id(), false);
+        if(!$bus){
+            // rollback if prep stat execution fails
+            $this->mysqliInstance->rollback();
+            exit();
+        }
+        
+        //Gets the Hotel of the Dayprogram to calculate with pricePerPerson
+        $hotelDBC = new HotelDBC();
+        $hotel = $hotelDBC->findHotelById($dayprogram->getFkHotelId(), false);
+        if(!$hotel){
+            // rollback if prep stat execution fails
+            $this->mysqliInstance->rollback();
+            exit();
+        }
+        
+        //updates the price and durationInDays of the TripTemplate
+        $stmt = $this->mysqliInstance->prepare("UPDATE triptemplate SET price = ?, durationInDays = ? WHERE id = ?");
+        if(!$stmt){
+            // rollback if prep stat execution fails
+            $this->mysqliInstance->rollback();
+            exit();
+        }
+        $stmt->bind_param('dii', $price, $durationInDays, $tripTemplateId);
+        //Calculates and adds the minPrice for the TripTemplate
+        $price = $tripTemplate->getPrice() + $bus->getPricePerDay() + $tripTemplate->getMinAllocation() * $hotel->getPricePerPerson();
+        $price = round($price * 20, 0) / 20;//round to the nearest 0.05
+        $durationInDays = $tripTemplate->getDurationInDays() + 1;
+        $tripTemplateId = $tripTemplate->getId();
+        if(!$stmt->execute()){
+            // rollback if prep stat execution fails
+            $this->mysqliInstance->rollback();
+            exit();
+        }
+        
+        $this->mysqliInstance->commit();
+        $this->mysqliInstance->autocommit(true);
+        $stmt->close();
+        return true;
+    }
+    
+    /** (tested)
+     * Deletes the Dayprogram from the TripTemplate
+     * @param type $dayprogram
+     * @return boolean
+     */
+    public function deleteDayprogram($dayprogram){
+        //Begins the transaction
+        $this->mysqliInstance->begin_transaction();
+        $this->mysqliInstance->autocommit(false);
+        
+        //Gets the real object of the Dayprogram
+        $dayprogram = $this->findDayprogramById($dayprogram->getId(), false);
+        
+        //Elimination of Dayprogram
+        $stmt = $this->mysqliInstance->prepare("DELETE FROM dayprogram WHERE id = ?");
+        if(!$stmt){
+            // rollback if prep stat execution fails
+            $this->mysqliInstance->rollback();
+            exit();
+        }
+        $stmt->bind_param('i', $dayprogramId);
+        $dayprogramId = $dayprogram->getId();
+        if(!$stmt->execute()){
+            // rollback if prep stat execution fails
+            $this->mysqliInstance->rollback();
+            exit();
+        }
+        
+        //Gets the TripTemplate to update
+        $tripTemplate = $this->findTripTemplateById($dayprogram->getFkTripTemplateId(), false);
+        if(!$tripTemplate){
+            // rollback if prep stat execution fails
+            $this->mysqliInstance->rollback();
+            exit();
+        }
+        
+        //Gets the Bus of the TripTemplate to calculate with pricePerDay
+        $busDBC = new BusDBC();
+        $bus = $busDBC->findBusById($tripTemplate->getFk_bus_id(), false);
+        if(!$bus){
+            // rollback if prep stat execution fails
+            $this->mysqliInstance->rollback();
+            exit();
+        }
+        
+        //Gets the Hotel of the Dayprogram to calculate with pricePerPerson
+        $hotelDBC = new HotelDBC();
+        $hotel = $hotelDBC->findHotelById($dayprogram->getFkHotelId(), false);
+        if(!$hotel){
+            // rollback if prep stat execution fails
+            $this->mysqliInstance->rollback();
+            exit();
+        }
+        
+        //updates the price and durationInDays of the TripTemplate
+        $stmt = $this->mysqliInstance->prepare("UPDATE triptemplate SET price = ?, durationInDays = ? WHERE id = ?");
+        if(!$stmt){
+            // rollback if prep stat execution fails
+            $this->mysqliInstance->rollback();
+            exit();
+        }
+        $stmt->bind_param('dii', $price, $durationInDays, $tripTemplateId);
+        //Calculates and decreases the minPrice for the TripTemplate
+        $price = $tripTemplate->getPrice() - $bus->getPricePerDay() - $tripTemplate->getMinAllocation() * $hotel->getPricePerPerson();
+        $price = round($price * 20, 0) / 20;//round to the nearest 0.05
+        $durationInDays = $tripTemplate->getDurationInDays() - 1;
+        $tripTemplateId = $tripTemplate->getId();
+        if(!$stmt->execute()){
+            // rollback if prep stat execution fails
+            $this->mysqliInstance->rollback();
+            exit();
+        }
+        
+        $this->mysqliInstance->commit();
+        $this->mysqliInstance->autocommit(true);
+        $stmt->close();
+        return true;
+    }
+    
+    /** (tested)
+     * Finds the Dayprogram by the given id from the database
+     * @param type $templateId, $close (false if closing of connection is NOT desired)
+     * @return boolean|Dayprogram
+     */
+    public function findDayprogramById($dayprogramId, $close = true){
+        $stmt = $this->mysqliInstance->prepare("SELECT * FROM dayprogram where id = ?;");
         if(!$stmt){
             return false;
         }
-        $stmt->bind_param('sssssii', $name, $picturePath, $date, $description, $hotelName, $fk_trip_id, $fk_hotel_id);
-        $name = $dayprogram->getName();
-        $picturePath = $dayprogram->getPicturePath();
-        $date = $dayprogram->getDayNumber();
-        $description = $dayprogram->getDescription();
-        $hotelName = $dayprogram->getHotelName();
-        $fk_trip_id = $dayprogram->getFkTripTemplateId();
-        $fk_hotel_id = $dayprogram->getFkHotelId();
-        return $this->executeInsert($stmt);
+        $stmt->bind_param('i', $id);
+        $id = $dayprogramId;
+        $stmt->execute();
+        $dayprogramObj = $stmt->get_result()->fetch_object("entities\Dayprogram");
+        
+        //closing of the connection if desired
+        if($close){
+            $stmt->close();
+        }
+        
+        //checks whether the Dayprogram exists
+        if($dayprogramObj){
+            return $dayprogramObj;
+        }else{
+            return false;
+        }
     }
     
     

@@ -35,6 +35,18 @@ require_once '.\helpers\Autoloader.php';
 
 //For testing purpose
 /*
+for($i = 0; $i < 5; $i++){
+    $dayprogram = new Dayprogram();
+    $dayprogram->setDayNumber($i+1);
+    $dayprogram->setDescription("description".$i);
+    $dayprogram->setFkHotelId(1);
+    $dayprogram->setFkTripTemplateId(2);
+    $dayprogram->setName("dayprogramName".$i);
+    $dayprogram->setPicturePath("assets/pictures/defaultDayprogram.jpg");
+    $dayprogram->create();
+}
+ */
+/*
 $tripTemplate = new TripTemplate();
 $tripTemplate->setName("Trip to Wonderland");
 $tripTemplate->setDescription("Alice wants to visit the Wonderland!");

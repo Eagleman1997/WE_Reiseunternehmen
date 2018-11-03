@@ -36,11 +36,6 @@ class TripController {
             return false;
         }
         $tripTemplate->setMaxAllocation($maxAllocation);
-        $durationInDays = Validation::positiveInt(filter_input(INPUT_POST, $_POST['durationInDays'], FILTER_VALIDATE_INT));
-        if(!$durationInDays){
-            return false;
-        }
-        $tripTemplate->setDurationInDays($durationInDays);
         $picture = $_FILES['picture'];
         if($picture){
             $tripTemplate->setPicturePath(Upload::uploadImage());
@@ -104,25 +99,53 @@ class TripController {
     }
     
     /**
-     * Stores a Dayprogram into the database
+     * Stores any number of Dayprograms in relation to the TripTemplate and Hotel
+     * @return boolean
      */
-    private static function createDayprogram($tripId){
-        
-        $numberOfDayprograms = filter_input(INPUT_POST, $_POST['numberOfDayprograms'], FILTER_VALIDATE_INT);
+    public static function createDayprogram(){
+        if($_SESSION['role'] != "admin"){
+            return false;
+        }
+        $numberOfDayprograms = Validation::positiveInt(filter_input(INPUT_POST, $_POST['numberOfDayprograms'], FILTER_VALIDATE_INT));
+        if(!$numberOfDayprograms){
+            return false;
+        }
         
         //stores several dayprograms
+        $fk_tripTemplate_id = Validation::positiveInt(filter_input(INPUT_POST, $_POST['tripTemplateId'.$i], FILTER_VALIDATE_INT));
+        if(!$fk_tripTemplate_id){
+            return false;
+        }
+
+        //stores the Dayprograms
         for($i = 0; $i < $numberOfDayprograms; $i++){
             $dayprogram = new Dayprogram();
             $dayprogram->setName(filter_input(INPUT_POST, $_POST['name'.$i], FILTER_DEFAULT));
-            $dayprogram->setPicturePath(filter_input(INPUT_POST, $_POST['picturePath'.$i], FILTER_DEFAULT));
-            $dayprogram->setDayNumber(filter_input(INPUT_POST, $_POST['date'.$i], FILTER_DEFAULT));
+            $dayNumber = Validation::positiveInt(filter_input(INPUT_POST, $_POST['dayNumber'.$i], FILTER_VALIDATE_INT));
+            if(!$dayNumber){
+                return false;
+            }
+            $dayprogram->setDayNumber($dayNumber);
             $dayprogram->setDescription(filter_input(INPUT_POST, $_POST['description'.$i], FILTER_DEFAULT));
-            $dayprogram->setHotelName(filter_input(INPUT_POST, $_POST['hotelName'.$i], FILTER_DEFAULT));
-            $dayprogram->setFkTripTemplateId($tripId);
+            $dayprogram->setFkTripTemplateId($fk_tripTemplate_id);
+            $fk_hotel_id = Validation::positiveInt(filter_input(INPUT_POST, $_POST['hotelId'.$i], FILTER_VALIDATE_INT));
+            if(!$fk_hotel_id){
+                return false;
+            }
+            $picture = $_FILES['picture'.$i];
+            if($picture){
+                $dayprogram->setPicturePath(Upload::uploadImage());
+            }else{
+                $dayprogram->setPicturePath("assets/pictures/defaultDayprogram.jpg");
+            }
             
-            $dayprogram->storeDayprogram();
+            $success = $dayprogram->create();
+            if(!$success){
+                return false;
+            }
         }
-        //return html after dayprogram storage
+        //storage of dayprograms succeeded
+        return true;
     }
     
     /**

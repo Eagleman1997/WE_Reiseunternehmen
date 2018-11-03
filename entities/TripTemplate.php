@@ -20,7 +20,7 @@ class TripTemplate {
     private $durationInDays;
     private $price;
     private $picturePath;
-    private $bookable = false;
+    private $bookable;
     private $fk_bus_id;
     private $dayprograms;//array
     private $bus;
@@ -38,6 +38,7 @@ class TripTemplate {
      * Otherwise, validation if seats and maxAllocation will be performed. 
      * If maxAllocation is bigger than the number of seats according to the bus, maxAllocation will be set automatically to seatNumber of the given bus.
      * If minAllocation is bigger than the number of seats according to the bus, minAllocation will be set automatically to seatNumber of the given bus.
+     * minAllocation is min 12. maxAllocatin is max 20;
      * @return boolean|int
      */
     public function create(){
@@ -46,12 +47,14 @@ class TripTemplate {
             return false;
         }
         if(!$this->maxAllocation){
+            $this->maxAllocation = 20;
+        }
+        if(!$this->minAllocation){
+            $this->minAllocation = 12;
+        }
+        if($this->bus->getSeats() < $this->maxAllocation){
+            //maxAllocation is bigger than busSeats
             $this->maxAllocation = $this->bus->getSeats();
-        }else{
-            if($this->bus->getSeats() < $this->maxAllocation){
-                //maxAllocation is bigger than busSeats
-                $this->maxAllocation = $this->bus->getSeats();
-            }
         }
         if($this->minAllocation > $this->bus->getSeats()){
             //minAllocation is bigger than busSeats
@@ -60,8 +63,9 @@ class TripTemplate {
         if($this->getMinAllocation() > $this->getMaxAllocation()){
             return false;
         }
-        $this->price = $this->bus->getPricePerDay() * $this->durationInDays;
-        $this->price = round($this->price * 20, 0) / 20;//round to the nearest 0.05
+        $this->price = 0.0;
+        $this->durationInDays = 0;
+        $this->bookable = false;
         return $this->tripDBC->createTripTemplate($this);
     }
     

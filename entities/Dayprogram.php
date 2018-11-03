@@ -2,7 +2,7 @@
 
 namespace entities;
 
-use database\DBConnection;
+use database\TripDBC;
 
 /**
  * Dayprogram Entity
@@ -19,14 +19,18 @@ class Dayprogram {
     private $fk_tripTemplate_id;
     private $fk_hotel_id;
     private $hotel;
-    private $dbConnection;
+    private $tripDBC;
     
     public function __construct() {
-        $this->dbConnection = DBConnection::getDBConnection();
+        $this->tripDBC = new tripDBC();
     }
     
-    public function storeDayprogram(){
-        return $this->dbConnection->createDayprogram($this);
+    public function create(){
+        return $this->tripDBC->createDayprogram($this);
+    }
+    
+    public function delete(){
+        return $this->tripDBC->deleteDayprogram($this);
     }
 
     
