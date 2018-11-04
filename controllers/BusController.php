@@ -54,6 +54,7 @@ class BusController {
         if($_SESSION['role'] != "admin"){
             return false;
         }
+        $bus = new Bus();
         $id = Validation::positiveInt(filter_input(INPUT_POST, $_POST['busId'], FILTER_VALIDATE_INT));
         if(!$id){
             return false;

@@ -18,12 +18,12 @@ class UserDBC extends DBConnector {
      * @return boolean if registration was successful (usually email does already exist)
      */
     public function createUser($user){
-        $stmt = $this->mysqliInstance->prepare("INSERT INTO user VALUES (NULL, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+        $stmt = $this->mysqliInstance->prepare("INSERT INTO user VALUES (NULL, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
         if(!$stmt){
             return false;
         }
-        $stmt->bind_param('sssisssss', $firstName, $lastName, $street, $zipCode, 
-                $location, $email, $role, $birthDate, $password);
+        $stmt->bind_param('sssisssssi', $firstName, $lastName, $street, $zipCode, 
+                $location, $email, $role, $birthDate, $password, $deleted);
         $firstName = $user->getFirstName();
         $lastName = $user->getLastName();
         $street = $user->getStreet();
@@ -33,6 +33,7 @@ class UserDBC extends DBConnector {
         $role = $user->getRole();
         $birthDate = $user->getBirthDate();
         $password = $user->getPassword();
+        $deleted = intval(false);
         return $this->executeInsert($stmt);
     }
     
@@ -44,12 +45,13 @@ class UserDBC extends DBConnector {
      *         boolean false if query failed (usually email is not stored in database)
      */
     public function findUserByEmail($user){
-        $stmt = $this->mysqliInstance->prepare("SELECT * FROM user where email = ?;");
+        $stmt = $this->mysqliInstance->prepare("SELECT * FROM user where email = ? and deleted = ?");
         if(!$stmt){
             return false;
         }
-        $stmt->bind_param('s', $email);
+        $stmt->bind_param('si', $email, $deleted);
         $email = $user->getEmail();
+        $deleted = intval(false);
         $stmt->execute();
         $userObj = $stmt->get_result()->fetch_object("entities\User");
         
@@ -63,17 +65,17 @@ class UserDBC extends DBConnector {
     }
     
     /** (tested)
-     * Finds User by the given id
-     * @param type $user
+     * Finds User by the given id (teleted Users too)
+     * @param type $userId
      * @return boolean|User
      */
-    public function findUserById($user){
-        $stmt = $this->mysqliInstance->prepare("SELECT * FROM user where id = ?;");
+    public function findUserById($userId){
+        $stmt = $this->mysqliInstance->prepare("SELECT * FROM user where id = ?");
         if(!$stmt){
             return false;
         }
         $stmt->bind_param('i', $id);
-        $id = $user->getId();
+        $id = $userId;
         $stmt->execute();
         $userObj = $stmt->get_result()->fetch_object("entities\User");
         
@@ -91,10 +93,12 @@ class UserDBC extends DBConnector {
      * @return boolean|array
      */
     public function getAllUsers(){
-        $stmt = $this->mysqliInstance->prepare("SELECT * FROM user ORDER BY firstName ASC");
+        $stmt = $this->mysqliInstance->prepare("SELECT * FROM user WHERE deleted = ? ORDER BY firstName ASC");
         if(!$stmt){
             return false;
         }
+        $stmt->bind_param('i', $deleted);
+        $deleted = intval(false);
         $stmt->execute();
         $users = array();
         $result = $stmt->get_result();
@@ -112,27 +116,29 @@ class UserDBC extends DBConnector {
      * @return type
      */
     public function updatePassword($user){
-        $stmt = $this->mysqliInstance->prepare("UPDATE user SET password = ? WHERE id = ?");
+        $stmt = $this->mysqliInstance->prepare("UPDATE user SET password = ? WHERE id = ? AND deleted = ?");
         if(!$stmt){
             return false;
         }
-        $stmt->bind_param('si', $password, $id);
+        $stmt->bind_param('sii', $password, $id, $deleted);
         $password = $user->getPassword();
         $id = $user->getId();
+        $deleted = intval(false);
         return $this->executeInsert($stmt);
     }
     
     /** (tested)
-     * Deletes a User from the database by the given id
+     * Removes the User from access of several functions
      * @param type $user
      * @return type
      */
     public function deleteUser($user){
-        $stmt = $this->mysqliInstance->prepare("DELETE FROM user WHERE id = ?");
+        $stmt = $this->mysqliInstance->prepare("UPDATE user SET deleted = ? WHERE id = ?");
         if(!$stmt){
             return false;
         }
-        $stmt->bind_param('i', $id);
+        $stmt->bind_param('ii', $deleted, $id);
+        $deleted = intval(true);
         $id = $user->getId();
         return $this->executeDelete($stmt);
     }
@@ -143,14 +149,15 @@ class UserDBC extends DBConnector {
      * @return boolean
      */
     public function createParticipant($participant){
-        $stmt = $this->mysqliInstance->prepare("INSERT INTO participant VALUES (NULL, ?, ?, ?, ?)");
+        $stmt = $this->mysqliInstance->prepare("INSERT INTO participant VALUES (NULL, ?, ?, ?, ?, ?)");
         if(!$stmt){
             return false;
         }
-        $stmt->bind_param('sssi', $firstName, $lastName, $birthDate, $fk_user_id);
+        $stmt->bind_param('sssii', $firstName, $lastName, $birthDate, $deleted, $fk_user_id);
         $firstName = $participant->getFirstName();
         $lastName = $participant->getLastName();
         $birthDate = $participant->getBirthDate();
+        $deleted = intval(false);
         $fk_user_id = $participant->getFkUserId();
         return $this->executeInsert($stmt);
     }
@@ -161,12 +168,13 @@ class UserDBC extends DBConnector {
      * @return boolean|array
      */
     public function findParticipants($user){
-        $stmt = $this->mysqliInstance->prepare("SELECT * FROM participant where fk_user_id = ?;");
+        $stmt = $this->mysqliInstance->prepare("SELECT * FROM participant WHERE fk_user_id = ? AND deleted = ?");
         if(!$stmt){
             return false;
         }
-        $stmt->bind_param('i', $fk_user_id);
+        $stmt->bind_param('ii', $fk_user_id, $deleted);
         $fk_user_id = $user->getId();
+        $deleted = intval(false);
         $stmt->execute();
         $participants = array();
         $result = $stmt->get_result();
@@ -174,14 +182,73 @@ class UserDBC extends DBConnector {
             array_push($participants, $participant);
         }
         
-        //checks whether there is at least one Participant
         $stmt->close();
-        if($participants){
-            return $participants;
+        return $participants;
+    }
+    
+    /** (tested)
+     * Finds Participant by the given id (teleted Participants too)
+     * @param type $participantId
+     * @return boolean|Participant
+     */
+    public function findParticipantById($participantId){
+        $stmt = $this->mysqliInstance->prepare("SELECT * FROM participant where id = ?");
+        if(!$stmt){
+            return false;
+        }
+        $stmt->bind_param('i', $id);
+        $id = $participantId;
+        $stmt->execute();
+        $participantObj = $stmt->get_result()->fetch_object("entities\Participant");
+        
+        //checks whether the Participant exists
+        $stmt->close();
+        if($participantObj){
+            return $participantObj;
         }else{
             return false;
         }
     }
+    
+    /**
+     * Finds all Participants according to the Trip (deletion of Participants ignored)
+     * @param type $tripId
+     * @return boolean|array
+     */
+    public function findParticipantsToTrip($tripId){
+        $stmt = $this->mysqliInstance->prepare("SELECT * FROM tripparticipant WHERE fk_trip_id = ?");
+        if(!$stmt){
+            return false;
+        }
+        $stmt->bind_param('i', $fk_trip_id);
+        $fk_trip_id = $tripId;
+        $stmt->execute();
+        $participants = array();
+        $result = $stmt->get_result();
+        while($participant = $result->fetch_object("entities\Participant")){
+            array_push($participants, $participant);
+        }
+        
+        $stmt->close();
+        return $participants;
+    }
+    
+    /**
+     * Removes Participant from access of several functions
+     * @param type $participant
+     * @return boolean
+     */
+    public function deleteParticipant($participant){
+        $stmt = $this->mysqliInstance->prepare("UPDATE participant SET deleted = ? WHERE id = ?");
+        if(!$stmt){
+            return false;
+        }
+        $stmt->bind_param('ii', $deleted, $id);
+        $deleted = intval(true);
+        $id = $participant->getId();
+        return $this->executeInsert($stmt);
+    }
+
     
     /** (tested)
      * Updates the role of the given User
@@ -189,13 +256,14 @@ class UserDBC extends DBConnector {
      * @return boolean
      */
     public function updateRole($user){
-        $stmt = $this->mysqliInstance->prepare("UPDATE user SET role = ? WHERE id = ?");
+        $stmt = $this->mysqliInstance->prepare("UPDATE user SET role = ? WHERE id = ? AND deleted = ?");
         if(!$stmt){
             return false;
         }
-        $stmt->bind_param('si', $role, $id);
+        $stmt->bind_param('sii', $role, $id, $deleted);
         $role = $user->getRole();
         $id = $user->getId();
+        $deleted = intval(false);
         return $this->executeInsert($stmt);
     }
     

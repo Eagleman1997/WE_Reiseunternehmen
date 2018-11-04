@@ -2,7 +2,7 @@
 
 namespace entities;
 
-use helpers\database\DBConnection;
+use database\InvoiceDBC;
 
 /**
  * Invoice Entity
@@ -16,37 +16,39 @@ class Invoice {
     private $price;
     private $date;
     private $type;
-    private $user;
-    private $trip;
-    private $dbConnection;
+    private $pdfPath;
+    private $fk_trip_id;
+    private $invoiceDBC;
     
     public function __construct() {
-        $this->dbConnection = DBConnection::getDBConnection();
+        $this->invoiceDBC = new InvoiceDBC();
     }
     
     /**
-     * Stores a new Invoice into the database if the Invoice is valid
-     * @return string
+     * Creates a new Invoice
+     * @return boolean|int
      */
-    public function recordInvoice(){
-        echo "UserId: ".$this->user->getId()."</br>";
-        echo "TripId: ".$this->trip->getId()."</br>";
-        if($this->price < 0){
-            echo "invalidPrice";
-            return "invalidPrice";
-        }
-        if($this->dbConnection->checkBooking($this->user, $this->trip)){
-            //Invoice storation is valid
-            echo "beforeInsertInvoice";
-            return $this->dbConnection->insertInvoice($this);
-        }else{
-            echo "notBooked";
-            return "notBooked";
-        }
-        
+    public function create(){
+        return $this->invoiceDBC->createInvoice($this);
     }
-
     
+    /**
+     * Deletes the Invoice
+     * @return boolean
+     */
+    public function delete(){
+        return $this->invoiceDBC->deleteInvoice($this);
+    }
+    
+    /**
+     * Finds the invoice
+     * @return boolean|Invoice
+     */
+    public function find(){
+        return $this->invoiceDBC->findInvoiceById($this->id);
+    }
+    
+
     public function getId() {
         return $this->id;
     }
@@ -66,13 +68,13 @@ class Invoice {
     public function getType() {
         return $this->type;
     }
-    
-    public function getUser(){
-        return $this->user;
+
+    public function getPdfPath() {
+        return $this->pdfPath;
     }
-    
-    public function getTrip(){
-        return $this->trip;
+
+    public function getFkTripId() {
+        return $this->fk_trip_id;
     }
 
     public function setId($id) {
@@ -94,13 +96,13 @@ class Invoice {
     public function setType($type) {
         $this->type = $type;
     }
-    
-    public function setUser($user){
-        $this->user = $user;
+
+    public function setPdfPath($pdfPath) {
+        $this->pdfPath = $pdfPath;
     }
 
-    public function setTrip($trip){
-        $this->trip = $trip;
+    public function setFkTripId($fk_trip_id) {
+        $this->fk_trip_id = $fk_trip_id;
     }
     
 }

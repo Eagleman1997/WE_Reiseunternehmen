@@ -3,9 +3,9 @@
 namespace controllers;
 
 use entities\Invoice;
-use entities\User;
-use entities\Trip;
-use helpers\database\DBConnection;
+use database\InvoiceDBC;
+use helpers\Validation;
+use helpers\Upload;
 
 /**
  * Controlls the Invoice storage and querys
@@ -14,45 +14,94 @@ use helpers\database\DBConnection;
  */
 class InvoiceController{
     
+    
     /**
-     * Records an Invoice on the chosen Trip
+     * Creates an Invoice to the according Trip
+     * @return boolean
      */
     public static function createInvoice(){
+        if(!isset($_POST['uploadPdf'])){
+            return false;
+        }
+        if($_SESSION['role'] != "admin"){
+            return false;
+        }
         $invoice = new Invoice();
-        $user = new User();
-        $trip = new Trip();
-        
         $invoice->setDescription(filter_input(INPUT_POST, $_POST['description'], FILTER_DEFAULT));
-        $invoice->setPrice(filter_input(INPUT_POST, $_POST['price'], FILTER_DEFAULT));
-        $invoice->setDate(date("Y-m-d"));
-        $invoice->setType(filter_input(INPUT_POST, $_POST['type'], FILTER_DEFAULT));
-        $trip->setTripId(filter_input(INPUT_POST, $_POST['tripId'], FILTER_VALIDATE_INT));
-        $invoice->setTrip($trip);
-        $user->setId($_SESSION['userId']);
-        $invoice->setUser($user);
+        $price = Validation::positivePrice(filter_input(INPUT_POST, $_POST['price'], FILTER_DEFAULT));
+        if(!$price){
+            return false;
+        }
+        $invoice->setPrice($price);
+        $date = Validation::date(filter_input(INPUT_POST, $_POST['date'], FILTER_DEFAULT));
+        if(!$date){
+            return false;
+        }
+        $invoice->setDate($date);
+        $type = Validation::invoiceType(filter_input(INPUT_POST, $_POST['type'], FILTER_DEFAULT));
+        if(!$type){
+            return false;
+        }
+        $invoice->setType($type);
+        $pdf = $_FILES['invoice'];
+        if($pdf){
+            $invoice->setPdfPath(Upload::uploadPdf());
+        }else{
+            $invoice->setPdfPath("assets/pictures/defaultInvoice.jpg");
+        }
+        $fk_trip_id = Validation::positiveInt(filter_input(INPUT_POST, $_POST['tripId'], FILTER_VALIDATE_INT));
+        if(!$fk_trip_id){
+            return false;
+        }
+        $invoice->setFkTripId($fk_trip_id);
         
-        $result = $invoice->recordInvoice();
-        //do something with the result
+        return $invoice->create();
     }
     
     /**
-     * Gets a financial overview of the Invoices of the chosen User and Trip
-     * Admins only
+     * Gets an array of the Invoices of the chosen Trip
+     * @return boolean|array
      */
     public static function getTripInvoices(){
-        $dbConnection = DBConnection::getDBConnection();
-        $user = new User();
-        $trip = new Trip();
-        
-        $user->setId(filter_input(INPUT_POST, $_POST['userId'], FILTER_VALIDATE_INT));
-        $trip->setTripId(filter_input(INPUT_POST, $_POST['tripId'], FILTER_VALIDATE_INT));
-        
-        $result = $dbConnection->getTripInvoices($user, $trip);
-        //do something with the result
+        $tripId = Validation::positiveInt(filter_input(INPUT_POST, $_POST['tripId'], FILTER_VALIDATE_INT));
+        if(!$tripId){
+            return false;
+        }
+        $invoiceDBC = new InvoiceDBC();
+        return $invoiceDBC->findTripInvoices($tripId);
     }
     
-    public static function deleteInvoice(){
+    /**
+     * Gets a specific Invoice
+     * @return boolean|Invoice
+     */
+    public static function getInvoice(){
+        $invoice = new Invoice();
+        $id = Validation::positiveInt(filter_input(INPUT_POST, $_POST['invoiceId'], FILTER_VALIDATE_INT));
+        if(!$id){
+            return false;
+        }
+        $invoice->setId($id);
         
+        return $invoice->find();
+    }
+    
+    /**
+     * Deletes an Invoice by the given id
+     * @return boolean
+     */
+    public static function deleteInvoice(){
+        if($_SESSION['role'] != "admin"){
+            return false;
+        }
+        $invoice = new Invoice();
+        $id = Validation::positiveInt(filter_input(INPUT_POST, $_POST['invoiceId'], FILTER_VALIDATE_INT));
+        if(!$id){
+            return false;
+        }
+        $invoice->setId($id);
+        
+        return $invoice->delete();
     }
     
 }

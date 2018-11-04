@@ -28,6 +28,8 @@ use helpers\Validation;
 use entities\Bus;
 use database\BusDBC;
 use entities\TripTemplate;
+use database\TripDBC;
+use database\InvoiceDBC;
 
 
 session_start();
@@ -35,35 +37,89 @@ require_once '.\helpers\Autoloader.php';
 
 //For testing purpose
 /*
+$trip = new Trip();
+$trip->setId(3);
+$newTrip = $trip->find();
+echo "departureDate: ".$newTrip->getDepartureDate()."</br>";
+echo "userFirstName: ".$newTrip->getUser()->getFirstName()."</br>";
+echo "1 participant: ".$newTrip->getParticipants()[0]->getFirstName()."</br>";
+echo "1 invoice: ".$newTrip->getInvoices()[0]->getDescription()."</br>";
+echo "insurance: ".$newTrip->getInsurance()->getName()."</br>";
+$tripTemplate = $newTrip->getTripTemplate();
+echo "triptemplate: ".$tripTemplate->getName()."</br>";
+echo "Bus: ".$tripTemplate->getBus()->getName()."</br>";
+$dayprograms = $tripTemplate->getDayPrograms();
+echo "dayprogram 1: ".$dayprograms[0]->getName()."</br>";
+echo "Hotel: ".$dayprograms[0]->getHotel()->getName()."</br>";
+ */
+/*
+$invoice = new Invoice();
+$invoice->setDate("2231-03-05");
+$invoice->setDescription("Insurance ZH-Versicherung");
+$invoice->setFkTripId(2);
+$invoice->setPdfPath("assets/pdfs/ramdomPdf.pdf");
+$invoice->setPrice(8888.03);
+$invoice->setType("Insurance");
+$invoice->create();
+ */
+/*
+$trip = new Trip();
+$trip->setDepartureDate("2019-12-31");
+$trip->setFkInsuranceId(2);
+$trip->setFkTripTemplateId(7);
+$trip->setFkUserId(3);
+$trip->setNumOfParticipation(12);
+$participantIds = array(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12);
+$trip->setParticipantIds($participantIds);
+$trip->book();
+ */
+/*
+$insurance = new Insurance();
+$insurance->setName("Alices Insurance");
+$insurance->setDescription("Only Alice can choose this kind of insurance");
+$insurance->setPricePerPerson(23.20);
+$insurance->create();
+$insurance = new Insurance();
+$insurance->setName("Common Insurance");
+$insurance->setDescription("Everyone can choose this kind of insurance");
+$insurance->setPricePerPerson(67.95);
+$insurance->create();
+$insurance = new Insurance();
+$insurance->setName("Royal Insurance");
+$insurance->setDescription("Only Royals are allowed to choose this");
+$insurance->setPricePerPerson(150.00);
+$insurance->create();
+ */
+/*
 for($i = 0; $i < 5; $i++){
     $dayprogram = new Dayprogram();
     $dayprogram->setDayNumber($i+1);
-    $dayprogram->setDescription("description".$i);
+    $dayprogram->setDescription("Test description".$i);
     $dayprogram->setFkHotelId(1);
-    $dayprogram->setFkTripTemplateId(2);
-    $dayprogram->setName("dayprogramName".$i);
+    $dayprogram->setFkTripTemplateId(7);
+    $dayprogram->setName("Test dayprogram".$i);
     $dayprogram->setPicturePath("assets/pictures/defaultDayprogram.jpg");
     $dayprogram->create();
 }
  */
 /*
 $tripTemplate = new TripTemplate();
-$tripTemplate->setName("Trip to Wonderland");
-$tripTemplate->setDescription("Alice wants to visit the Wonderland!");
-$tripTemplate->setDurationInDays(18);
-$tripTemplate->setFk_bus_id(1);
-$tripTemplate->setMinAllocation(2);
-$tripTemplate->setMaxAllocation(13);
+$tripTemplate->setName("Trip to Testland");
+$tripTemplate->setDescription("Test description");
+$tripTemplate->setDurationInDays(6);
+$tripTemplate->setFk_bus_id(4);
+$tripTemplate->setMinAllocation(8);
+$tripTemplate->setMaxAllocation(22);
 $tripTemplate->setPicturePath("assets/pictures/defaultTripTemplate.jpg");
 $tripTemplate->create();
  */
 /*
 $bus = new Bus();
-$bus->setName("megaBus");
-$bus->setDescription("Bus is meeega!");
+$bus->setName("testBus");
+$bus->setDescription("Normal bus");
 $bus->setPicturePath("assets/pictures/megaBus.jpg");
-$bus->setPricePerDay(1456.35);
-$bus->setSeats(199);
+$bus->setPricePerDay(100.35);
+$bus->setSeats(19);
 $bus->create();
  */
 /*
@@ -75,12 +131,14 @@ $hotel->setPicturePath("someOtherPath.jpg");
 $hotel->create();
  */
 /*
+for($i = 0; $i < 20; $i++){
 $participant = new Participant();
-$participant->setFirstName("Elise");
-$participant->setLastName("Merker");
+$participant->setFirstName("Elise".$i);
+$participant->setLastName("Merker".$i);
 $participant->setBirthDate("1992-08-03");
-$participant->setFkUserId(1);
-$participant->createParticipant();
+$participant->setFkUserId(3);
+$participant->create();
+}
  */
 /*
 $user = new User();

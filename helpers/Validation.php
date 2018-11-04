@@ -40,11 +40,42 @@ class Validation {
     /** (tested)
      * Checks whether a given date is in format YYYY-MM-DD
      * @param type $date
-     * @return boolean
+     * @return boolean|string
      */
     public static function date($date){
         if(preg_match('/^[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[0-1])$/', $date)){
             return $date;
+        }else{
+            return false;
+        }
+    }
+    
+    /** (tested)
+     * Checks whether a given date is in format YYYY-MM-DD and lies in the future
+     * @param type $date
+     * @return boolean|string
+     */
+    public static function upToDate($date){
+        if(!self::date($date)){
+            return false;
+        }
+        $today = date("Y-m-d");
+        if($date > $today){
+            return $date;
+        }
+        return false;
+    }
+    
+    /**
+     * Checks if the type of the Invoice is valid
+     * Allowed: "hotel", "bus", "insurance"
+     * @param type $type
+     * @return boolean|string
+     */
+    public static function invoiceType($type){
+        $allowed = array("hotel", "bus", "insurance");
+        if(in_array(strtolower($type), $allowed)){
+            return strtolower($type);
         }else{
             return false;
         }

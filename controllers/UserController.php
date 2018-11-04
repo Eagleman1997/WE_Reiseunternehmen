@@ -121,7 +121,23 @@ class UserController {
         $participant->setBirthDate($birthDate);
         $participant->setFkUserId($_SESSION['userId']);
         
-        return $participant->createParticipant();
+        return $participant->create();
+    }
+    
+    /**
+     * Deletes the Participant
+     * @return boolean
+     */
+    public static function deleteParticipant(){
+        $participant = new Participant();
+        
+        $id = Validation::positiveInt(filter_input(INPUT_POST, $_POST['participantId'], FILTER_VALIDATE_INT));
+        if(!$id){
+            return false;
+        }
+        $participant->setId($id);
+        
+        return $participant->delete();
     }
     
     /**
@@ -160,20 +176,5 @@ class UserController {
         $user->setRole(filter_input(INPUT_POST, $_POST['role'], FILTER_DEFAULT));
         
         return $user->updateRole();
-    }
-    
-    /**
-     * Books a Trip
-     */
-    public static function bookTrip(){
-        $user = new User();
-        $trip = new Trip();
-        
-        $trip->setId(filter_input(INPUT_POST, $_POST['tripId'], FILTER_VALIDATE_INT));
-        $insurance = filter_input(INPUT_POST, $_POST['insurance'], FILTER_VALIDATE_BOOLEAN);
-        $user->setId($_SESSION['userId']);
-        
-        $answer = $user->bookTrip($trip, $insurance);
-        //do something with the answer, possible:(overbooked, outdated, doublebooked, id, false)
     }
 }

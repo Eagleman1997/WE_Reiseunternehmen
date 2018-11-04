@@ -2,7 +2,7 @@
 
 namespace entities;
 
-use helpers\database\DBConnection;
+use database\InsuranceDBC;
 
 /**
  * Insurance Entity
@@ -15,14 +15,26 @@ class Insurance {
     private $name;
     private $description;
     private $pricePerPerson;
-    private $dbConnection;
+    private $insuranceDBC;
     
     public function __construct() {
-        $this->dbConnection = DBConnection::getDBConnection();
+        $this->insuranceDBC = new InsuranceDBC();
     }
     
-    public function storeInsurance(){
-        $this->dbConnection->insertInsurance($this);
+    /**
+     * Creates the Insurance in the database
+     * @return boolean|int
+     */
+    public function create(){
+        return $this->insuranceDBC->createInsurance($this);
+    }
+    
+    /**
+     * Deletes the Insurance
+     * @return boolean
+     */
+    public function delete(){
+        return $this->insuranceDBC->deleteInsurance($this);
     }
 
     

@@ -20,12 +20,39 @@ class Trip {
     private $fk_insurance_id;
     private $fk_tripTemplate_id;
     private $tripTemplate;
-    private $invoices;
-    private $participants;
+    private $invoices;//array
+    private $user;
+    private $participantIds;//array
+    private $participants;//array
+    private $insurance;
     private $tripDBC;
     
     public function __construct() {
         $this->tripDBC = new TripDBC();
+    }
+    
+    /**
+     * Stores the Trip into the database
+     * @return boolean
+     */
+    public function book(){
+        return $this->tripDBC->createTrip($this);
+    }
+    
+    /**
+     * Deletes the Trip from the database
+     * @return boolean
+     */
+    public function cancel(){
+        return $this->tripDBC->deleteTrip($this);
+    }
+    
+    /**
+     * Finds the Trip with the given id
+     * @return boolean|Trip
+     */
+    public function find(){
+        return $this->tripDBC->findTripById($this->id);
     }
     
     
@@ -49,15 +76,15 @@ class Trip {
         return $this->invoicesRegistered;
     }
 
-    public function getFk_user_id() {
+    public function getFkUserId() {
         return $this->fk_user_id;
     }
 
-    public function getFk_insurance_id() {
+    public function getFkInsuranceId() {
         return $this->fk_insurance_id;
     }
 
-    public function getFk_tripTemplate_id() {
+    public function getFkTripTemplateId() {
         return $this->fk_tripTemplate_id;
     }
 
@@ -68,10 +95,23 @@ class Trip {
     public function getInvoices() {
         return $this->invoices;
     }
+    
+    public function getUser(){
+        return $this->user;
+    }
+    
+    public function getParticipantIds(){
+        return $this->participantIds;
+    }
 
     public function getParticipants() {
         return $this->participants;
     }
+    
+    public function getInsurance(){
+        return $this->insurance;
+    }
+    
     public function setId($id) {
         /* @var $id type int*/
         $this->id = (int) $id;
@@ -95,17 +135,17 @@ class Trip {
         $this->invoicesRegistered = $invoicesRegistered;
     }
 
-    public function setFk_user_id($fk_user_id) {
+    public function setFkUserId($fk_user_id) {
         /* @var $fk_user_id type int*/
         $this->fk_user_id = (int) $fk_user_id;
     }
 
-    public function setFk_insurance_id($fk_insurance_id) {
+    public function setFkInsuranceId($fk_insurance_id) {
         /* @var $fk_insurance_id type int*/
         $this->fk_insurance_id = (int) $fk_insurance_id;
     }
 
-    public function setFk_tripTemplate_id($fk_tripTemplate_id) {
+    public function setFkTripTemplateId($fk_tripTemplate_id) {
         /* @var $fk_tripTemplate_id type int*/
         $this->fk_tripTemplate_id = (int) $fk_tripTemplate_id;
     }
@@ -117,9 +157,21 @@ class Trip {
     public function setInvoices($invoices) {
         $this->invoices = $invoices;
     }
+    
+    public function setUser($user){
+        $this->user = $user;
+    }
+    
+    public function setParticipantIds($participantIds){
+        $this->participantIds = $participantIds;
+    }
 
     public function setParticipants($participants) {
         $this->participants = $participants;
+    }
+    
+    public function setInsurance($insurance){
+        $this->insurance = $insurance;
     }
  
 }

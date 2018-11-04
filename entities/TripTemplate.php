@@ -46,10 +46,10 @@ class TripTemplate {
         if(!$this->bus){
             return false;
         }
-        if(!$this->maxAllocation){
+        if(!$this->maxAllocation or $this->maxAllocation > 20){
             $this->maxAllocation = 20;
         }
-        if(!$this->minAllocation){
+        if(!$this->minAllocation or $this->minAllocation < 12){
             $this->minAllocation = 12;
         }
         if($this->bus->getSeats() < $this->maxAllocation){
@@ -91,6 +91,14 @@ class TripTemplate {
         return $tripTemplate;
     }
     
+    /**
+     * Changes (locks or unlocks) the bookable of the TripTemplate
+     * @return boolean
+     */
+    public function changeBookable(){
+        return $this->tripDBC->changeBookable($this);
+    }
+    
     
     public function getId() {
         return $this->id;
@@ -125,10 +133,10 @@ class TripTemplate {
     }
     
     public function getBookable() {
-        return $this->bookable;
+        return (boolean) $this->bookable;
     }
 
-    public function getFk_bus_id() {
+    public function getFkBusId() {
         return $this->fk_bus_id;
     }
 
@@ -182,7 +190,7 @@ class TripTemplate {
         $this->bookable = (boolean) $bookable;
     }
 
-    public function setFk_bus_id($fk_bus_id) {
+    public function setFkBusId($fk_bus_id) {
         /* @var $fk_bus_id type int*/
         $this->fk_bus_id = (int) $fk_bus_id;
     }

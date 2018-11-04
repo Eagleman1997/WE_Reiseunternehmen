@@ -46,7 +46,7 @@ class TripController {
         if(!$fk_bus_id){
             return false;
         }
-        $tripTemplate->setFk_bus_id($fk_bus_id);
+        $tripTemplate->setFkBusId($fk_bus_id);
         
         return $tripTemplate->create();
     }
@@ -149,37 +149,138 @@ class TripController {
     }
     
     /**
-     * Gets the Dayprograms according to the given trip
+     * Deletes the selected Dayprogram
+     * @return boolean
      */
-    public static function getDayprogramsFromTripTemplate(){
-        $dbConnection = DBConnection::getDBConnection();
-        $tripId = filter_input(INPUT_POST, $_POST['tripId'], FILTER_VALIDATE_INT);
-        $trip = $dbConnection->getTripById($tripId);
-        $trip->addDayprograms();
-        //return html of Dayprograms according to the given trip
-    }
-    
-    public static function getAllDayprograms(){
-        
-    }
-    
     public static function deleteDayprogram(){
+        if($_SESSION['role'] != "admin"){
+            return false;
+        }
         
+        $dayprogram = new Dayprogram();
+        $id = Validation::positiveInt(filter_input(INPUT_POST, $_POST['dayprogramId'], FILTER_VALIDATE_INT));
+        if(!$id){
+            return false;
+        }
+        $dayprogram->setId($id);
+        
+        return $dayprogram->delete();
     }
-    
-    
     
     /**
-     * Gets the current (departureDate respected) trips
+     * Changes the bookable of the TripTemplate
+     * @return boolean
      */
-    public static function getCurrentBookedTrips(){
-        $dbConnection = DBConnection::getDBConnection();
-        $trips = $dbConnection->findTrips("current");
-        //return html of the current trips
+    public static function changeBookableOfTripTemplate(){
+        if($_SESSION['role'] != "admin"){
+            return false;
+        }
+        if(isset($_POST['bookable'])){
+            $tripDBC = new TripDBC();
+            $tripTemplate = new TripTemplate();
+            
+            $id = Validation::positiveInt(filter_input(INPUT_POST, $_POST['tripTemplateId'], FILTER_VALIDATE_INT));
+            if(!$id){
+                return false;
+            }
+            $tripTemplate->setId($id);
+            
+            return $tripTemplate->changeBookable();
+        }
     }
     
-    public static function getAllBookedTrips(){
+    /**
+     * Books a Trip
+     * @return boolean
+     */
+    public static function bookTrip(){
+        if(!isset($_POST['submit'])){
+            return false;
+        }
+        $fkTripTemplateId = Validation::positiveInt(filter_input(INPUT_POST, $_POST['tripTemplateId'], FILTER_VALIDATE_INT));
+        if(!$id){
+            return false;
+        }
+        $trip = new Trip();
+        $numOfParticipation = Validation::positiveInt(filter_input(INPUT_POST, $_POST['numOfParticipation'], FILTER_VALIDATE_INT));
+        if(!$numOfParticipation){
+            return false;
+        }
+        $numOfParticipation++;//To count the User 
+        $trip->setNumOfParticipation($numOfParticipation);
+        $departureDate = Validation::upToDate(filter_input(INPUT_POST, $_POST['departureDate'], FILTER_DEFAULT));
+        if(!$departureDate){
+            return false;
+        }
+        $trip->setDepartureDate($departureDate);
+        $trip->setFkUserId($_SESSION['userId']);
+        $trip->setFkTripTemplateId($fkTripTemplateId);
+        if(isset($_POST['insuranceId'])){
+            $insuranceId = Validation::positiveInt(filter_input(INPUT_POST, $_POST['insuranceId'], FILTER_VALIDATE_INT));
+            if(!$insuranceId){
+                return false;
+            }
+            $trip->setFkInsuranceId($insuranceId);
+        }
         
+        $participantIds = array();
+        for($i = 0; $i < $numOfParticipation - 1; $i++){
+            $participantId = Validation::positiveInt(filter_input(INPUT_POST, $_POST['participantId'.$i], FILTER_VALIDATE_INT));
+            if(!$participantId){
+                return false;
+            }
+            array_push($participantIds, $participantId);
+        }
+        $trip->setParticipantIds($participantIds);
+        
+        return $trip->book();
+    }
+    
+    /**
+     * Deletes the Trip
+     * @return boolean
+     */
+    public static function cancelTrip(){
+        if($_SESSION['role'] != "admin"){
+            return false;
+        }
+        $tripId = Validation::positiveInt(filter_input(INPUT_POST, $_POST['tripId'], FILTER_VALIDATE_INT));
+        if(!$tripId){
+            return false;
+        }
+        $trip = new Trip();
+        $trip->setId($tripId);
+        
+        return $trip->cancel();
+    }
+    
+    /**
+     * Get all booked Trips whether from a user or if an admin is requesting, he/she gets all the booked Trips
+     * (Trip and TripTemplate)
+     * @return boolean|array
+     */
+    public static function getBookedTrips(){
+        $tripDBC = new TripDBC();
+        if($_SESSION['role'] == "admin"){
+            return $tripDBC->getBookedTrips();
+        }else{
+            return $tripDBC->getBookedTrips($_SESSION['userId']);
+        }
+    }
+    
+    /**
+     * Get the requested booked Trip (TripTemplate, Bus, Hotel, Dayprograms, Insurance inclusive)
+     * @return boolean|Trip
+     */
+    public static function getBookedTrip(){
+        $tripId = Validation::positiveInt(filter_input(INPUT_POST, $_POST['tripId'], FILTER_VALIDATE_INT));
+        if(!$tripId){
+            return false;
+        }
+        $trip = new Trip();
+        $trip->setId($tripId);
+        
+        return $trip->find();
     }
     
 }

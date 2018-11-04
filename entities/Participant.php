@@ -26,8 +26,12 @@ class Participant {
      * Creates a new Participant
      * @return type
      */
-    public function createParticipant(){
+    public function create(){
         return $this->userDBC->createParticipant($this);
+    }
+    
+    public function delete(){
+        return $this->userDBC->deleteParticipant($this);
     }
     
     
