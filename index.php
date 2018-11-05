@@ -142,18 +142,19 @@ $participant->create();
  */
 /*
 $user = new User();
-$user->setFirstName("Adrian");
-$user->setLastName("the weakest");
-$user->setStreet("Weaklingstreet 23");
-$user->setZipCode(6453);
-$user->setLocation("Weakhausen");
-$user->setEmail("Adrian.Weakling@theWeakest.com");
-$user->setBirthDate("1996-10-21");
-$user->setPassword("AdriansPassword");
-$user->setRole("user");
+$user->setFirstName("Admin");
+$user->setLastName("Admin");
+$user->setStreet("Adminstreet 1");
+$user->setZipCode(9999);
+$user->setLocation("Adminhausen");
+$user->setEmail("Admin@admin.ch");
+$user->setBirthDate("2000-01-01");
+$user->setPassword("Admin");
+$user->setRole("admin");
         
-echo "AdriansId: ".$user->register();
+echo "AdminsId: ".$user->register();
  */
+
 
 /*
 $authFunction = function () {

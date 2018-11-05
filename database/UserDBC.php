@@ -22,7 +22,7 @@ class UserDBC extends DBConnector {
         if(!$stmt){
             return false;
         }
-        $stmt->bind_param('sssisssssi', $firstName, $lastName, $street, $zipCode, 
+        $stmt->bind_param('sssisssssi', $firstName, $lastName, $street, $zipCode,
                 $location, $email, $role, $birthDate, $password, $deleted);
         $firstName = $user->getFirstName();
         $lastName = $user->getLastName();
@@ -210,13 +210,13 @@ class UserDBC extends DBConnector {
         }
     }
     
-    /**
+    /** (tested)
      * Finds all Participants according to the Trip (deletion of Participants ignored)
      * @param type $tripId
      * @return boolean|array
      */
     public function findParticipantsToTrip($tripId){
-        $stmt = $this->mysqliInstance->prepare("SELECT * FROM tripparticipant WHERE fk_trip_id = ?");
+        $stmt = $this->mysqliInstance->prepare("SELECT fk_participant_id FROM tripparticipant WHERE fk_trip_id = ?");
         if(!$stmt){
             return false;
         }
@@ -225,15 +225,19 @@ class UserDBC extends DBConnector {
         $stmt->execute();
         $participants = array();
         $result = $stmt->get_result();
-        while($participant = $result->fetch_object("entities\Participant")){
+        $participantIds = $result->fetch_array(MYSQLI_NUM);
+        $stmt->close();
+        
+        //Gets the real Participant objects into an array
+        foreach($participantIds as $participantId){
+            $participant = $this->findParticipantById($participantId);
             array_push($participants, $participant);
         }
-        
-        $stmt->close();
+
         return $participants;
     }
     
-    /**
+    /** (tested)
      * Removes Participant from access of several functions
      * @param type $participant
      * @return boolean
