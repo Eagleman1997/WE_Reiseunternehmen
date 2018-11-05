@@ -23,6 +23,7 @@ class DBConnection {
         $dbname = Config::get("database.name");
             
         self::$mysqliInstance = new mysqli($host, $user, $password, $dbname);
+        
         /* check connection */
         if (self::$mysqliInstance->connect_error) {
             printf("Connect failed: %s\n", self::$mysqliInstance->connect_error);

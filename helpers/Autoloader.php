@@ -6,6 +6,7 @@
  * Time: 17:13
  */
 
+namespace helpers;
 
 class Autoloader
 {
@@ -22,4 +23,4 @@ class Autoloader
     }
 }
 
-spl_autoload_register('Autoloader::autoload');
+spl_autoload_register('helpers\Autoloader::autoload');

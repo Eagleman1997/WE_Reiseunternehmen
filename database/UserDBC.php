@@ -18,6 +18,9 @@ class UserDBC extends DBConnector {
      * @return boolean if registration was successful (usually email does already exist)
      */
     public function createUser($user){
+        
+        echo 'Hallo Welt';
+        
         $stmt = $this->mysqliInstance->prepare("INSERT INTO user VALUES (NULL, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
         if(!$stmt){
             return false;

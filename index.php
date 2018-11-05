@@ -33,7 +33,7 @@ use database\InvoiceDBC;
 
 
 session_start();
-require_once '.\helpers\Autoloader.php';
+require_once 'helpers/Autoloader.php';
 
 //For testing purpose
 /*
@@ -140,6 +140,7 @@ $participant->setFkUserId(3);
 $participant->create();
 }
  */
+
 /*
 $user = new User();
 $user->setFirstName("Admin");
@@ -150,12 +151,8 @@ $user->setLocation("Adminhausen");
 $user->setEmail("Admin@admin.ch");
 $user->setBirthDate("2000-01-01");
 $user->setPassword("Admin");
-$user->setRole("admin");
-        
-echo "AdminsId: ".$user->register();
+$user->setRole("user");
  */
-
-
 /*
 $authFunction = function () {
     if (AuthController::authenticate())

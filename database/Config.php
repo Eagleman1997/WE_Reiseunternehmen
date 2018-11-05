@@ -20,14 +20,14 @@ class Config
     }
 
     public static function get($key)
-    {
+    {   
         if (empty(self::$config)){
             self::init();
         }
         return self::$config[$key];
     }
 
-    private static function loadENV(){
+    private static function loadENV(){        
         if (isset($_ENV["DATABASE_URL"])) {
             $dbopts = parse_url($_ENV["DATABASE_URL"]);
             self::$config["database.dsn"] = "pgsql" . ":host=" . $dbopts["host"] . ";port=" . $dbopts["port"] . "; dbname=" . ltrim($dbopts["path"], '/') . "; sslmode=require";
