@@ -3,7 +3,7 @@
         
     </head>
     <body>
-        <form method="POST" action="login">
+        <form method="GET" action="admin/bookedtrips/detail/finalSettlement/1">
             <button type="submit">click</button>
         </form>
     </body>
@@ -167,6 +167,7 @@ $user->setRole("user");
  */
 session_destroy();
 $_SESSION['login'] = true;
+$_SESSION['role'] = "admin";
 
 $authFunction = function () {
     if (AuthController::authenticate())
@@ -375,7 +376,7 @@ Router::route_auth("GET", "/bookedtrips/detail/invoice/{id}", $authFunction, fun
     InvoiceController::getUsersInvoice($id);
 });
 
-Router::route_auth("GET", "/admin/bookedtrips/detail/finalInvoice/{id}", $authFunction, function ($id) {
+Router::route_auth("GET", "/admin/bookedtrips/detail/finalSettlement/{id}", $authFunction, function ($id) {
     InvoiceController::getFinalInvoice($id);
 });
 

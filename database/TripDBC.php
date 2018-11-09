@@ -484,9 +484,6 @@ class TripDBC extends DBConnector {
         
         //Calculates the price (tripTemplatePrice / minAllocation is price per person without any insurance)
         $price = $tripTemplate->getPrice() / $tripTemplate->getMinAllocation() * $numOfParticipation;
-        if($insurance){
-            $price = $price + $insurance->getPricePerPerson() * $numOfParticipation;
-        }
         $price = round($price * 20, 0) / 20;//round to the nearest 0.05
         
         $departureDate = $trip->getDepartureDate();
@@ -636,7 +633,7 @@ class TripDBC extends DBConnector {
             return false;
         }
         
-        //If it is just a shallow query, then it returns just the entity Trip without any other deep objects
+        //If it is just a shallow query, then it returns just a Part of the entity Trip some unnecessary deep objects
         if($shallow){
             $stmt->close();
             return $tripObj;

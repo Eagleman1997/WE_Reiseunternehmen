@@ -61,7 +61,6 @@ class InvoiceController{
      * Gets the final Invoice of the Trip if invoiceRegistered is set on the Trip
      */
     public static function getFinalInvoice($tripId){
-        echo "getTripInvoices</br>";
         if($_SESSION['role'] != "admin"){
             return false;
         }
@@ -69,15 +68,18 @@ class InvoiceController{
         if(!$id){
             return false;
         }
-        $invoiceDBC = new InvoiceDBC();
-        $invoices = $invoiceDBC->findTripInvoices($id, true);
-        if(!$invoices){
+        $tripDBC = new TripDBC();
+        $trip = $tripDBC->findTripById($tripId);
+        if(!$trip){
+            return false;
+        }
+        if(!$trip->getInvoicesRegistered()){
             //usually InvoiceRegistered is not set
             //AJAX tell the client that InvoiceRegistered is not set
             return false;
         }
         
-        //html and pdf toDo
+        include '../pdf/finalSettlement.php';
     }
     
     /**
@@ -86,7 +88,6 @@ class InvoiceController{
      */
     public static function getUsersInvoice($tripId){
         echo "getInvoice</br>";
-        $invoice = new Invoice();
         $id = Validation::positiveInt($tripId);
         if(!$id){
             return false;
@@ -97,7 +98,7 @@ class InvoiceController{
             return false;
         }
         
-        //html and pdf toDo
+        //pdf toDo
     }
     
     /**

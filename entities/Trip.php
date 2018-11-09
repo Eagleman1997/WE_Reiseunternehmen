@@ -3,6 +3,8 @@
 namespace entities;
 
 use database\TripDBC;
+use helpers\Margin;
+use entities\Insurance;
 
 /**
  * Trip Entity
@@ -122,6 +124,26 @@ class Trip {
     
     public function getInsurance(){
         return $this->insurance;
+    }
+    
+    public function getCustomerPrice(){
+        return Margin::addTrip($this->price);
+    }
+    
+    public function getInsurancePrice(){
+        if(!$this->insurance){
+            return false;
+        }
+        $insurancePrice = $this->insurance->getPricePerPerson() * $this->numOfParticipation;
+        return round($insurancePrice * 20, 0) / 20;//round to the nearest 0.05
+    }
+    
+    public function getInsuranceCustomerPrice(){
+        if(!$this->insurance){
+            return false;
+        }
+        $insuranceCustomerPrice = Margin::addInsurance($this->insurance->getPricePerPerson() * $this->numOfParticipation);
+        return round($insuranceCustomerPrice * 20, 0) / 20;//round to the nearest 0.05
     }
     
     public function setId($id) {

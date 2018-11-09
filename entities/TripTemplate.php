@@ -4,6 +4,7 @@ namespace entities;
 
 use database\TripDBC;
 use database\BusDBC;
+use helpers\Margin;
 
 /**
  * Description of TripTemplate
@@ -146,6 +147,10 @@ class TripTemplate {
     
     public function getBus(){
         return $this->bus;
+    }
+    
+    public function getCustomerPrice(){
+        return Margin::addTrip($this->price);
     }
     
     public function setId($id) {
