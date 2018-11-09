@@ -4,6 +4,7 @@ namespace controllers;
 
 use entities\Invoice;
 use database\InvoiceDBC;
+use database\TripDBC;
 use helpers\Validation;
 use helpers\Upload;
 
@@ -20,9 +21,7 @@ class InvoiceController{
      * @return boolean
      */
     public static function createInvoice(){
-        if(!isset($_POST['uploadPdf'])){
-            return false;
-        }
+        echo "createInvoice</br>";
         if($_SESSION['role'] != "admin"){
             return false;
         }
@@ -47,7 +46,7 @@ class InvoiceController{
         if($pdf){
             $invoice->setPdfPath(Upload::uploadPdf());
         }else{
-            $invoice->setPdfPath("assets/pictures/defaultInvoice.jpg");
+            $invoice->setPdfPath("views/assets/pdfs/defaultInvoice.jpg");
         }
         $fk_trip_id = Validation::positiveInt(filter_input(INPUT_POST, $_POST['tripId'], FILTER_VALIDATE_INT));
         if(!$fk_trip_id){
@@ -59,43 +58,59 @@ class InvoiceController{
     }
     
     /**
-     * Gets an array of the Invoices of the chosen Trip
-     * @return boolean|array
+     * Gets the final Invoice of the Trip if invoiceRegistered is set on the Trip
      */
-    public static function getTripInvoices(){
-        $tripId = Validation::positiveInt(filter_input(INPUT_POST, $_POST['tripId'], FILTER_VALIDATE_INT));
-        if(!$tripId){
+    public static function getFinalInvoice($tripId){
+        echo "getTripInvoices</br>";
+        if($_SESSION['role'] != "admin"){
+            return false;
+        }
+        $id = Validation::positiveInt($tripId);
+        if(!$id){
             return false;
         }
         $invoiceDBC = new InvoiceDBC();
-        return $invoiceDBC->findTripInvoices($tripId);
+        $invoices = $invoiceDBC->findTripInvoices($id, true);
+        if(!$invoices){
+            //usually InvoiceRegistered is not set
+            //AJAX tell the client that InvoiceRegistered is not set
+            return false;
+        }
+        
+        //html and pdf toDo
     }
     
     /**
      * Gets a specific Invoice
      * @return boolean|Invoice
      */
-    public static function getInvoice(){
+    public static function getUsersInvoice($tripId){
+        echo "getInvoice</br>";
         $invoice = new Invoice();
-        $id = Validation::positiveInt(filter_input(INPUT_POST, $_POST['invoiceId'], FILTER_VALIDATE_INT));
+        $id = Validation::positiveInt($tripId);
         if(!$id){
             return false;
         }
-        $invoice->setId($id);
+        $tripDBC = new TripDBC();
+        $trip = $tripDBC->findTripById($id);
+        if(!$trip){
+            return false;
+        }
         
-        return $invoice->find();
+        //html and pdf toDo
     }
     
     /**
      * Deletes an Invoice by the given id
      * @return boolean
      */
-    public static function deleteInvoice(){
+    public static function deleteInvoice($invoiceId){
+        echo "deleteInvoice</br>";
         if($_SESSION['role'] != "admin"){
             return false;
         }
         $invoice = new Invoice();
-        $id = Validation::positiveInt(filter_input(INPUT_POST, $_POST['invoiceId'], FILTER_VALIDATE_INT));
+        $id = Validation::positiveInt($invoiceId);
         if(!$id){
             return false;
         }

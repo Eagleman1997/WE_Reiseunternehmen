@@ -14,6 +14,7 @@ class User {
     private $id;
     private $firstName;
     private $lastName;
+    private $gender;
     private $street;
     private $zipCode;
     private $location;
@@ -34,12 +35,14 @@ class User {
     public function register(){
         if($this->userDBC->findUserByEmail($this)){
             //doublicate of e-mails are not allowed
+            //AJAX to tell this to the User
             return false;
         }
         
         $this->password = password_hash($this->password, PASSWORD_DEFAULT);
         $userId = $this->userDBC->createUser($this);
         if($userId){
+            session_regenerate_id();
             $_SESSION['userId'] = $userId;
             $_SESSION['login'] = true;
             $_SESSION['role'] = $this->role;
@@ -68,7 +71,7 @@ class User {
                 $this->password = $reHashedPassword;
                 $this->userDBC->updatePassword($this);
             }
-            echo "userId: ".$userObj->getId()."</br>";
+            session_regenerate_id();
             $_SESSION['userId'] = $userObj->getId();
             $_SESSION['login'] = true;
             $_SESSION['role'] = $userObj->getRole();
@@ -121,10 +124,16 @@ class User {
     }
     
     /**
-     * Updates a role of the User
+     * Changes and updates the role of a User
      * @return type
      */
-    public function updateRole(){
+    public function changeRole(){
+        $user = $this->userDBC->findUserById($this->getId());
+        if($user->getRole() == "user"){
+            $this->setRole("admin");
+        }else if($user->getRole() == "admin"){
+            $this->setRole("user");
+        }
         $result = $this->userDBC->updateRole($this);
         if($result){
             $_SESSION['role'] = $this->getRole();
@@ -159,7 +168,11 @@ class User {
     public function getLastName() {
         return $this->lastName;
     }
-
+    
+    public function getGender()
+    {
+        return $this->gender;
+    }
     public function getStreet() {
         return $this->street;
     }
@@ -203,6 +216,10 @@ class User {
 
     public function setLastName($lastName) {
         $this->lastName = $lastName;
+    }
+    
+    public function setGender($gender){
+        $this->gender = $gender;
     }
 
     public function setStreet($street) {

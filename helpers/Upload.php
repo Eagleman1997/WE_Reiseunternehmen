@@ -8,7 +8,7 @@ namespace helpers;
  */
 class Upload {
     
-    /**
+    /** (tested)
      * Stores an jpg, jpeg or png into assets/pictures
      * @param type $file
      * @return string filePath if storage succeeded. Otherwise "fileSizeError", "uploadError", "formatError"
@@ -16,11 +16,11 @@ class Upload {
      */
     public static function uploadImage(){
         
-        $fileName = $_FILES['picture']['name'];
-        $fileTmpName = $_FILES['picture']['tmp_name'];
-        $fileSize = $_FILES['picture']['size'];
-        $fileError = $_FILES['picture']['error'];
-        $fileType = $_FILES['picture']['type'];
+        $fileName = $_FILES['img']['name'];
+        $fileTmpName = $_FILES['img']['tmp_name'];
+        $fileSize = $_FILES['img']['size'];
+        $fileError = $_FILES['img']['error'];
+        $fileType = $_FILES['img']['type'];
         
         $fileExt = explode('.', $fileName);
         $fileActualExt = strtolower(end($fileExt));
@@ -30,8 +30,8 @@ class Upload {
         if(in_array($fileActualExt, $allowed)){
             if($fileError === 0){
                 if($fileSize < 1000000){
-                    $fileNameNew = $fileName.uniqid('', true).".".$fileActualExt;
-                    $fileDestination = 'assets/pictures/'.$fileNameNew;
+                    $fileNameNew = $fileExt[0].uniqid('', true).".".$fileActualExt;
+                    $fileDestination = 'views/assets/img/'.$fileNameNew;
                     move_uploaded_file($fileTmpName, $fileDestination);
                     return $fileNameNew;
                 }else{
@@ -46,7 +46,7 @@ class Upload {
         
     }
     
-    /**
+    /** (tested)
      * Stores an pdf into assets/pdfs
      * @param type $file
      * @return string filePath if storage succeeded. Otherwise "fileSizeError", "uploadError", "formatError"
@@ -68,8 +68,8 @@ class Upload {
         if(in_array($fileActualExt, $allowed)){
             if($fileError === 0){
                 if($fileSize < 1000000){
-                    $fileNameNew = $fileName.uniqid('', true).".".$fileActualExt;
-                    $fileDestination = 'assets/pdfs/'.$fileNameNew;
+                    $fileNameNew = $fileExt[0].uniqid('', true).".".$fileActualExt;
+                    $fileDestination = 'views/assets/pdfs/'.$fileNameNew;
                     move_uploaded_file($fileTmpName, $fileDestination);
                     return $fileNameNew;
                 }else{

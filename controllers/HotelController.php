@@ -19,6 +19,7 @@ class HotelController {
      * @return type
      */
     public static function createHotel(){
+        echo "createHotel</br>";
         if($_SESSION['role'] != "admin"){
             return false;
         }
@@ -35,7 +36,7 @@ class HotelController {
         if($picture){
             $hotel->setPicturePath(Upload::uploadImage());
         }else{
-            $hotel->setPicturePath("assets/pictures/defaultHotel.jpg");
+            $hotel->setPicturePath("views/assets/img/defaultHotel.jpg");
         }
         return $hotel->create();
     }
@@ -44,13 +45,14 @@ class HotelController {
      * Deletes the Hotel
      * @return boolean
      */
-    public static function deleteHotel(){
+    public static function deleteHotel($id){
+        echo "deleteHotel</br>";
         if($_SESSION['role'] != "admin"){
             return false;
         }
         $hotel = new Hotel();
         
-        $id = Validation::positiveInt(filter_input(INPUT_POST, $_POST['id'], FILTER_VALIDATE_INT));
+        $id = Validation::positiveInt($id);
         if(!$id){
             return false;
         }
@@ -59,11 +61,17 @@ class HotelController {
         return $hotel->delete();
     }
     
+    /**
+     * Get all Hotels
+     * @return boolean
+     */
     public static function getAllHotels(){
+        echo "getAllHotels</br>";
         if($_SESSION['role'] != "admin"){
             return false;
         }
         $hotelDBC = new HotelDBC();
-        return $hotelDBC->findAllHotels();
+        $hotels = $hotelDBC->findAllHotels();
+        //html toDo
     }
 }

@@ -20,9 +20,11 @@ class UserController {
      * 
      */
     public static function register(){
+        echo "register</br>";
         $user = new User();
         $user->setFirstName(filter_input(INPUT_POST, $_POST['firstName'], FILTER_DEFAULT));
         $user->setLastName(filter_input(INPUT_POST, $_POST['lastName'], FILTER_DEFAULT));
+        $user->setGender(filter_input(INPUT_POST, $_POST['gender'], FILTER_DEFAULT));
         $user->setStreet(filter_input(INPUT_POST, $_POST['street'], FILTER_DEFAULT));
         $zipCode = Validation::zipCode(filter_input(INPUT_POST, $_POST['zipCode'], FILTER_VALIDATE_INT));
         if(!$zipCode){
@@ -54,6 +56,8 @@ class UserController {
      * @param type $password
      */
     public static function login(){
+        echo "login</br>";
+        return true;
         $user = new User();
         $email = filter_input(INPUT_POST, $_POST['email'], FILTER_VALIDATE_EMAIL);
         if(!$email){
@@ -69,39 +73,49 @@ class UserController {
      * Controlls the logout process of a User
      */
     public static function logout(){
+        echo "logout</br>";
         $user = new User();
         
         return $user->logout();
     }
     
+    /**
+     * Gets all Users
+     * @return boolean\array
+     */
     public static function getAllUsers(){
+        echo "getAllUsers</br>";
         if($_SESSION['role'] == "admin"){
             $userDBC = new UserDBC();
-            return $userDBC->getAllUsers();
-        }else{
-            return false;
+            $users = $userDBC->getAllUsers();
+            //html toDo
         }
     }
     
     
     /**
-     * Deletes the User (Admins can delete other Users)
-     * @return type
+     * Deletes a User
      */
-    public static function deleteUser(){
-        //router must perform the role validation too to guide to the correct side (i.e. login if it was an user)
+    public static function deleteUser($userId){
+        echo "deleteUser</br>";
         $user = new User();
         
         if($_SESSION['role'] == "admin"){
-            $id = Validation::positiveInt(filter_input(INPUT_POST, $_POST['userId'], FILTER_VALIDATE_INT));
+            $id = Validation::positiveInt($userId);
             if(!$id){
                 return false;
             }
             $user->setId($id);
-        }else{
-            $user->setId($_SESSION['userId']);
+            return $user->delete();
         }
-        
+    }
+    
+    /**
+     * Deletes the own account
+     */
+    public static function deleteSelf(){
+        $user = new User();
+        $user->setId($_SESSION['userId']);
         return $user->delete();
     }
     
@@ -110,6 +124,7 @@ class UserController {
      * @return type
      */
     public static function createParticipant(){
+        echo "createParticipant</br>";
         $participant = new Participant();
         
         $participant->setFirstName(filter_input(INPUT_POST, $_POST['firstName'], FILTER_DEFAULT));
@@ -128,10 +143,11 @@ class UserController {
      * Deletes the Participant
      * @return boolean
      */
-    public static function deleteParticipant(){
+    public static function deleteParticipant($participantId){
+        echo "deleteParticipant</br>";
         $participant = new Participant();
         
-        $id = Validation::positiveInt(filter_input(INPUT_POST, $_POST['participantId'], FILTER_VALIDATE_INT));
+        $id = Validation::positiveInt($participantId);
         if(!$id){
             return false;
         }
@@ -145,36 +161,46 @@ class UserController {
      * @return type
      */
     public static function getParticipants(){
+        echo "getParticipants</br>";
         $user = new User();
-        
-        if($_SESSION['role'] == "admin"){
-            $id = Validation::positiveInt(filter_input(INPUT_POST, $_POST['userId'], FILTER_VALIDATE_INT));
-            if(!$id){
-                return false;
-            }
-            $user->setId($id);
-        }else{
-            $user->setId($_SESSION['userId']);
-        }
-        return $user->findParticipants();
+
+        $user->setId($_SESSION['userId']);
+            
+        $participants = $user->findParticipants();
+        //html toDo
     }
     
     /**
      * Updates the role of a given User to the given role
      * @return boolean
      */
-    public static function updateRole(){
+    public static function changeRole($userId){
+        echo "updateRole</br>";
         if($_SESSION['role'] != "admin"){
             return false;
         }
         $user = new User();
-        $id = Validation::positiveInt(filter_input(INPUT_POST, $_POST['userId'], FILTER_VALIDATE_INT));
+        $id = Validation::positiveInt($userId);
         if(!$id){
             return false;
         }
         $user->setId($id);
-        $user->setRole(filter_input(INPUT_POST, $_POST['role'], FILTER_DEFAULT));
         
-        return $user->updateRole();
+        return $user->changeRole();
+    }
+    
+    /**
+     * Provides the homepage (after login) of a admin or user
+     */
+    public static function getHomepage(){
+        echo "getHomepage</br>";
+        if($_SESSION['role'] == "admin"){
+            echo "homepage admin</br>";
+            //html toDo
+        }
+        if($_SESSION['role'] == "user"){
+            echo "homepage user</br>";
+            //html toDo
+        }
     }
 }

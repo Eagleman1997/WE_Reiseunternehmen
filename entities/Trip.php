@@ -36,6 +36,10 @@ class Trip {
      * @return boolean
      */
     public function book(){
+        if($this->numOfParticipation < 11){
+            //too less participants involved
+            return false;
+        }
         return $this->tripDBC->createTrip($this);
     }
     
@@ -53,6 +57,14 @@ class Trip {
      */
     public function find(){
         return $this->tripDBC->findTripById($this->id);
+    }
+    
+    /**
+     * Changes the InvoicesRegistered
+     * @return boolean
+     */
+    public function changeInvoicesRegistered(){
+        return $this->tripDBC->changeInvoicesRegistered($this);
     }
     
     

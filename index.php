@@ -1,3 +1,13 @@
+<html>
+    <head>
+        
+    </head>
+    <body>
+        <form method="POST" action="login">
+            <button type="submit">click</button>
+        </form>
+    </body>
+</html>
 <?php
 
 use router\Router;
@@ -12,6 +22,7 @@ use controllers\InsuranceController;
 use controllers\InvoiceController;
 use controllers\TripController;
 use controllers\UserController;
+use controllers\ErrorController;
 
 //just for testing purpose
 use database\DBConnection;
@@ -30,10 +41,12 @@ use database\BusDBC;
 use entities\TripTemplate;
 use database\TripDBC;
 use database\InvoiceDBC;
+use helpers\Upload;
 
 
 session_start();
 require_once 'helpers/Autoloader.php';
+
 
 //For testing purpose
 /*
@@ -140,7 +153,6 @@ $participant->setFkUserId(3);
 $participant->create();
 }
  */
-
 /*
 $user = new User();
 $user->setFirstName("Admin");
@@ -153,7 +165,9 @@ $user->setBirthDate("2000-01-01");
 $user->setPassword("Admin");
 $user->setRole("user");
  */
-/*
+session_destroy();
+$_SESSION['login'] = true;
+
 $authFunction = function () {
     if (AuthController::authenticate())
         return true;
@@ -170,50 +184,202 @@ Router::route("GET", "/register", function () {
 });
 
 Router::route("POST", "/register", function () {
-    if(UserController::register())
+    if(UserController::register()){
         Router::redirect("/logout");
+    }
 });
 
 Router::route("POST", "/login", function () {
-    AuthController::login();
+    UserController::login();
     Router::redirect("/");
 });
 
 Router::route("GET", "/logout", function () {
-    AuthController::logout();
+    UserController::logout();
     Router::redirect("/login");
-});
-
-Router::route("POST", "/password/request", function () {
-    AgentPasswordResetController::resetEmail();
-    Router::redirect("/login");
-});
-
-Router::route("GET", "/password/request", function () {
-    AgentPasswordResetController::requestView();
-});
-
-Router::route("POST", "/password/reset", function () {
-    AgentPasswordResetController::reset();
-    Router::redirect("/login");
-});
-
-Router::route("GET", "/password/reset", function () {
-    AgentPasswordResetController::resetView();
 });
 
 Router::route_auth("GET", "/", $authFunction, function () {
-    CustomerController::readAll();
+    UserController::getHomepage();
 });
 
-Router::route_auth("GET", "/agent/edit", $authFunction, function () {
-    AgentController::editView();
+Router::route_auth("GET", "/admin", $authFunction, function () {
+    UserController::getHomepage();
 });
 
-Router::route_auth("POST", "/agent/edit", $authFunction, function () {
-    if(AgentController::update())
+Router::route_auth("GET", "/admin/users", $authFunction, function () {
+    UserController::getAllUsers();
+});
+
+Router::route_auth("DELETE", "/admin/users/{id}", $authFunction, function ($id) {
+    if(UserController::deleteUser($id)){
+        Router::redirect("/admin/users");
+        //or with AJAX?
+    }
+});
+
+//Not in use
+Router::route_auth("DELETE", "/profile", $authFunction, function () {
+    if(UserController::deleteSelf()){
         Router::redirect("/logout");
+    }
 });
+
+Router::route_auth("PUT", "/admin/users/{id}", $authFunction, function ($id) {
+    UserController::changeRole($id);
+});
+
+Router::route_auth("GET", "/travelers", $authFunction, function () {
+    UserController::getParticipants();
+});
+
+Router::route_auth("POST", "/travelers", $authFunction, function () {
+    if(UserController::createParticipant()){
+        //Update with AJAX
+    }
+});
+
+Router::route_auth("DELETE", "/travelers/{id}", $authFunction, function ($id) {
+    UserController::deleteParticipant($id);
+});
+
+Router::route_auth("GET", "/admin/bus", $authFunction, function () {
+    BusController::getAllBuses();
+});
+
+Router::route_auth("POST", "/admin/bus", $authFunction, function () {
+    if(BusController::createBus()){
+        //Update with AJAX
+    }
+});
+
+Router::route_auth("DELETE", "/admin//bus/{id}", $authFunction, function ($id) {
+    BusController::deleteBus($id);
+});
+
+Router::route_auth("GET", "/admin/hotel", $authFunction, function () {
+    HotelController::getAllHotels();
+});
+
+Router::route_auth("POST", "/admin/hotel", $authFunction, function () {
+    if(HotelController::createHotel()){
+        //Update with AJAX
+    }
+});
+
+Router::route_auth("DELETE", "/admin/hotel/{id}", $authFunction, function ($id) {
+    HotelController::deleteHotel($id);
+});
+
+Router::route_auth("GET", "/admin/insurance", $authFunction, function () {
+    InsuranceController::getAllInsurances();
+});
+
+Router::route_auth("POST", "/admin/insurance", $authFunction, function () {
+    if(InsuranceController::createInsurance()){
+        //Update with AJAX
+    }
+});
+
+Router::route_auth("DELETE", "/admin/insurance/{id}", $authFunction, function ($id) {
+    InsuranceController::deleteInsurance($id);
+});
+
+//no use of $authFunctin necessary to allow users without a loggin to see the packageOverview
+Router::route("GET", "/packageOverview", function () {
+    TripController::getAllTripTemplates();
+});
+
+Router::route_auth("GET", "/admin/packageOverview", $authFunction, function () {
+    TripController::getAllTripTemplates();
+});
+
+Router::route_auth("POST", "/admin/packageOverview", $authFunction, function () {
+    if(TripController::createTripTemplate()){
+        //Update with AJAX
+    }
+});
+
+Router::route_auth("DELETE", "/admin/packageOverview/{id}", $authFunction, function ($id) {
+    TripController::deleteTripTemplate($id);
+});
+
+Router::route("GET", "/packageOverview/package/{id}", function ($id) {
+    TripController::getTripTemplate($id);
+});
+
+Router::route_auth("POST", "/packageOverview/package", $authFunction, function () {
+    if(TripController::bookTrip()){
+        Router::redirect("/bookedTrips");
+    }
+});
+
+Router::route_auth("GET", "/admin/packageOverview/package/{id}", $authFunction, function ($id) {
+    TripController::getTripTemplate($id);
+});
+
+Router::route_auth("PUT", "/admin/packageOverview/package/{id}", $authFunction, function ($id) {
+    TripController::changeBookableOfTripTemplate($id);
+});
+
+Router::route_auth("POST", "/admin/packageOverview/package", $authFunction, function () {
+    if(TripController::createDayprogram()){
+        //Update with AJAX
+    }
+});
+
+Router::route_auth("DELETE", "/admin/packageOverview/package/{id}", $authFunction, function ($id) {
+    TripController::deleteDayprogram($id);
+    //AJAX?
+});
+
+Router::route_auth("GET", "/bookedTrips", $authFunction, function () {
+        TripController::getBookedTrips();
+});
+
+Router::route_auth("GET", "admin/bookedTrips", $authFunction, function () {
+        TripController::getBookedTrips();
+});
+
+Router::route_auth("DELETE", "/admin/bookedTrips/{id}", $authFunction, function ($id) {
+    TripController::cancelTrip($id);
+    //AJAX?
+});
+
+Router::route_auth("GET", "/bookedtrips/detail/{id}", $authFunction, function ($id) {
+    TripController::getBookedTrip($id);
+});
+
+Router::route_auth("GET", "/admin/bookedtrips/detail/{id}", $authFunction, function ($id) {
+    TripController::getBookedTrip($id);
+});
+
+Router::route_auth("POST", "/admin/bookedtrips/detail", $authFunction, function () {
+    InvoiceController::createInvoice();
+    //AJAX?
+});
+
+Router::route_auth("DELETE", "/admin/bookedtrips/detail/{id}", $authFunction, function ($id) {
+    InvoiceController::deleteInvoice($id);
+});
+
+Router::route_auth("PUT", "/admin/bookedtrips/detail/{id}", $authFunction, function ($id) {
+    TripController::changeInvoicesRegistered($id);
+});
+
+Router::route_auth("GET", "/admin/bookedtrips/detail/invoice/{id}", $authFunction, function ($id) {
+    InvoiceController::getUsersInvoice($id);
+});
+
+Router::route_auth("GET", "/bookedtrips/detail/invoice/{id}", $authFunction, function ($id) {
+    InvoiceController::getUsersInvoice($id);
+});
+
+Router::route_auth("GET", "/admin/bookedtrips/detail/finalInvoice/{id}", $authFunction, function ($id) {
+    InvoiceController::getFinalInvoice($id);
+});
+
+
 
 try {
     HTTPHeader::setHeader("Access-Control-Allow-Origin: *");
@@ -228,7 +394,8 @@ try {
     $exception->getHeader();
     ErrorController::show404();
 }
- */
+
+
 
 
 

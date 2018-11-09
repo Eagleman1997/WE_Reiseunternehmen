@@ -3,6 +3,7 @@
 namespace database;
 
 use entities\Invoice;
+use database\TripDBC;
 use entities\Trip;
 
 /**
@@ -92,9 +93,22 @@ class InvoiceDBC extends DBConnector {
     /** (tested)
      * Finds all Invoices according to the given tripId
      * @param type $tripId
+     * @param type $checkInvoicesRegistered
      * @return boolean|array
      */
-    public function findTripInvoices($tripId){
+    public function findTripInvoices($tripId, $checkInvoicesRegistered = false){
+        //Checks if all Invoices are recorded
+        if($checkInvoicesRegistered){
+            $tripDBC = new TripDBC();
+            //shallow request
+            $trip = $tripDBC->findTripById($tripId, true);
+            if(!$trip->getInvoicesRegistered()){
+                //here, not all Invoices are registered
+                return false;
+            }
+        }
+        
+        //Gets all the Invoices from the Trip
         $stmt = $this->mysqliInstance->prepare("SELECT * FROM invoice WHERE fk_trip_id = ? ORDER BY type ASC");
         if(!$stmt){
             return false;

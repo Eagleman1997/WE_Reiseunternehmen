@@ -621,7 +621,7 @@ class TripDBC extends DBConnector {
      * @param type $tripId
      * @return boolean|Trip
      */
-    public function findTripById($tripId){
+    public function findTripById($tripId, $shallow = false){
         //Gets the Trip object from the database
         $stmt = $this->mysqliInstance->prepare("SELECT * FROM trip where id = ?;");
         if(!$stmt){
@@ -634,6 +634,12 @@ class TripDBC extends DBConnector {
         if(!$tripObj){
             $stmt->close();
             return false;
+        }
+        
+        //If it is just a shallow query, then it returns just the entity Trip without any other deep objects
+        if($shallow){
+            $stmt->close();
+            return $tripObj;
         }
         
         //Adds the Insurance to the Trip
@@ -664,6 +670,34 @@ class TripDBC extends DBConnector {
         
         return $tripObj;
         
+    }
+    
+    /**
+     * Changes the parameter of InvoicesRegistered in the Trip
+     * @param type $trip
+     * @return boolean
+     */
+    public function changeInvoicesRegistered($trip){
+        //Gets the object of the Trip (shallow request)
+        $tripObj = $this->findTripById($trip->getId(), true);
+        if(!$tripObj){
+            return false;
+        }
+        
+        //Locks or unlocks the invoicesRegistered
+        $stmt = $this->mysqliInstance->prepare("UPDATE trip SET invoicesRegistered = ? WHERE id = ?");
+        $stmt->bind_param('ii', $invoicesRegistered, $id);
+        $id = $tripObj->getId();
+        if($tripObj->getInvoicesRegistered()){
+            //Locks invoicesRegistered
+            $invoicesRegistered = intval(false);
+        }else{
+            //Unlocks invoicesRegistered
+            $invoicesRegistered = intval(true);
+        }
+        $result = $stmt->execute();
+        $stmt->close();
+        return $result;
     }
     
 }

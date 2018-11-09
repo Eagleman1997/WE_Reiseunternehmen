@@ -18,6 +18,7 @@ class InsuranceController {
      * @return boolean|int
      */
     public static function createInsurance(){
+        echo "createInsurance</br>";
         if($_SESSION['role'] != "admin"){
             return false;
         }
@@ -38,16 +39,14 @@ class InsuranceController {
      * Deletes the Insurance
      * @return boolean
      */
-    public static function deleteInsurance(){
+    public static function deleteInsurance($id){
+        echo "deleteInsurance</br>";
         if($_SESSION['role'] != "admin"){
-            return false;
-        }
-        if(!isset($_POST['submit'])){
             return false;
         }
         $insurance = new Insurance();
         
-        $id = Validation::positiveInt(filter_input(INPUT_POST, $_POST['insuranceId'], FILTER_VALIDATE_INT));
+        $id = Validation::positiveInt($id);
         if(!$id){
             return false;
         }
@@ -58,11 +57,12 @@ class InsuranceController {
     
     /**
      * Gets all Insurances
-     * @return boolean|array
      */
     public static function getAllInsurances(){
+        echo "getAllInsurances</br>";
         $insuranceDBC = new InsuranceDBC();
-        return $insuranceDBC->getAllInsurances();
+        $insurances = $insuranceDBC->getAllInsurances();
+        //html toDo
     }
     
 }

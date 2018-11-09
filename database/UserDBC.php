@@ -18,17 +18,15 @@ class UserDBC extends DBConnector {
      * @return boolean if registration was successful (usually email does already exist)
      */
     public function createUser($user){
-        
-        echo 'Hallo Welt';
-        
-        $stmt = $this->mysqliInstance->prepare("INSERT INTO user VALUES (NULL, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+        $stmt = $this->mysqliInstance->prepare("INSERT INTO user VALUES (NULL, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
         if(!$stmt){
             return false;
         }
-        $stmt->bind_param('sssisssssi', $firstName, $lastName, $street, $zipCode,
+        $stmt->bind_param('sssisssssi', $firstName, $lastName, $gender, $street, $zipCode,
                 $location, $email, $role, $birthDate, $password, $deleted);
         $firstName = $user->getFirstName();
         $lastName = $user->getLastName();
+        $gender = $user->getGender();
         $street = $user->getStreet();
         $zipCode = $user->getZipCode();
         $location = $user->getLocation();

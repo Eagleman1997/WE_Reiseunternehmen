@@ -19,6 +19,7 @@ class BusController {
      * @return boolean|int
      */
     public static function createBus(){
+        echo "createBus</br>";
         if($_SESSION['role'] != "admin"){
             return false;
         }
@@ -40,7 +41,7 @@ class BusController {
         if($picture){
             $bus->setPicturePath(Upload::uploadImage());
         }else{
-            $bus->setPicturePath("assets/pictures/defaultBus.jpg");
+            $bus->setPicturePath("views/assets/img/defaultBus.jpg");
         }
         
         return $bus->create();
@@ -50,12 +51,13 @@ class BusController {
      * Deletes a Bus by the given busId
      * @return boolean
      */
-    public static function deleteBus(){
+    public static function deleteBus($busId){
+        echo "deleteBus</br>";
         if($_SESSION['role'] != "admin"){
             return false;
         }
         $bus = new Bus();
-        $id = Validation::positiveInt(filter_input(INPUT_POST, $_POST['busId'], FILTER_VALIDATE_INT));
+        $id = Validation::positiveInt($busId);
         if(!$id){
             return false;
         }
@@ -69,28 +71,32 @@ class BusController {
      * @return boolean|array
      */
     public static function getAllBuses(){
+        echo "getAllBuses</br>";
         if($_SESSION['role'] != "admin"){
             return false;
         }
         $busDBC = new BusDBC();
         
-        return $busDBC->getAllBuses();
+        $buses = $busDBC->getAllBuses();
+        //html toDo
     }
     
     /**
      * Gets the Bus
      * @return boolean|Bus
      */
-    public static function getBus(){
+    public static function getBus($id){
+        echo "getBus</br>";
         $bus = new Bus();
         
-        $id = Validation::positiveInt(filter_input(INPUT_POST, $_POST['busId'], FILTER_VALIDATE_INT));
+        $id = Validation::positiveInt($id);
         if(!$id){
             return false;
         }
         $bus->setId($id);
         
-        return $bus->find();
+        $bus = $bus->find();
+        //not in use
     }
     
 }

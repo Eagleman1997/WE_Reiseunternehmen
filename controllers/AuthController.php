@@ -2,7 +2,6 @@
 
 namespace controllers;
 
-use entities\User;
 
 /**
  * Controls the registration of a new User
@@ -27,14 +26,16 @@ class AuthController {
      * Gets the login-view
      */
     public static function loginView(){
-        echo "loginView";
+        echo "loginView</br>";
+        //html toDo
     }
     
     /**
      * Gets the register-view
      */
     public static function registerView(){
-        echo "registerView";
+        echo "registerView</br>";
+        //html toDo
     }
 
 }
