@@ -22,7 +22,7 @@ function Header()
     // A4 ist 210mm
         
     // Logo
-    $this->Image('logo.jpeg',90,6,30);
+    $this->Image('pdf/logo.jpeg',90,6,30);
     $this->Ln(30);
     
     // Line(float x1, float y1, float x2, float y2)
@@ -195,12 +195,14 @@ function CreateTable()
 }
 
 // Instanciation of inherited class
+ob_start();
 $pdf = new PDF();
 $pdf->AliasNbPages();
 $pdf->AddPage();
 $pdf->CreateTable();
 
 $pdf->Output();
+ob_end_flush();
 
 /*
  * $pdf=new \FPDF('P','mm','A4');
