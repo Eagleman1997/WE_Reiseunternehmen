@@ -145,7 +145,6 @@ class TripDBC extends DBConnector {
         }
         $stmt->bind_param('i', $id);
         $id = $templateId;
-        echo "id is: ".$id."</br>";
         $stmt->execute();
         $templateObj = $stmt->get_result()->fetch_object("entities\TripTemplate");
         
@@ -669,7 +668,7 @@ class TripDBC extends DBConnector {
         
     }
     
-    /**
+    /** (tested)
      * Changes the parameter of InvoicesRegistered in the Trip
      * @param type $trip
      * @return boolean
@@ -683,14 +682,17 @@ class TripDBC extends DBConnector {
         
         //Locks or unlocks the invoicesRegistered
         $stmt = $this->mysqliInstance->prepare("UPDATE trip SET invoicesRegistered = ? WHERE id = ?");
-        $stmt->bind_param('ii', $invoicesRegistered, $id);
+        if(!$stmt){
+            return false;
+        }
+        $stmt->bind_param('si', $invoicesRegistered, $id);
         $id = $tripObj->getId();
         if($tripObj->getInvoicesRegistered()){
             //Locks invoicesRegistered
-            $invoicesRegistered = intval(false);
+            $invoicesRegistered = null;
         }else{
             //Unlocks invoicesRegistered
-            $invoicesRegistered = intval(true);
+            $invoicesRegistered = date("Y-m-d");
         }
         $result = $stmt->execute();
         $stmt->close();

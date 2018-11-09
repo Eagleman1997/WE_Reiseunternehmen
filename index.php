@@ -1,4 +1,4 @@
-<html>
+<!-- <html>
     <head>
         
     </head>
@@ -8,6 +8,7 @@
         </form>
     </body>
 </html>
+-->
 <?php
 
 use router\Router;
@@ -51,7 +52,7 @@ require_once 'helpers/Autoloader.php';
 //For testing purpose
 /*
 $trip = new Trip();
-$trip->setId(3);
+$trip->setId(5);
 $newTrip = $trip->find();
 echo "departureDate: ".$newTrip->getDepartureDate()."</br>";
 echo "userFirstName: ".$newTrip->getUser()->getFirstName()."</br>";
@@ -69,8 +70,8 @@ echo "Hotel: ".$dayprograms[0]->getHotel()->getName()."</br>";
 $invoice = new Invoice();
 $invoice->setDate("2231-03-05");
 $invoice->setDescription("Insurance ZH-Versicherung");
-$invoice->setFkTripId(2);
-$invoice->setPdfPath("assets/pdfs/ramdomPdf.pdf");
+$invoice->setFkTripId(5);
+$invoice->setPdfPath("views/assets/pdfs/ramdomPdf.pdf");
 $invoice->setPrice(8888.03);
 $invoice->setType("Insurance");
 $invoice->create();
@@ -78,11 +79,11 @@ $invoice->create();
 /*
 $trip = new Trip();
 $trip->setDepartureDate("2019-12-31");
-$trip->setFkInsuranceId(2);
-$trip->setFkTripTemplateId(7);
-$trip->setFkUserId(3);
+$trip->setFkInsuranceId(7);
+$trip->setFkTripTemplateId(8);
+$trip->setFkUserId(8);
 $trip->setNumOfParticipation(12);
-$participantIds = array(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12);
+$participantIds = array(23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34);
 $trip->setParticipantIds($participantIds);
 $trip->book();
  */
@@ -108,10 +109,10 @@ for($i = 0; $i < 5; $i++){
     $dayprogram = new Dayprogram();
     $dayprogram->setDayNumber($i+1);
     $dayprogram->setDescription("Test description".$i);
-    $dayprogram->setFkHotelId(1);
-    $dayprogram->setFkTripTemplateId(7);
+    $dayprogram->setFkHotelId(3);
+    $dayprogram->setFkTripTemplateId(8);
     $dayprogram->setName("Test dayprogram".$i);
-    $dayprogram->setPicturePath("assets/pictures/defaultDayprogram.jpg");
+    $dayprogram->setPicturePath("views/assets/img/defaultDayprogram.jpg");
     $dayprogram->create();
 }
  */
@@ -120,17 +121,17 @@ $tripTemplate = new TripTemplate();
 $tripTemplate->setName("Trip to Testland");
 $tripTemplate->setDescription("Test description");
 $tripTemplate->setDurationInDays(6);
-$tripTemplate->setFk_bus_id(4);
+$tripTemplate->setFkBusId(5);
 $tripTemplate->setMinAllocation(8);
 $tripTemplate->setMaxAllocation(22);
-$tripTemplate->setPicturePath("assets/pictures/defaultTripTemplate.jpg");
+$tripTemplate->setPicturePath("views/assets/img/defaultTripTemplate.jpg");
 $tripTemplate->create();
  */
 /*
 $bus = new Bus();
 $bus->setName("testBus");
 $bus->setDescription("Normal bus");
-$bus->setPicturePath("assets/pictures/megaBus.jpg");
+$bus->setPicturePath("views/assets/img/defaultBus.jpg");
 $bus->setPricePerDay(100.35);
 $bus->setSeats(19);
 $bus->create();
@@ -139,7 +140,7 @@ $bus->create();
 $hotel = new Hotel();
 $hotel->setName("TestHotel");
 $hotel->setDescription("Only schwoeschtere allowed!");
-$hotel->setPricePerPerson(145.25);
+$hotel->setPricePerPerson(80.25);
 $hotel->setPicturePath("someOtherPath.jpg");
 $hotel->create();
  */
@@ -149,7 +150,7 @@ $participant = new Participant();
 $participant->setFirstName("Elise".$i);
 $participant->setLastName("Merker".$i);
 $participant->setBirthDate("1992-08-03");
-$participant->setFkUserId(3);
+$participant->setFkUserId(8);
 $participant->create();
 }
  */
@@ -157,6 +158,7 @@ $participant->create();
 $user = new User();
 $user->setFirstName("Admin");
 $user->setLastName("Admin");
+$user->setGender("male");
 $user->setStreet("Adminstreet 1");
 $user->setZipCode(9999);
 $user->setLocation("Adminhausen");
@@ -170,8 +172,9 @@ $_SESSION['login'] = true;
 $_SESSION['role'] = "admin";
 
 $authFunction = function () {
-    if (AuthController::authenticate())
+    if (AuthController::authenticate()){
         return true;
+    }
     Router::redirect("/login");
     return false;
 };
