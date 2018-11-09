@@ -86,7 +86,7 @@ class Trip {
         return $this->departureDate;
     }
     
-    public function getInvoiceRegistered(){
+    public function getInvoicesRegistered(){
         return $this->invoicesRegistered;
     }
 

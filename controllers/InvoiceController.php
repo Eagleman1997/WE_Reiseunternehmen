@@ -74,12 +74,13 @@ class InvoiceController{
             return false;
         }
         if(!$trip->getInvoicesRegistered()){
+            echo "invoiceRegistered: ".$trip->getInvoicesRegistered();
             //usually InvoiceRegistered is not set
             //AJAX tell the client that InvoiceRegistered is not set
             return false;
         }
-        
-        include '../pdf/finalSettlement.php';
+        echo "84";
+        include 'pdf/finalSettlement.php';
     }
     
     /**
