@@ -6,6 +6,8 @@ use entities\Hotel;
 use database\HotelDBC;
 use helpers\Upload;
 use helpers\Validation;
+use views\LayoutRendering;
+use views\TemplateView;
 
 /**
  * Controls the actions of a Hotel

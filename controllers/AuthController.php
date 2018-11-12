@@ -25,7 +25,7 @@ class AuthController {
         }
     }
     
-    /**
+    /** (tested)
      * Gets the login-view
      */
     public static function loginView(){
@@ -33,12 +33,12 @@ class AuthController {
         LayoutRendering::basicLayout($homepage, "headerLoggedOut");
     }
     
-    /**
+    /** (tested)
      * Gets the register-view
      */
     public static function registerView(){
-        echo "registerView</br>";
-        //html toDo
+        $homepage = new TemplateView("registration.php");
+        LayoutRendering::basicLayout($homepage, "headerLoggedOut");
     }
 
 }

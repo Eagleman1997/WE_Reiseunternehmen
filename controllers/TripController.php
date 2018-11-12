@@ -8,6 +8,8 @@ use entities\Dayprogram;
 use database\TripDBC;
 use helpers\Validation;
 use helpers\Upload;
+use views\LayoutRendering;
+use views\TemplateView;
 
 /**
  * Controlls the storage and querys of Trips
@@ -57,17 +59,18 @@ class TripController {
      */
     public static function getAllTripTemplates(){
         $tripDBC = new TripDBC();
-        if($_SESSION['role'] == "admin"){
-            echo "getAllTripTemplates (admin)</br>";
-            $tripTemplates = $tripDBC->getAllTripTemplates();
-            //html toDo
+        $tripTemplates = $tripDBC->getAllTripTemplates();
+        if(isset($_SESSION['role']) and $_SESSION['role'] == "admin"){
+            $homepage = new TemplateView("allTrips.php");
+            LayoutRendering::basicLayout($homepage);
         }else{
-            echo "getAllTripTemplates (user & co)</br>";
             $tripTemplates = $tripDBC->getBookableTripTemplates();
-            if($_SESSION['login']){
-                //html toDo
+            if(isset($_SESSION['login']) and $_SESSION['login']){
+                $homepage = new TemplateView("allTrips.php");
+                LayoutRendering::basicLayout($homepage, "headerUserLoggedIn");
             }else{
-                //html toDo
+                $homepage = new TemplateView("allTrips.php");
+                LayoutRendering::basicLayout($homepage, "headerLoggedOut");
             }
         }
         

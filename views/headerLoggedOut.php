@@ -47,7 +47,7 @@ use views\TemplateView;
                 <div
                     class="collapse navbar-collapse" id="navcol-1">
                     <ul class="nav navbar-nav mr-auto">
-                        <li class="nav-item" role="presentation"><a class="nav-link" href="AllTrips.html" style="color: #000000;">Trip overview</a></li>
+                        <li class="nav-item" role="presentation"><a class="nav-link" href="<?php echo $GLOBALS['ROOT_URL'] ?>/packageOverview" style="color: #000000;">Trip overview</a></li>
                     </ul><span class="ml-auto navbar-text actions"> <div class="topnav">
   <div class="login-container">
     <form action="index.php" method="post">
@@ -56,7 +56,7 @@ use views\TemplateView;
       <button id=loginButton type="submit">Login</button>
     </form>
   </div>
-</div><a class="btn btn-link btn-sm border rounded border-primary" role="button" href="Registration.html" style="background-color: #ffffff;color: #0080f7;padding-top: 2px;padding-bottom: 2px;margin-top: 4px;">Sign up</a></span>
+</div><a class="btn btn-link btn-sm border rounded border-primary" role="button" href="<?php echo $GLOBALS["ROOT_URL"]; ?>/registration" style="background-color: #ffffff;color: #0080f7;padding-top: 2px;padding-bottom: 2px;margin-top: 4px;">Sign up</a></span>
             </div>
     </div>
     </nav>

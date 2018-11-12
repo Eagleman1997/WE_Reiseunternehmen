@@ -6,6 +6,8 @@ use entities\Bus;
 use helpers\Validation;
 use helpers\Upload;
 use database\BusDBC;
+use views\LayoutRendering;
+use views\TemplateView;
 
 /**
  * Description of BusController

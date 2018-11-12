@@ -5,6 +5,8 @@ namespace controllers;
 use entities\Insurance;
 use database\InsuranceDBC;
 use helpers\Validation;
+use views\LayoutRendering;
+use views\TemplateView;
 
 /**
  * Description of InsuranceController

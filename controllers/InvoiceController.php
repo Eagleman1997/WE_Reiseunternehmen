@@ -3,10 +3,11 @@
 namespace controllers;
 
 use entities\Invoice;
-use database\InvoiceDBC;
 use database\TripDBC;
 use helpers\Validation;
 use helpers\Upload;
+use views\LayoutRendering;
+use views\TemplateView;
 
 /**
  * Controlls the Invoice storage and querys

@@ -169,11 +169,11 @@ Router::route("GET", "/login", function () {
     AuthController::loginView();
 });
 
-Router::route("GET", "/register", function () {
+Router::route("GET", "/registration", function () {
     AuthController::registerView();
 });
 
-Router::route("POST", "/register", function () {
+Router::route("POST", "/registration", function () {
     if(UserController::register()){
         Router::redirect("/logout");
     }

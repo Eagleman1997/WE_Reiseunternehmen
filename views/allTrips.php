@@ -44,7 +44,9 @@ use views\TemplateView;
     <div style="min-height: 850px;">
         <ul class="nav nav-tabs" style="margin-top: 15px;margin-bottom: 15px;">
             <li class="nav-item"><a class="nav-link active" role="tab" data-toggle="tab" href="#tab-1">All trips</a></li>
+            <?php if(isset($_SESSION['role']) and $_SESSION['role'] != "admin") : ?>
             <li class="nav-item"><a class="nav-link" role="tab" data-toggle="tab" href="#tab-2">My booked trips</a></li>
+            <?php endif; ?>
         </ul>
         <div class="tab-content">
             <div class="tab-pane active" role="tabpanel" id="tab-1">

@@ -2,6 +2,7 @@
 
 namespace controllers;
 
+use views\LayoutRendering;
 use views\TemplateView;
 
 /**

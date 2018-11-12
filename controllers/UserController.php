@@ -7,6 +7,8 @@ use entities\Trip;
 use entities\Participant;
 use database\UserDBC;
 use helpers\Validation;
+use views\LayoutRendering;
+use views\TemplateView;
 
 /**
  * Controls the Login and Logout of a User
