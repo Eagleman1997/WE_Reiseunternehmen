@@ -1,1 +1,0 @@
-assets: This folder will contain all the asset files, images, style-sheets and JavaScript files and if you wanna go even hard core, make separate directories for each type of files, which I personally do.
