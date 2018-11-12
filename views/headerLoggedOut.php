@@ -43,7 +43,7 @@ use views\TemplateView;
 <body>
     <div>
         <nav class="navbar navbar-light navbar-expand-md navigation-clean-button">
-            <div class="container-fluid"><a class="navbar-brand" href="<?php echo $GLOBALS['ROOT_URL'] ?>/homepage" data-bs-hover-animate="tada"></a><button class="navbar-toggler" data-toggle="collapse" data-target="#navcol-1"><span class="sr-only">noggle navigation</span><span class="navbar-toggler-icon"></span></button>
+            <div class="container-fluid"><a class="navbar-brand" href="<?php echo $GLOBALS['ROOT_URL'] ?>/login" data-bs-hover-animate="tada"></a><button class="navbar-toggler" data-toggle="collapse" data-target="#navcol-1"><span class="sr-only">noggle navigation</span><span class="navbar-toggler-icon"></span></button>
                 <div
                     class="collapse navbar-collapse" id="navcol-1">
                     <ul class="nav navbar-nav mr-auto">
