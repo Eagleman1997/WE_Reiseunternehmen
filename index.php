@@ -155,9 +155,7 @@ $user->setBirthDate("2000-01-01");
 $user->setPassword("Admin");
 $user->setRole("user");
  */
-session_destroy();
-$_SESSION['login'] = true;
-$_SESSION['role'] = "admin";
+
 
 $authFunction = function () {
     if (AuthController::authenticate()){

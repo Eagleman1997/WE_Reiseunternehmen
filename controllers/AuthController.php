@@ -2,6 +2,9 @@
 
 namespace controllers;
 
+use views\TemplateView;
+use views\LayoutRendering;
+
 
 /**
  * Controls the registration of a new User
@@ -26,8 +29,8 @@ class AuthController {
      * Gets the login-view
      */
     public static function loginView(){
-        echo "loginView</br>";
-        //html toDo
+        $homepage = new TemplateView("homepage.php");
+        LayoutRendering::basicLayout($homepage, "headerLoggedOut");
     }
     
     /**
