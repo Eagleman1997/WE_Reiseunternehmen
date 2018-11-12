@@ -57,19 +57,19 @@ class TripController {
     /**
      * Gets all TripTemplates (Admins all, the other roles all templates which are finished in creation)
      */
-    public static function getAllTripTemplates(){
+    public static function getAllTrips(){
         $tripDBC = new TripDBC();
-        $tripTemplates = $tripDBC->getAllTripTemplates();
+        $homepage = new TemplateView("allTrips.php");
         if(isset($_SESSION['role']) and $_SESSION['role'] == "admin"){
-            $homepage = new TemplateView("allTrips.php");
+            $homepage->tripTemplates = $tripDBC->getAllTripTemplates();
+            $homepage->trips = $tripDBC->getBookedTrips();
             LayoutRendering::basicLayout($homepage);
         }else{
-            $tripTemplates = $tripDBC->getBookableTripTemplates();
-            if(isset($_SESSION['login']) and $_SESSION['login']){
-                $homepage = new TemplateView("allTrips.php");
+            $homepage->tripTemplates = $tripDBC->getBookableTripTemplates();
+            if(isset($_SESSION['login'])){
                 LayoutRendering::basicLayout($homepage, "headerUserLoggedIn");
+                $homepage->trips = $tripDBC->getBookedTrips($_SESSION['userId']);
             }else{
-                $homepage = new TemplateView("allTrips.php");
                 LayoutRendering::basicLayout($homepage, "headerLoggedOut");
             }
         }
@@ -81,24 +81,24 @@ class TripController {
      * @return boolean|TripTemplate
      */
     public static function getTripTemplate($tripTemplateId){
-        echo "getTripTemplate</br>";
         $tripTemplate = new TripTemplate();
-        
         $id = Validation::positiveInt($tripTemplateId);
         if(!id){
             return false;
         }
         $tripTemplate->setId($id);
         
-        $tripTemplate = $tripTemplate->find();
-        
-        if($_SESSION['role'] == "admin"){
-            //html toDo
+        if(isset($_SESSION['role']) and $_SESSION['role'] == "admin"){
+            $adminTripOverview = new TemplateView("adminUnbookedTripOverview.php");
+            $adminTripOverview->tripTemplate = $tripTemplate->find();
+            LayoutRendering::basicLayout($adminTripOverview);
         }else{
-            if($_SESSION['login']){
-                //html toDo
+            $userTripOverview = new TemplateView("userUnbookedTripOverview.php");
+            $userTripOverview->tripTemplate = $tripTemplate->find();
+            if(isset($_SESSION['login'])){
+                LayoutRendering::basicLayout($userTripOverview, "headerUserLoggedIn");
             }else{
-                //html toDo
+                LayoutRendering::basicLayout($userTripOverview, "headerLoggedOut");
             }
         }
         
@@ -274,28 +274,9 @@ class TripController {
     }
     
     /**
-     * Get all booked Trips whether from a user or if an admin is requesting, he/she gets all the booked Trips
-     * (Trip and TripTemplate)
-     * @return boolean|array
-     */
-    public static function getBookedTrips(){
-        echo "getBookedTrips</br>";
-        $tripDBC = new TripDBC();
-        if($_SESSION['role'] == "admin"){
-            $trips = $tripDBC->getBookedTrips();
-            //html toDo
-        }else{
-            $trips = $tripDBC->getBookedTrips($_SESSION['userId']);
-            //html toDo
-        }
-    }
-    
-    /**
      * Get the requested booked Trip (TripTemplate, Bus, Hotel, Dayprograms, Insurance inclusive)
-     * @return boolean|Trip
      */
     public static function getBookedTrip($tripId){
-        echo "getBookedTrip</br>";
         $id = Validation::positiveInt($tripId);
         if(!$id){
             return false;
@@ -303,12 +284,14 @@ class TripController {
         $trip = new Trip();
         $trip->setId($id);
         
-        $trip = $trip->find();
-        
-        if($_SESSION['role'] == "admin"){
-            //html toDo
+        if(isset($_SESSION['role']) and $_SESSION['role'] == "admin"){
+            $adminBookedTripOverview = new TemplateView("adminBookedTripOverview.php");
+            $adminBookedTripOverview->trip = $trip->find();
+            LayoutRendering::basicLayout($adminBookedTripOverview);
         }else{
-            //html toDo
+            $userBookedTripOverview = new TemplateView("userBookedTripOverview.php");
+            $userBookedTripOverview->trip = $trip->find();
+            LayoutRendering::basicLayout($userBookedTripOverview);
         }
     }
     

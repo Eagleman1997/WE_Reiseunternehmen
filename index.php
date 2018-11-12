@@ -277,11 +277,11 @@ Router::route_auth("DELETE", "/admin/insurance/{id}", $authFunction, function ($
 
 //no use of $authFunctin necessary to allow users without a loggin to see the packageOverview
 Router::route("GET", "/packageOverview", function () {
-    TripController::getAllTripTemplates();
+    TripController::getAllTrips();
 });
 
-Router::route_auth("GET", "/admin/packageOverview", $authFunction, function () {
-    TripController::getAllTripTemplates();
+Router::route_auth("GET", "admin/packageOverview", $authFunction, function () {
+        TripController::getAllTrips();
 });
 
 Router::route_auth("POST", "/admin/packageOverview", $authFunction, function () {
@@ -321,14 +321,6 @@ Router::route_auth("POST", "/admin/packageOverview/package", $authFunction, func
 Router::route_auth("DELETE", "/admin/packageOverview/package/{id}", $authFunction, function ($id) {
     TripController::deleteDayprogram($id);
     //AJAX?
-});
-
-Router::route_auth("GET", "/bookedTrips", $authFunction, function () {
-        TripController::getBookedTrips();
-});
-
-Router::route_auth("GET", "admin/bookedTrips", $authFunction, function () {
-        TripController::getBookedTrips();
 });
 
 Router::route_auth("DELETE", "/admin/bookedTrips/{id}", $authFunction, function ($id) {
