@@ -60,7 +60,7 @@ class InvoiceController{
     /**
      * Gets the final Invoice of the Trip if invoiceRegistered is set on the Trip
      */
-    public static function getFinalInvoice($tripId){
+    public static function getFinalSettlement($tripId){
         if($_SESSION['role'] != "admin"){
             return false;
         }
@@ -85,7 +85,7 @@ class InvoiceController{
      * Gets a specific Invoice
      * @return boolean|Invoice
      */
-    public static function getUsersInvoice($tripId){
+    public static function getCustomersInvoice($tripId){
         echo "getInvoice</br>";
         $id = Validation::positiveInt($tripId);
         if(!$id){

@@ -1,14 +1,3 @@
-<!-- <html>
-    <head>
-        
-    </head>
-    <body>
-        <form method="GET" action="admin/bookedtrips/detail/finalSettlement/1">
-            <button type="submit">click</button>
-        </form>
-    </body>
-</html>
--->
 <?php
 
 use router\Router;
@@ -43,7 +32,6 @@ use entities\TripTemplate;
 use database\TripDBC;
 use database\InvoiceDBC;
 use helpers\Upload;
-
 
 session_start();
 require_once 'helpers/Autoloader.php';
@@ -372,15 +360,15 @@ Router::route_auth("PUT", "/admin/bookedtrips/detail/{id}", $authFunction, funct
 });
 
 Router::route_auth("GET", "/admin/bookedtrips/detail/invoice/{id}", $authFunction, function ($id) {
-    InvoiceController::getUsersInvoice($id);
+    InvoiceController::getCustomersInvoice($id);
 });
 
 Router::route_auth("GET", "/bookedtrips/detail/invoice/{id}", $authFunction, function ($id) {
-    InvoiceController::getUsersInvoice($id);
+    InvoiceController::getCustomersInvoice($id);
 });
 
-Router::route_auth("GET", "/admin/bookedtrips/detail/finalSettlement/{id}", $authFunction, function ($id) {
-    InvoiceController::getFinalInvoice($id);
+Router::route_auth("GET", "admin/bookedtrips/detail/finalSettlement/{id}", $authFunction, function ($id) {
+    InvoiceController::getFinalSettlement($id);
 });
 
 
