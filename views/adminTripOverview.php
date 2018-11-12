@@ -6,6 +6,7 @@
 use views\TemplateView;
 
 isset($this->trips) ? $trips = $this->trips : $trips = array();
+isset($this->invoices) ? $invoices = $this->invoices : $invoices = array();
 isset($this->trips->getTripTemplate->getDayprograms) ? $dayprograms = $this->$dayprograms : $$dayprograms = array();
 
 
@@ -45,7 +46,7 @@ dayprograms
                                             <td><?php echo TemplateView::noHTML($trips->getTripTemplate()->getDescription()); ?> </td>
                                             <td><?php echo TemplateView::noHTML($trips->getDepartureDate()); ?> </td>
                                             <td><?php echo TemplateView::noHTML($trips->getTripTemplate()->getPrice()); ?> </td>
-                                            <td><?php echo TemplateView::noHTML($trips->getTripTemplate()->getBus()); ?> </td>
+                                            <td><?php echo TemplateView::noHTML($trips->getTripTemplate()->getBus()->getPicturePath()); ?> </td>
                                         </tr>
                                     <?php endforeach; ?>
                                 </tbody>
@@ -155,30 +156,21 @@ dayprograms
                                                 </tr>
                                             </thead>
                                             <tbody>
-                                                <tr>
-                                                    <td>Hotel</td>
-                                                    <td>Hotel Sternen</td>
-                                                    <td>21.10.2018</td>
-                                                    <td>120.00</td>
-                                                    <td><a href="assets/img/Beach.jpg" download="Name of file">
-                                                            <img src="assets/img/paper-clip.png" alt="Download" width="25px" height="25px">
-                                                        </a>
-
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <td>Bus</td>
-                                                    <td>Hotel Gehrig</td>
-                                                    <td>05.09.2018</td>
-                                                    <td>75.00</td>
-                                                    <td><a href="assets/img/Bus%20travel.jpg" download="Name of file">
-                                                            <img src="assets/img/paper-clip.png" alt="Download" width="25px" height="25px">
-                                                        </a>
-
-                                                    </td>
+                                                <?php foreach ($this->invoices as $invoice): ?>
+                                                    <tr>
+                                                        <td><?php echo TemplateView::noHTML($invoice->getType()); ?></td>
+                                                        <td><?php echo TemplateView::noHTML($invoice->getDescription()); ?> </td>
+                                                        <td><?php echo TemplateView::noHTML($invoice->getDate()); ?> </td>
+                                                        <td><?php echo TemplateView::noHTML($invoice->getPrice()); ?> </td>
+                                                        <td><a href="<?php $invoice->getPdfPath(); ?>" download="Invoice">
+                                                                <img src="assets/img/paper-clip.png" alt="Your invoice" width="25px" height="25px">
+                                                            </a>
+                                                        </td>
+                                                    </tr>
+                                                <?php endforeach; ?>
                                                 </tr>
                                             </tbody>
-                                        </table>
+                                        </table>    
                                     </div>
                                 </div>
                             </div>
