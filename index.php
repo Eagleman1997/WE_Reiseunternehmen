@@ -264,13 +264,17 @@ Router::route_auth("GET", "admin/packageOverview", $authFunction, function () {
         TripController::getAllTrips();
 });
 
-Router::route_auth("POST", "/admin/packageOverview", $authFunction, function () {
+Router::route_auth("GET", "admin/tripTemplates", $authFunction, function () {
+        TripController::getAllTripTemplates();
+});
+
+Router::route_auth("POST", "/admin/tripTemplates", $authFunction, function () {
     if(TripController::createTripTemplate()){
         //Update with AJAX
     }
 });
 
-Router::route_auth("DELETE", "/admin/packageOverview/{id}", $authFunction, function ($id) {
+Router::route_auth("DELETE", "/admin/tripTemplates/{id}", $authFunction, function ($id) {
     TripController::deleteTripTemplate($id);
 });
 
@@ -284,21 +288,21 @@ Router::route_auth("POST", "/packageOverview/package", $authFunction, function (
     }
 });
 
-Router::route_auth("GET", "/admin/packageOverview/package/{id}", $authFunction, function ($id) {
+Router::route_auth("GET", "/admin/tripTemplates/package/{id}", $authFunction, function ($id) {
     TripController::getTripTemplate($id);
 });
 
-Router::route_auth("PUT", "/admin/packageOverview/package/{id}", $authFunction, function ($id) {
+Router::route_auth("PUT", "/admin/tripTemplates/package/{id}", $authFunction, function ($id) {
     TripController::changeBookableOfTripTemplate($id);
 });
 
-Router::route_auth("POST", "/admin/packageOverview/package", $authFunction, function () {
+Router::route_auth("POST", "/admin/tripTemplates/package", $authFunction, function () {
     if(TripController::createDayprogram()){
         //Update with AJAX
     }
 });
 
-Router::route_auth("DELETE", "/admin/packageOverview/package/{id}", $authFunction, function ($id) {
+Router::route_auth("DELETE", "/admin/tripTemplates/package/{id}", $authFunction, function ($id) {
     TripController::deleteDayprogram($id);
     //AJAX?
 });
