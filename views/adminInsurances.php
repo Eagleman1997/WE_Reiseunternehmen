@@ -13,14 +13,14 @@ isset($this->insurances) ? $insurances = $this->insurances : $insurances = array
     <section>
         <div id="wrapper">
             <div id="sidebar-wrapper" style="font-family: Capriola, sans-serif;">
-                <ul class="sidebar-nav">
-                    <li class="sidebar-brand"> <a href="AdminMain.html"><strong>Administration main</strong></a></li>
-                    <li> <a href="AdminTripTemplates.html">Trip templates</a></li>
+                <ul class="sidebar-nav"> 
+                    <li class="sidebar-brand"> <a href="<?php echo $GLOBALS['ROOT_URL'] ?>/admin"><strong>Administration main</strong></a></li>
+                    <li> <a href="<?php echo $GLOBALS['ROOT_URL'] ?>/admin/tripTemplates">Trip templates</a></li>
                     <li> </li>
-                    <li> <a href="AdminUsers.html">Users</a></li>
-                    <li> <a href="AdminHotels.html">Hotels</a></li>
-                    <li> <a href="AdminBuses.html">Buses</a></li>
-                    <li> <a href="AdminInsurances.html" style="background-color: rgba(255,255,255,0.2);">Insurances</a></li>
+                    <li> <a href="<?php echo $GLOBALS['ROOT_URL'] ?>/admin/users">Users</a></li>
+                    <li> <a href="<?php echo $GLOBALS['ROOT_URL'] ?>/admin/hotels" >Hotels</a></li>
+                    <li> <a href="<?php echo $GLOBALS['ROOT_URL'] ?>/admin/buses" >Buses</a></li>
+                    <li> <a href="<?php echo $GLOBALS['ROOT_URL'] ?>/admin/insurances" style="background-color: rgba(255,255,255,0.2);">Insurances</a></li>  
                 </ul>
             </div>
             <div class="page-content-wrapper">

@@ -16,11 +16,11 @@ isset($this->users) ? $users = $this->users : $users = array();
             <div id="sidebar-wrapper" style="font-family: Capriola, sans-serif;">
                 <ul class="sidebar-nav">
                     <li class="sidebar-brand"> <a href="<?php echo $GLOBALS['ROOT_URL'] ?>/admin"><strong>Administration main</strong></a></li>
-                    <li> <a href="<?php echo $GLOBALS['ROOT_URL'] ?>/admin/packageOverview">Trip templates</a></li>
+                    <li> <a href="<?php echo $GLOBALS['ROOT_URL'] ?>/admin/tripTemplates">Trip templates</a></li>
                     <li> </li>
                     <li> <a href="<?php echo $GLOBALS['ROOT_URL'] ?>/admin/users" style="background-color: rgba(255,255,255,0.2);">Users</a></li>
-                    <li> <a href="<?php echo $GLOBALS['ROOT_URL'] ?>/admin/hotels">Hotels</a></li>
-                    <li> <a href="<?php echo $GLOBALS['ROOT_URL'] ?>/admin/buses">Buses</a></li>
+                    <li> <a href="<?php echo $GLOBALS['ROOT_URL'] ?>/admin/hotels" >Hotels</a></li>
+                    <li> <a href="<?php echo $GLOBALS['ROOT_URL'] ?>/admin/buses" >Buses</a></li>
                     <li> <a href="<?php echo $GLOBALS['ROOT_URL'] ?>/admin/insurances">Insurances</a></li>
                 </ul>
             </div>

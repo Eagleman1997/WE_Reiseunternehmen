@@ -13,7 +13,7 @@ use views\TemplateView;
             <div id="sidebar-wrapper" style="font-family: Capriola, sans-serif;">
                 <ul class="sidebar-nav">
                     <li class="sidebar-brand"> <a href="<?php echo $GLOBALS['ROOT_URL'] ?>/admin" style="background-color: rgba(255,255,255,0.2);"><strong>Administration main</strong></a></li>
-                    <li> <a href="<?php echo $GLOBALS['ROOT_URL'] ?>/admin/packageOverview">Trip templates</a></li>
+                    <li> <a href="<?php echo $GLOBALS['ROOT_URL'] ?>/admin/tripTemplates">Trip templates</a></li>
                     <li> </li>
                     <li> <a href="<?php echo $GLOBALS['ROOT_URL'] ?>/admin/users">Users</a></li>
                     <li> <a href="<?php echo $GLOBALS['ROOT_URL'] ?>/admin/hotels">Hotels</a></li>
