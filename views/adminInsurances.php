@@ -103,3 +103,5 @@ isset($this->insurances) ? $insurances = $this->insurances : $insurances = array
             </div>
         </div>
     </section>
+    
+    <script src="assets/js/Sidebar-Menu.js"></script>

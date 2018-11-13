@@ -108,3 +108,5 @@ isset($this->hotels) ? $hotels = $this->hotels : $hotels = array();
             </div>
         </div>
     </section>
+    
+    <script src="assets/js/Sidebar-Menu.js"></script>

@@ -112,3 +112,5 @@ isset($this->buses) ? $buses = $this->buses : $buses = array();
             </div>
         </div>
     </section>
+    
+     <script src="assets/js/Sidebar-Menu.js"></script>

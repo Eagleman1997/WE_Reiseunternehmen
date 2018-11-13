@@ -29,3 +29,5 @@ use views\TemplateView;
             </div>
         </div>
     </section>
+    
+     <script src="assets/js/Sidebar-Menu.js"></script>
