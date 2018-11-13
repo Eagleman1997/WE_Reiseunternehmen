@@ -14,25 +14,6 @@ use controllers\TripController;
 use controllers\UserController;
 use controllers\ErrorController;
 
-//just for testing purpose
-use database\DBConnection;
-use entities\User;
-use entities\Trip;
-use entities\Dayprogram;
-use entities\Insurance;
-use entities\Invoice;
-use entities\Participant;
-use database\UserDBC;
-use database\HotelDBC;
-use entities\Hotel;
-use helpers\Validation;
-use entities\Bus;
-use database\BusDBC;
-use entities\TripTemplate;
-use database\TripDBC;
-use database\InvoiceDBC;
-use helpers\Upload;
-
 session_start();
 require_once 'helpers/Autoloader.php';
 
@@ -174,9 +155,8 @@ Router::route("GET", "/registration", function () {
 });
 
 Router::route("POST", "/registration", function () {
-    if(UserController::register()){
-        Router::redirect("/logout");
-    }
+    UserController::register();
+    Router::redirect("/");
 });
 
 Router::route("POST", "/login", function () {
@@ -233,45 +213,45 @@ Router::route_auth("DELETE", "/travelers/{id}", $authFunction, function ($id) {
     UserController::deleteParticipant($id);
 });
 
-Router::route_auth("GET", "/admin/bus", $authFunction, function () {
+Router::route_auth("GET", "/admin/buses", $authFunction, function () {
     BusController::getAllBuses();
 });
 
-Router::route_auth("POST", "/admin/bus", $authFunction, function () {
+Router::route_auth("POST", "/admin/buses", $authFunction, function () {
     if(BusController::createBus()){
         //Update with AJAX
     }
 });
 
-Router::route_auth("DELETE", "/admin//bus/{id}", $authFunction, function ($id) {
+Router::route_auth("DELETE", "/admin/buses/{id}", $authFunction, function ($id) {
     BusController::deleteBus($id);
 });
 
-Router::route_auth("GET", "/admin/hotel", $authFunction, function () {
+Router::route_auth("GET", "/admin/hotels", $authFunction, function () {
     HotelController::getAllHotels();
 });
 
-Router::route_auth("POST", "/admin/hotel", $authFunction, function () {
+Router::route_auth("POST", "/admin/hotels", $authFunction, function () {
     if(HotelController::createHotel()){
         //Update with AJAX
     }
 });
 
-Router::route_auth("DELETE", "/admin/hotel/{id}", $authFunction, function ($id) {
+Router::route_auth("DELETE", "/admin/hotels/{id}", $authFunction, function ($id) {
     HotelController::deleteHotel($id);
 });
 
-Router::route_auth("GET", "/admin/insurance", $authFunction, function () {
+Router::route_auth("GET", "/admin/insurances", $authFunction, function () {
     InsuranceController::getAllInsurances();
 });
 
-Router::route_auth("POST", "/admin/insurance", $authFunction, function () {
+Router::route_auth("POST", "/admin/insurances", $authFunction, function () {
     if(InsuranceController::createInsurance()){
         //Update with AJAX
     }
 });
 
-Router::route_auth("DELETE", "/admin/insurance/{id}", $authFunction, function ($id) {
+Router::route_auth("DELETE", "/admin/insurances/{id}", $authFunction, function ($id) {
     InsuranceController::deleteInsurance($id);
 });
 
@@ -349,11 +329,11 @@ Router::route_auth("PUT", "/admin/bookedtrips/detail/{id}", $authFunction, funct
     TripController::changeInvoicesRegistered($id);
 });
 
-Router::route_auth("GET", "/admin/bookedtrips/detail/invoice/{id}", $authFunction, function ($id) {
+Router::route_auth("GET", "/admin/bookedtrips/detail/invoices/{id}", $authFunction, function ($id) {
     InvoiceController::getCustomersInvoice($id);
 });
 
-Router::route_auth("GET", "/bookedtrips/detail/invoice/{id}", $authFunction, function ($id) {
+Router::route_auth("GET", "/bookedtrips/detail/invoices/{id}", $authFunction, function ($id) {
     InvoiceController::getCustomersInvoice($id);
 });
 

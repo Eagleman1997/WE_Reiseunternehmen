@@ -22,7 +22,7 @@ class UserDBC extends DBConnector {
         if(!$stmt){
             return false;
         }
-        $stmt->bind_param('sssisssssi', $firstName, $lastName, $gender, $street, $zipCode,
+        $stmt->bind_param('ssssisssssi', $firstName, $lastName, $gender, $street, $zipCode,
                 $location, $email, $role, $birthDate, $password, $deleted);
         $firstName = $user->getFirstName();
         $lastName = $user->getLastName();

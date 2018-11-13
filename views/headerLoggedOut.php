@@ -50,7 +50,7 @@ use views\TemplateView;
                         <li class="nav-item" role="presentation"><a class="nav-link" href="<?php echo $GLOBALS['ROOT_URL'] ?>/packageOverview" style="color: #000000;">Trip overview</a></li>
                     </ul><span class="ml-auto navbar-text actions"> <div class="topnav">
   <div class="login-container">
-    <form action="index.php" method="post">
+    <form action="<?php echo $GLOBALS['ROOT_URL'] ?>/login" method="post">
       <input type="email" required placeholder="Email" name="email">
       <input type="password" required placeholder="Password" name="password">
       <button id=loginButton type="submit">Login</button>

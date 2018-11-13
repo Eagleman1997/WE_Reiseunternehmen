@@ -22,29 +22,28 @@ class UserController {
      * 
      */
     public static function register(){
-        echo "register</br>";
         $user = new User();
-        $user->setFirstName(filter_input(INPUT_POST, $_POST['firstName'], FILTER_DEFAULT));
-        $user->setLastName(filter_input(INPUT_POST, $_POST['lastName'], FILTER_DEFAULT));
-        $user->setGender(filter_input(INPUT_POST, $_POST['gender'], FILTER_DEFAULT));
-        $user->setStreet(filter_input(INPUT_POST, $_POST['street'], FILTER_DEFAULT));
-        $zipCode = Validation::zipCode(filter_input(INPUT_POST, $_POST['zipCode'], FILTER_VALIDATE_INT));
+        $user->setFirstName(\filter_input(\INPUT_POST, 'firstName', \FILTER_DEFAULT));
+        $user->setLastName(\filter_input(\INPUT_POST, 'lastName', \FILTER_DEFAULT));
+        $user->setGender(\filter_input(\INPUT_POST, 'gender', \FILTER_DEFAULT));
+        $user->setStreet(\filter_input(\INPUT_POST, 'street', \FILTER_DEFAULT));
+        $zipCode = Validation::zipCode(\filter_input(\INPUT_POST, 'zipCode', \FILTER_VALIDATE_INT));
         if(!$zipCode){
             return false;
         }
         $user->setZipCode($zipCode);
-        $user->setLocation(filter_input(INPUT_POST, $_POST['location'], FILTER_DEFAULT));
-        $email = filter_input(INPUT_POST, $_POST['email'], FILTER_VALIDATE_EMAIL);
+        $user->setLocation(\filter_input(\INPUT_POST, 'location', \FILTER_DEFAULT));
+        $email = filter_input(\INPUT_POST, 'email', \FILTER_VALIDATE_EMAIL);
         if(!$email){
             return false;
         }
         $user->setEmail($email);
-        $birthDate = Validation::date(filter_input(INPUT_POST, $_POST['birthDate'], FILTER_DEFAULT));
+        $birthDate = Validation::date(\filter_input(\INPUT_POST, 'birthDate', \FILTER_DEFAULT));
         if(!$birthDate){
             return false;
         }
         $user->setBirthDate($birthDate);
-        $user->setPassword(filter_input(INPUT_POST, $_POST['password'], FILTER_DEFAULT));
+        $user->setPassword(\filter_input(\INPUT_POST, 'password', \FILTER_DEFAULT));
         //default role user (not admin)
         $user->setRole("user");
         
@@ -58,15 +57,13 @@ class UserController {
      * @param type $password
      */
     public static function login(){
-        echo "login</br>";
-        return true;
         $user = new User();
-        $email = filter_input(INPUT_POST, $_POST['email'], FILTER_VALIDATE_EMAIL);
+        $email = \filter_input(\INPUT_POST, 'email', \FILTER_VALIDATE_EMAIL);
         if(!$email){
             return false;
         }
         $user->setEmail($email);
-        $user->setPassword(filter_input(INPUT_POST, $_POST['password'], FILTER_DEFAULT));
+        $user->setPassword(\filter_input(\INPUT_POST, 'password', \FILTER_DEFAULT));
         
         return $user->login();
     }
@@ -83,14 +80,15 @@ class UserController {
     
     /**
      * Gets all Users
-     * @return boolean\array
      */
     public static function getAllUsers(){
-        echo "getAllUsers</br>";
-        if($_SESSION['role'] == "admin"){
+        if(isset($_SESSION['role']) and $_SESSION['role'] == "admin"){
             $userDBC = new UserDBC();
             $users = $userDBC->getAllUsers();
-            //html toDo
+            
+            $adminUsers = new TemplateView("adminUsers.php");
+            $adminUsers->users = $users;
+            LayoutRendering::basicLayout($adminUsers);
         }
     }
     
@@ -195,14 +193,13 @@ class UserController {
      * Provides the homepage (after login) of a admin or user
      */
     public static function getHomepage(){
-        echo "getHomepage</br>";
-        if($_SESSION['role'] == "admin"){
-            echo "homepage admin</br>";
-            //html toDo
+        if(isset($_SESSION['role']) and $_SESSION['role'] == "admin"){
+            $homepage = new TemplateView("adminMain.php");
+            LayoutRendering::basicLayout($homepage);
         }
-        if($_SESSION['role'] == "user"){
-            echo "homepage user</br>";
-            //html toDo
+        if(isset($_SESSION['role']) and $_SESSION['role'] == "user"){
+            $homepage = new TemplateView("homepage.php");
+            LayoutRendering::basicLayout($homepage, "headerUserLoggedIn");
         }
     }
 }

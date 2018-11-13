@@ -43,13 +43,13 @@ use views\TemplateView;
 <body style="background-size: cover;background-repeat: no-repeat;background-position: center;background-color: rgb(241,247,252);">
     <div>
         <nav class="navbar navbar-light navbar-expand-md navigation-clean-button">
-            <div class="container-fluid"><a class="navbar-brand" href="index.html" data-bs-hover-animate="tada"></a><button class="navbar-toggler" data-toggle="collapse" data-target="#navcol-1"><span class="sr-only">Toggle navigation</span><span class="navbar-toggler-icon"></span></button>
+            <div class="container-fluid"><a class="navbar-brand" href="<?php echo $GLOBALS['ROOT_URL'] ?>" data-bs-hover-animate="tada"></a><button class="navbar-toggler" data-toggle="collapse" data-target="#navcol-1"><span class="sr-only">Toggle navigation</span><span class="navbar-toggler-icon"></span></button>
                 <div
                     class="collapse navbar-collapse float-right" id="navcol-1">
                     <ul class="nav navbar-nav">
-                        <li class="nav-item" role="presentation"><a class="nav-link" href="AllTrips.html" style="color: #000000;">Trip overview</a></li>
-                        <li class="nav-item" role="presentation"><a class="nav-link" href="AddTravelers.html" style="color: #000000;">Add travelers</a></li>
-                    </ul><span class="ml-auto navbar-text actions" style="background-position: right;color: #000000;"> <a class="float-right" href="index.html" style="background-position: right;">Sign out</a></span></div>
+                        <li class="nav-item" role="presentation"><a class="nav-link" href="<?php echo $GLOBALS['ROOT_URL'] ?>/packageOverview" style="color: #000000;">Trip overview</a></li>
+                        <li class="nav-item" role="presentation"><a class="nav-link" href="<?php echo $GLOBALS['ROOT_URL'] ?>/travelers" style="color: #000000;">Add travelers</a></li>
+                    </ul><span class="ml-auto navbar-text actions" style="background-position: right;color: #000000;"> <a class="float-right" href="<?php echo $GLOBALS['ROOT_URL'] ?>/logout" style="background-position: right;">Sign out</a></span></div>
     </div>
     </nav>
     </div>
