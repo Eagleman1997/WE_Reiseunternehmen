@@ -269,9 +269,8 @@ Router::route_auth("GET", "admin/tripTemplates", $authFunction, function () {
 });
 
 Router::route_auth("POST", "/admin/tripTemplates", $authFunction, function () {
-    if(TripController::createTripTemplate()){
-        //Update with AJAX
-    }
+    TripController::createTripTemplate();
+    Router::redirect("/admin/tripTemplates");
 });
 
 Router::route_auth("DELETE", "/admin/tripTemplates/{id}", $authFunction, function ($id) {

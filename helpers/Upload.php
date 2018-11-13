@@ -8,6 +8,9 @@ namespace helpers;
  */
 class Upload {
     
+    private static $imgPath = "views/assets/img/";
+    private static $pdfPath = "views/assets/pdfs/";
+    
     /** (tested)
      * Stores an jpg, jpeg or png into assets/pictures
      * @param type $file
@@ -29,9 +32,9 @@ class Upload {
         
         if(in_array($fileActualExt, $allowed)){
             if($fileError === 0){
-                if($fileSize < 1000000){
-                    $fileNameNew = $fileExt[0].uniqid('', true).".".$fileActualExt;
-                    $fileDestination = 'views/assets/img/'.$fileNameNew;
+                if($fileSize < 10000000){
+                    $fileNameNew = self::$imgPath.$fileExt[0].str_replace(".", "", uniqid('', true)).".".$fileActualExt;
+                    $fileDestination = $fileNameNew;
                     move_uploaded_file($fileTmpName, $fileDestination);
                     return $fileNameNew;
                 }else{
@@ -67,9 +70,9 @@ class Upload {
         
         if(in_array($fileActualExt, $allowed)){
             if($fileError === 0){
-                if($fileSize < 1000000){
-                    $fileNameNew = $fileExt[0].uniqid('', true).".".$fileActualExt;
-                    $fileDestination = 'views/assets/pdfs/'.$fileNameNew;
+                if($fileSize < 10000000){
+                    $fileNameNew = self::$pdfPath.$fileExt[0].str_replace(".", "", uniqid('', true)).".".$fileActualExt;
+                    $fileDestination = $fileNameNew;
                     move_uploaded_file($fileTmpName, $fileDestination);
                     return $fileNameNew;
                 }else{

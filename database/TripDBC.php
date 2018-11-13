@@ -108,6 +108,11 @@ class TripDBC extends DBConnector {
         }
 
         $stmt->close();
+        
+        $busDBC = new BusDBC();
+        foreach($templates as $template){
+            $template->setBus($busDBC->findBusById($template->getFkBusId()));
+        }
         return $templates;
     }
     

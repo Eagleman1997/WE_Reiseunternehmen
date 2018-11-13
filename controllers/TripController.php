@@ -6,6 +6,7 @@ use entities\Trip;
 use entities\TripTemplate;
 use entities\Dayprogram;
 use database\TripDBC;
+use database\BusDBC;
 use helpers\Validation;
 use helpers\Upload;
 use views\LayoutRendering;
@@ -23,35 +24,34 @@ class TripController {
      */
     public static function createTripTemplate(){
         echo "createTripTemplate</br>";
-        if($_SESSION['role'] != "admin"){
+        if(!isset($_SESSION['role']) or (isset($_SESSION['role']) and $_SESSION['role'] != "admin")){
             return false;
         }
         $tripTemplate = new TripTemplate();
-        $tripTemplate->setName(filter_input(INPUT_POST, $_POST['name'], FILTER_DEFAULT));
-        $tripTemplate->setDescription(filter_input(INPUT_POST, $_POST['description'], FILTER_DEFAULT));
-        $minAllocation = Validation::positiveInt(filter_input(INPUT_POST, $_POST['minAllocation'], FILTER_VALIDATE_INT));
+        $tripTemplate->setName(\filter_input(\INPUT_POST, 'name', \FILTER_DEFAULT));
+        $tripTemplate->setDescription(\filter_input(\INPUT_POST, 'description', \FILTER_DEFAULT));
+        $minAllocation = Validation::positiveInt(\filter_input(\INPUT_POST, 'minAllocation', \FILTER_VALIDATE_INT));
         if(!$minAllocation){
             return false;
         }
         $tripTemplate->setMinAllocation($minAllocation);
-        $maxAllocation = Validation::positiveInt(filter_input(INPUT_POST, $_POST['maxAllocation'], FILTER_VALIDATE_INT));
+        $maxAllocation = Validation::positiveInt(\filter_input(\INPUT_POST, 'maxAllocation', \FILTER_VALIDATE_INT));
         if(!$maxAllocation){
             return false;
         }
         $tripTemplate->setMaxAllocation($maxAllocation);
-        $picture = $_FILES['picture'];
-        if($picture){
+        if(isset($_FILES['img'])){
             $tripTemplate->setPicturePath(Upload::uploadImage());
         }else{
             $tripTemplate->setPicturePath("views/assets/img/defaultTrip.jpg");
         }
-        $fk_bus_id = Validation::positiveInt(filter_input(INPUT_POST, $_POST['busId'], FILTER_VALIDATE_INT));
+        $fk_bus_id = Validation::positiveInt(\filter_input(\INPUT_POST, 'busId', \FILTER_VALIDATE_INT));
         if(!$fk_bus_id){
             return false;
         }
         $tripTemplate->setFkBusId($fk_bus_id);
         
-        return $tripTemplate->create();
+        $tripTemplate->create();
     }
     
     /**
@@ -80,9 +80,11 @@ class TripController {
      * Gets to the admins TripTemplate overview
      */
     public static function getAllTripTemplates(){
-        $tripDBC = new TripDBC();
         if(isset($_SESSION['role']) and $_SESSION['role'] == "admin"){
+            $tripDBC = new TripDBC();
+            $busDBC = new BusDBC();
             $tripTemplates = new TemplateView("adminTripTemplates.php");
+            $tripTemplates->buses = $busDBC->getAllBuses();
             $tripTemplates->tripTemplates = $tripDBC->getAllTripTemplates();
             LayoutRendering::basicLayout($tripTemplates);
         }
