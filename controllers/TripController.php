@@ -59,12 +59,12 @@ class TripController {
      */
     public static function getAllTrips(){
         $tripDBC = new TripDBC();
-        $homepage = new TemplateView("allTrips.php");
         if(isset($_SESSION['role']) and $_SESSION['role'] == "admin"){
-            $homepage->tripTemplates = $tripDBC->getAllTripTemplates();
-            $homepage->trips = $tripDBC->getBookedTrips();
-            LayoutRendering::basicLayout($homepage);
+            $tripTemplates = new TemplateView("adminTripTemplates.php");
+            $tripTemplates->tripTemplates = $tripDBC->getAllTripTemplates();
+            LayoutRendering::basicLayout($tripTemplates);
         }else{
+            $homepage = new TemplateView("allTrips.php");
             $homepage->tripTemplates = $tripDBC->getBookableTripTemplates();
             if(isset($_SESSION['login'])){
                 LayoutRendering::basicLayout($homepage, "headerUserLoggedIn");
