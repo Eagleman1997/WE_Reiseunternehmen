@@ -27,13 +27,13 @@ isset($this->buses) ? $buses = $this->buses : $buses = array();
             <div class="page-content-wrapper">
                 <div class="container-fluid" style="background-image: url(&quot;assets/img/rome.jpg&quot;);background-position: center;background-size: cover;background-repeat: no-repeat;min-height: 900px;margin-bottom: 0px;padding-bottom: 40px;"><a class="btn btn-link bg-light" role="button" href="#menu-toggle" id="menu-toggle"><i class="fa fa-bars"></i></a>
                     <h2 class="text-center" style="font-family: Capriola, sans-serif;color: #000000;"><strong>Add a new bus.</strong></h2>
-                    <form class="form-inline pulse animated" action="index.php" method="post" enctype="multipart/form-data" id="busForm" style="background-color: rgba(255,255,255,0.72);margin: 20px;padding: 20px;font-family: Capriola, sans-serif;">
+                    <form class="form-inline pulse animated" action="<?php echo $GLOBALS['ROOT_URL'] ?>/admin/buses" method="post" enctype="multipart/form-data" id="busForm" style="background-color: rgba(255,255,255,0.72);margin: 20px;padding: 20px;font-family: Capriola, sans-serif;">
                         <div class="form-group" style="width: 400px;margin: 10px;margin-right: 10px;"><label class="labelsFormTripTemplates">Bus name</label><textarea class="form-control" name="name" required="" minlength="3" style="width: 400px;"></textarea></div>
                         <div class="form-group" style="margin: 10px;"><label class="labelsFormTripTemplates">Description</label><textarea class="form-control" name="description" required="" minlength="3" style="margin-right: 0px;width: 400px;"></textarea></div>
                         <div class="form-group" style="margin: 10px;width: 150px;"><label class="labelsFormTripTemplates" style="padding: 0x;">Number of seats</label><input class="form-control" type="number" name="seats" value="12" required="" min="12" step="1" style="width: 100px;margin-right: 0px;"></div>
                         <div
-                            class="form-group" style="margin: 10px;width: 200px;margin-right: 50px;"><label class="labelsFormTripTemplates">Price per day</label><input class="form-control" type="number" name="price" required="" min="1"></div>
-                        <div class="form-group mt-auto" style="margin-right: 100px;padding: 10px;padding-right: 50px;margin-bottom: 20px;padding-bottom: 0px;"><label class="labelsFormTripTemplates" style="padding: 0;">Picture</label><input type="file" name="picture_path" required="" style="font-family: Capriola, sans-serif;background-color: #ffffff;margin-right: 0;width: 400px;"></div>
+                            class="form-group" style="margin: 10px;width: 200px;margin-right: 50px;"><label class="labelsFormTripTemplates">Price per day</label><input class="form-control" type="number" name="pricePerDay" step="0.05" required="" min="1"></div>
+                        <div class="form-group mt-auto" style="margin-right: 100px;padding: 10px;padding-right: 50px;margin-bottom: 20px;padding-bottom: 0px;"><label class="labelsFormTripTemplates" style="padding: 0;">Picture</label><input type="file" name="img" required="" style="font-family: Capriola, sans-serif;background-color: #ffffff;margin-right: 0;width: 400px;"></div>
                         <div class="form-group mt-auto"
                              style="margin-top: 0px;padding-top: 20px;"><button class="btn btn-primary btn-block" type="submit" style="width: 100px;margin: 10px;margin-top: 10px;margin-left: 10px;">Save</button></div>
                     </form>
@@ -64,7 +64,7 @@ isset($this->buses) ? $buses = $this->buses : $buses = array();
                                         <tbody id="busTableBody">
                                             <?php foreach ($this->buses as $bus): ?>
                                                 <tr>
-                                                    <td><?php echo TemplateView::noHTML($bus->getPicturePath()); ?></td>
+                                                    <td><img src="<?php echo TemplateView::noHTML($bus->getPicturePath()); ?>" alt="Not available" border=3 width=200></td>
                                                     <td><?php echo TemplateView::noHTML($bus->getName()); ?> </td>
                                                     <td><?php echo TemplateView::noHTML($bus->getDescription()); ?> </td>
                                                     <td><?php echo TemplateView::noHTML($bus->getSeats()); ?> </td>

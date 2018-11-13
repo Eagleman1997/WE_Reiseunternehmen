@@ -21,26 +21,24 @@ class HotelController {
      * @return type
      */
     public static function createHotel(){
-        echo "createHotel</br>";
-        if($_SESSION['role'] != "admin"){
+        if(!isset($_SESSION['role']) or (isset($_SESSION['role']) and $_SESSION['role'] != "admin")){
             return false;
         }
         $hotel = new Hotel();
         
-        $hotel->setName(filter_input(INPUT_POST, $_POST['name'], FILTER_DEFAULT));
-        $hotel->setDescription(filter_input(INPUT_POST, $_POST['description'], FILTER_DEFAULT));
-        $hotelPrice = Validation::positivePrice(filter_input(INPUT_POST, $_POST['pricePerPerson'], FILTER_DEFAULT));
+        $hotel->setName(\filter_input(\INPUT_POST, 'name', \FILTER_DEFAULT));
+        $hotel->setDescription(\filter_input(\INPUT_POST, 'description', \FILTER_DEFAULT));
+        $hotelPrice = Validation::positivePrice(\filter_input(\INPUT_POST, 'pricePerPerson', \FILTER_DEFAULT));
         if(!$hotelPrice){
             return false;
         }
         $hotel->setPricePerPerson($hotelPrice);
-        $picture = $_FILES['picture'];
-        if($picture){
+        if(isset($_FILES['img'])){
             $hotel->setPicturePath(Upload::uploadImage());
         }else{
             $hotel->setPicturePath("views/assets/img/defaultHotel.jpg");
         }
-        return $hotel->create();
+        $hotel->create();
     }
     
     /**
@@ -68,12 +66,12 @@ class HotelController {
      * @return boolean
      */
     public static function getAllHotels(){
-        echo "getAllHotels</br>";
-        if($_SESSION['role'] != "admin"){
-            return false;
+        if(isset($_SESSION['role']) and $_SESSION['role'] == "admin"){
+            $hotelDBC = new HotelDBC();
+            
+            $hotelView = new TemplateView("adminHotels.php");
+            $hotelView->hotels = $hotelDBC->findAllHotels();
+            LayoutRendering::basicLayout($hotelView);
         }
-        $hotelDBC = new HotelDBC();
-        $hotels = $hotelDBC->findAllHotels();
-        //html toDo
     }
 }

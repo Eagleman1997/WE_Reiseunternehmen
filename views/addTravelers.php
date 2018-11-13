@@ -12,7 +12,7 @@ isset($this->participants) ? $participants = $this->participants : $participants
     <div class="register-photo" style="font-family: Capriola, sans-serif;background-size: auto;min-height: 800px;">
         <div class="form-container">
             <div class="image-holder" style="background-image: url(&quot;assets/img/travelGroup.jpg&quot;);background-position: center;background-size: cover;background-repeat: no-repeat;"></div>
-            <form action="index.php" method="post">
+            <form action="<?php echo $GLOBALS['ROOT_URL'] ?>/travelers" method="post">
                 <h2 class="text-center"><strong>Add travelers </strong>to your profile.</h2>
                 <div class="form-group"><label style="margin-bottom: 0px;">First name</label><input class="form-control" type="text" name="firstName" required="" minlength="3"></div>
                 <div class="form-group"><label style="margin-bottom: 0px;">Last name</label><input class="form-control" type="text" name="lastName" required="" minlength="3"></div>
@@ -45,7 +45,7 @@ isset($this->participants) ? $participants = $this->participants : $participants
                                 </tr>
                             </thead>
                             <tbody id="participantTableBody">
-                                <?php foreach ($this->participants as $participant): ?>
+                                <?php foreach ($participants as $participant): ?>
                                     <tr>
                                         <td><?php echo TemplateView::noHTML($participant->getFirstName()); ?></td>
                                         <td><?php echo TemplateView::noHTML($participant->getLastName()); ?> </td>

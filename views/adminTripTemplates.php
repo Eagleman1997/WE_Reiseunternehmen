@@ -66,6 +66,7 @@ isset($this->tripTemplates) ? $tripTemplates = $this->tripTemplates : $tripTempl
                                                 <th>Description</th>
                                                 <th>Min. travelers</th>
                                                 <th>Max. travelers</th>
+                                                <th>From CHF</th>
                                                 <th>Bus</th>
                                                 <th>Edit</th>
                                                 <th>Delete</th>
@@ -74,11 +75,12 @@ isset($this->tripTemplates) ? $tripTemplates = $this->tripTemplates : $tripTempl
                                         <tbody id="tripTemplateTableBody">
                                             <?php foreach ($tripTemplates as $tripTemplate) :  ?>
                                             <tr>
-                                                <td><img src="<?php echo $tripTemplate->getPicturePath(); ?>" alt="Not available" border=3 width=150></td>
+                                                <td><img src="<?php echo TemplateView::noHTML($tripTemplate->getPicturePath()); ?>" alt="Not available" border=3 width=150></td>
                                                 <td><?php echo TemplateView::noHTML($tripTemplate->getName()); ?></td>
                                                 <td><?php echo TemplateView::noHTML($tripTemplate->getDescription()); ?></td>
                                                 <td><?php echo TemplateView::noHTML($tripTemplate->getMinAllocation()); ?></td>
                                                 <td><?php echo TemplateView::noHTML($tripTemplate->getMaxAllocation()); ?></td>
+                                                <td><?php echo TemplateView::noHTML($tripTemplate->getPrice()); ?></td>
                                                 <td><?php echo TemplateView::noHTML($tripTemplate->getBus()->getName())." (seats: ".TemplateView::noHTML($tripTemplate->getBus()->getSeats()).")"; ?></td>
                                                 <td><img src="assets/img/edit.png" alt="Edit" border=3 height=20 width=20></td>
                                                 <td><img src="assets/img/Recycle_Bin.png" alt="Remove" border=3 height=20 width=20></td>

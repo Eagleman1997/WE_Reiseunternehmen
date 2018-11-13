@@ -124,19 +124,18 @@ class UserController {
      * @return type
      */
     public static function createParticipant(){
-        echo "createParticipant</br>";
         $participant = new Participant();
         
-        $participant->setFirstName(filter_input(INPUT_POST, $_POST['firstName'], FILTER_DEFAULT));
-        $participant->setLastName(filter_input(INPUT_POST, $_POST['lastName'], FILTER_DEFAULT));
-        $birthDate = Validation::date(filter_input(INPUT_POST, $_POST['birthDate'], FILTER_DEFAULT));
+        $participant->setFirstName(\filter_input(\INPUT_POST, 'firstName', \FILTER_DEFAULT));
+        $participant->setLastName(\filter_input(\INPUT_POST, 'lastName', \FILTER_DEFAULT));
+        $birthDate = Validation::date(\filter_input(\INPUT_POST, 'birthDate', \FILTER_DEFAULT));
         if(!$birthDate){
             return false;
         }
         $participant->setBirthDate($birthDate);
         $participant->setFkUserId($_SESSION['userId']);
         
-        return $participant->create();
+        $participant->create();
     }
     
     /**
@@ -157,17 +156,16 @@ class UserController {
     }
     
     /**
-     * Gets a complete User-object with the related Participants if available (Admin can select other Users)
-     * @return type
+     * Gets a complete User-object with the related Participants if available
      */
     public static function getParticipants(){
-        echo "getParticipants</br>";
         $user = new User();
 
         $user->setId($_SESSION['userId']);
             
-        $participants = $user->findParticipants();
-        //html toDo
+        $travelersView = new TemplateView("addTravelers.php");
+        $travelersView->participants = $user->findParticipants()->getParticipants();
+        LayoutRendering::basicLayout($travelersView);
     }
     
     /**
@@ -175,8 +173,7 @@ class UserController {
      * @return boolean
      */
     public static function changeRole($userId){
-        echo "updateRole</br>";
-        if($_SESSION['role'] != "admin"){
+        if(!isset($_SESSION['role']) or (isset($_SESSION['role']) and $_SESSION['role'] != "admin")){
             return false;
         }
         $user = new User();
@@ -186,7 +183,7 @@ class UserController {
         }
         $user->setId($id);
         
-        return $user->changeRole();
+        $user->changeRole();
     }
     
     /**

@@ -21,32 +21,30 @@ class BusController {
      * @return boolean|int
      */
     public static function createBus(){
-        echo "createBus</br>";
-        if($_SESSION['role'] != "admin"){
+        if(!isset($_SESSION['role']) or (isset($_SESSION['role']) and $_SESSION['role'] != "admin")){
             return false;
         }
         $bus = new Bus();
         
-        $bus->setName(filter_input(INPUT_POST, $_POST['name'], FILTER_DEFAULT));
-        $bus->setDescription(filter_input(INPUT_POST, $_POST['description'], FILTER_DEFAULT));
-        $seats = Validation::positiveInt(filter_input(INPUT_POST, $_POST['seats'], FILTER_VALIDATE_INT));
+        $bus->setName(\filter_input(\INPUT_POST, 'name', \FILTER_DEFAULT));
+        $bus->setDescription(\filter_input(\INPUT_POST, 'description', \FILTER_DEFAULT));
+        $seats = Validation::positiveInt(\filter_input(\INPUT_POST, 'seats', \FILTER_VALIDATE_INT));
         if(!$seats){
             return false;
         }
         $bus->setSeats($seats);
-        $price = Validation::positivePrice(filter_input(INPUT_POST, $_POST['price'], FILTER_DEFAULT));
-        if(!$price){
+        $pricePerDay = Validation::positivePrice(\filter_input(\INPUT_POST, 'pricePerDay', \FILTER_DEFAULT));
+        if(!$pricePerDay){
             return false;
         }
-        $bus->setPricePerDay($price);
-        $picture = $_FILES['picture'];
-        if($picture){
+        $bus->setPricePerDay($pricePerDay);
+        if($_FILES['img']){
             $bus->setPicturePath(Upload::uploadImage());
         }else{
             $bus->setPicturePath("views/assets/img/defaultBus.jpg");
         }
         
-        return $bus->create();
+        $bus->create();
     }
     
     /**
@@ -73,14 +71,14 @@ class BusController {
      * @return boolean|array
      */
     public static function getAllBuses(){
-        echo "getAllBuses</br>";
-        if($_SESSION['role'] != "admin"){
+        if(!isset($_SESSION['role']) or (isset($_SESSION['role']) and $_SESSION['role'] != "admin")){
             return false;
         }
         $busDBC = new BusDBC();
-        
-        $buses = $busDBC->getAllBuses();
-        //html toDo
+            
+        $busesView = new TemplateView("adminBuses.php");
+        $busesView->buses = $busDBC->getAllBuses();
+        LayoutRendering::basicLayout($busesView);
     }
     
     /**

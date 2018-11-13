@@ -20,21 +20,20 @@ class InsuranceController {
      * @return boolean|int
      */
     public static function createInsurance(){
-        echo "createInsurance</br>";
-        if($_SESSION['role'] != "admin"){
-            return false;
-        }
-        if(!isset($_POST['submit'])){
+        if(!isset($_SESSION['role']) or (isset($_SESSION['role']) and $_SESSION['role'] != "admin")){
             return false;
         }
         $insurance = new Insurance();
         
-        $insurance->setName(filter_input(INPUT_POST, $_POST['name'], FILTER_DEFAULT));
-        $insurance->setDescription(filter_input(INPUT_POST, $_POST['description'], FILTER_DEFAULT));
-        $pricePerPerson = Validation::positivePrice(filter_input(INPUT_POST, $_POST['pricePerPerson'], FILTER_DEFAULT));
+        $insurance->setName(\filter_input(\INPUT_POST, 'name', \FILTER_DEFAULT));
+        $insurance->setDescription(\filter_input(\INPUT_POST, 'description', \FILTER_DEFAULT));
+        $pricePerPerson = Validation::positivePrice(\filter_input(\INPUT_POST, 'pricePerPerson', \FILTER_DEFAULT));
+        if(!$pricePerPerson){
+            return false;
+        }
         $insurance->setPricePerPerson($pricePerPerson);
         
-        return $insurance->create();
+        $insurance->create();
     }
     
     /**
@@ -61,10 +60,13 @@ class InsuranceController {
      * Gets all Insurances
      */
     public static function getAllInsurances(){
-        echo "getAllInsurances</br>";
-        $insuranceDBC = new InsuranceDBC();
-        $insurances = $insuranceDBC->getAllInsurances();
-        //html toDo
+        if(isset($_SESSION['role']) and $_SESSION['role'] == "admin"){
+            $insuranceDBC = new InsuranceDBC();
+            
+            $insuranceView = new TemplateView("adminInsurances.php");
+            $insuranceView->insurances = $insuranceDBC->getAllInsurances();
+            LayoutRendering::basicLayout($insuranceView);
+        }
     }
     
 }

@@ -111,7 +111,7 @@ class User {
     
     /**
      * Finds any Participant in relation to the User
-     * @return type
+     * @return boolean|User
      */
     public function findParticipants(){
         $user = $this->userDBC->findUserById($this->id);
