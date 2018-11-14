@@ -12,7 +12,7 @@ use views\TemplateView;
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
-    <title>Reiseunternehmen extracted header &amp; footer</title>
+    <title>Reiseunternehmen</title>
     <link rel="stylesheet" href="assets/bootstrap/css/bootstrap.min.css">
     <link rel="stylesheet" href="assets/fonts/font-awesome.min.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Aclonica">
@@ -37,7 +37,7 @@ use views\TemplateView;
     <link rel="stylesheet" href="assets/css/Sidebar-Menu.css">
     <link rel="stylesheet" href="assets/css/styles.css">
     <link rel="stylesheet" href="assets/css/topnavLogin.css">
-    <link rel="stylesheet" href="assets/css/userAdminTable.css">
+    <link rel="stylesheet" href="assets/css/userAdminTable.css">   
 </head>
 
 <body>
