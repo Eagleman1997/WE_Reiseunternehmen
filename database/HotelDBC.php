@@ -35,13 +35,22 @@ class HotelDBC extends DBConnector {
      * @return boolean
      */
     public function deleteHotel($hotel){
+        $hotel = $this->findHotelById($hotel->getId());
+        if(!$hotel){
+            return false;
+        }
         $stmt = $this->mysqliInstance->prepare("DELETE FROM hotel WHERE id = ?");
         if(!$stmt){
             return false;
         }
         $stmt->bind_param('i', $id);
         $id = $hotel->getId();
-        return $this->executeDelete($stmt);
+        $result = $this->executeDelete($stmt);
+        $picturePath = $hotel->getPicturePath();
+        if(file_exists($picturePath)  and strpos($picturePath, 'default') == false){
+            unlink($picturePath);
+        }
+        return $result;
     }
     
     /** (tested)

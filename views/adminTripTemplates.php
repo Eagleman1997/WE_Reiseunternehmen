@@ -81,10 +81,10 @@ isset($this->tripTemplates) ? $tripTemplates = $this->tripTemplates : $tripTempl
                                                 <td><?php echo TemplateView::noHTML($tripTemplate->getMinAllocation()); ?></td>
                                                 <td><?php echo TemplateView::noHTML($tripTemplate->getMaxAllocation()); ?></td>
                                                 <td><?php echo TemplateView::noHTML($tripTemplate->getPrice()); ?></td>
-                                                <td><?php echo TemplateView::noHTML($tripTemplate->getBus()->getName())." (seats: ".TemplateView::noHTML($tripTemplate->getBus()->getSeats()).")"; ?></td>
-                                                <td><img src="assets/img/edit.png" alt="Edit" border=3 height=20 width=20></td>
-                                                <td><img src="assets/img/Recycle_Bin.png" alt="Remove" border=3 height=20 width=20></td>
-                                                <!--data-href="user/delete?id= ?php echo $tripTemplate->getId(); ?>"-->
+                                                <td><?php echo TemplateView::noHTML($tripTemplate->getBus()->getName())."</br>(seats: ".TemplateView::noHTML($tripTemplate->getBus()->getSeats()).")"; ?></td>
+                                                <td><a href="<?php echo $GLOBALS['ROOT_URL'] ?>/admin/tripTemplates/package/<?php echo $tripTemplate->getId(); ?>"><img src="assets/img/edit.png" alt="Edit" border=3 height=20 width=20></a></td>
+                                                <td><form id="deleteTripTemplate<?php echo $tripTemplate->getId(); ?>" action="<?php echo $GLOBALS['ROOT_URL'] ?>/admin/tripTemplates/<?php echo $tripTemplate->getId(); ?>" method="post">
+                                                        <input type="hidden" name="_method" value="DELETE"><img src="assets/img/Recycle_Bin.png" alt="Remove"  border=3 height=20 width=20 onclick="deleteHandler(<?php echo $tripTemplate->getId(); ?>)"></form></td>
                                             </tr>
                                             <?php endforeach;  ?>
                                         </tbody>
@@ -93,18 +93,11 @@ isset($this->tripTemplates) ? $tripTemplates = $this->tripTemplates : $tripTempl
 
                                 <script>
 
-                                    // Remove trip templates from the database
-                                    table = document.getElementById("tripTemplateOverviewTable");
-                                    for (var i = 1; i < table.rows.length; i++)
-                                    {
-                                        table.rows[i].cells[7].onclick = function () {
-                                            var c = confirm("Do you want to delete this trip template?");
-                                            if (c == true)
-                                            {
-                                                index = this.parentElement.rowIndex;
-                                                table.deleteRow(index);
-                                                // send index to database in order to delete the user
-                                            }
+                                    //Remove tripTemplate
+                                    function deleteHandler(templateId){
+                                        var c = confirm("Do you want to delete this trip template?");
+                                        if(c){
+                                            $( "#deleteTripTemplate"+templateId).submit();
                                         }
                                     }
 

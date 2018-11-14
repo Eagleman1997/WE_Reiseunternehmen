@@ -52,8 +52,7 @@ class BusController {
      * @return boolean
      */
     public static function deleteBus($busId){
-        echo "deleteBus</br>";
-        if($_SESSION['role'] != "admin"){
+        if(!isset($_SESSION['role']) or (isset($_SESSION['role']) and $_SESSION['role'] != "admin")){
             return false;
         }
         $bus = new Bus();
@@ -63,7 +62,7 @@ class BusController {
         }
         $bus->setId($id);
         
-        return $bus->delete();
+        $bus->delete();
     }
     
     /**

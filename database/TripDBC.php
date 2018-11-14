@@ -48,6 +48,13 @@ class TripDBC extends DBConnector {
      * @return boolean
      */
     public function deleteTripTemplate($tripTemplate){
+        //Stores the picturePath from TripTemplate to remove later
+        $tripTemplate = $this->findTripTemplateById($tripTemplate->getId());
+        if($tripTemplate){
+            $tripTemplatePicturePath = $tripTemplate->getPicturePath();
+        }
+        $dayporgramsPicturePaths = array();
+        
         //Begins the transaction
         $this->mysqliInstance->begin_transaction();
         $this->mysqliInstance->autocommit(false);
@@ -70,6 +77,7 @@ class TripDBC extends DBConnector {
         //Deletes the Dayprograms according to the TripTemplate
         $dayprograms = $this->getDayprogramsFromTemplate($tripTemplate);
         foreach($dayprograms as $dayprogram){
+            array_push($dayporgramsPicturePaths, $dayprogram->getPicturePath());
             $stmt = $this->mysqliInstance->prepare("DELETE FROM dayprogram WHERE id = ?");
             if(!$stmt){
                 // rollback if prep stat execution fails
@@ -85,9 +93,21 @@ class TripDBC extends DBConnector {
             }
         }
         
-        $this->mysqliInstance->commit();
+        $success = $this->mysqliInstance->commit();
         $this->mysqliInstance->autocommit(true);
         $stmt->close();
+        
+        //deletes the pictures from the folder
+        if($success){
+            if(file_exists($tripTemplatePicturePath) and strpos($tripTemplatePicturePath, 'default') == false){
+                unlink($tripTemplatePicturePath);
+            }
+            foreach($dayporgramsPicturePaths as $path){
+                if(file_exists($path) and strpos($path, 'default') == false){
+                    unlink($path);
+                }
+            }
+        }
         return true;
     }
     
@@ -158,7 +178,6 @@ class TripDBC extends DBConnector {
             $stmt->close();
         }
         
-        //checks whether the TripTemplate exists
         if($templateObj){
             $busDBC = new BusDBC();
             $bus = $busDBC->findBusById($templateObj->getFkBusId());
@@ -314,6 +333,9 @@ class TripDBC extends DBConnector {
     public function deleteDayprogram2($dayprogram){
         //Gets the real object of the Dayprogram
         $dayprogram = $this->findDayprogramById($dayprogram->getId(), false);
+        if($dayprogram){
+            $picturePath = $dayprogram->getPicturePath();
+        }
         
         //Elimination of Dayprogram
         $stmt = $this->mysqliInstance->prepare("DELETE FROM dayprogram WHERE id = ?");
@@ -368,8 +390,13 @@ class TripDBC extends DBConnector {
             exit();
         }
         
-        $this->mysqliInstance->commit();
+        $result = $this->mysqliInstance->commit();
         $stmt->close();
+        if($result){
+            if(file_exists($picturePath) and strpos($picturePath, 'default') == false){
+                unlink($picturePath);
+            }
+        }
         return true;
     }
     

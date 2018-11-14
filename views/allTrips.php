@@ -68,6 +68,7 @@ isset($this->trips) ? $trips = $this->trips : $trips = array();
                     <div class="row">
                         <?php 
                         foreach ($trips as $trip) : ?>
+                        <?php if(!$trip->getTripTemplate()){continue;};//Ensures that just Trips with a TripTemplate are shown ?>
                         <div class="col-md-6 col-lg-4">
                             <div class="card border-0"><a href="<?php
                                     if(isset($_SESSION['role']) and $_SESSION['role'] == "admin"){

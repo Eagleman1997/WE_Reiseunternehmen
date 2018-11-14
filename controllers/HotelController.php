@@ -46,8 +46,7 @@ class HotelController {
      * @return boolean
      */
     public static function deleteHotel($id){
-        echo "deleteHotel</br>";
-        if($_SESSION['role'] != "admin"){
+        if(!isset($_SESSION['role']) or (isset($_SESSION['role']) and $_SESSION['role'] != "admin")){
             return false;
         }
         $hotel = new Hotel();
@@ -58,7 +57,7 @@ class HotelController {
         }
         $hotel->setId($id);
         
-        return $hotel->delete();
+        $hotel->delete();
     }
     
     /**

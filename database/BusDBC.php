@@ -62,13 +62,20 @@ class BusDBC extends DBConnector {
      * @return boolean
      */
     public function deleteBus($bus){
+        $bus = $this->findBusById($bus->getId());
         $stmt = $this->mysqliInstance->prepare("DELETE FROM bus WHERE id = ?");
         if(!$stmt){
             return false;
         }
         $stmt->bind_param('i', $id);
         $id = $bus->getId();
-        return $this->executeDelete($stmt);
+        
+        $result = $this->executeDelete($stmt);
+        $picturePath = $bus->getPicturePath();
+        if(file_exists($picturePath) and strpos($picturePath, 'default') == false){
+            unlink($picturePath);
+        }
+        return $result;
     }
     
     /** (tested)

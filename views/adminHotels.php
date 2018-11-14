@@ -65,7 +65,8 @@ isset($this->hotels) ? $hotels = $this->hotels : $hotels = array();
                                                     <td><?php echo TemplateView::noHTML($hotel->getName()); ?> </td>
                                                     <td><?php echo TemplateView::noHTML($hotel->getDescription()); ?> </td>
                                                     <td><?php echo TemplateView::noHTML($hotel->getPricePerPerson()); ?> </td>
-                                                    <td><img data-href="user/delete?id=<?php echo $hotel->getId(); ?>" src="assets/img/Recycle_Bin.png" alt="Remove" border=3 height=20 width=20></td>
+                                                    <td><form id="deleteHotel<?php echo $hotel->getId(); ?>" action="<?php echo $GLOBALS['ROOT_URL'] ?>/admin/hotels/<?php echo $hotel->getId(); ?>" method="post">
+                                                        <input type="hidden" name="_method" value="DELETE"><img src="assets/img/Recycle_Bin.png" alt="Remove"  border=3 height=20 width=20 onclick="deleteHandler(<?php echo $hotel->getId(); ?>)"></form></td>
                                                 </tr>
                                             <?php endforeach; ?>
                                         </tbody>
@@ -74,20 +75,13 @@ isset($this->hotels) ? $hotels = $this->hotels : $hotels = array();
 
                                 <script>
 
-                                // Remove hotels from the database
-                                    table = document.getElementById("hotelOverviewTable");
-                                    for (var i = 1; i < table.rows.length; i++)
-                                    {
-                                        table.rows[i].cells[4].onclick = function () {
-                                            var c = confirm("Do you want to delete this hotel?");
-                                            if (c == true)
-                                            {
-                                                index = this.parentElement.rowIndex;
-                                                table.deleteRow(index);
-                                                // send index to database in order to delete the user
-                                            }
-                                        }
+                                //Remove hotel
+                                function deleteHandler(hotelId){
+                                    var c = confirm("Do you want to delete this hotel?");
+                                    if(c){
+                                        $( "#deleteHotel"+hotelId).submit();
                                     }
+                                }
 
                                 //Make the table searchable
                                     $(document).ready(function () {

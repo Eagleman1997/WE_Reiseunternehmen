@@ -69,7 +69,8 @@ isset($this->buses) ? $buses = $this->buses : $buses = array();
                                                     <td><?php echo TemplateView::noHTML($bus->getDescription()); ?> </td>
                                                     <td><?php echo TemplateView::noHTML($bus->getSeats()); ?> </td>
                                                     <td><?php echo TemplateView::noHTML($bus->getPricePerDay()); ?> </td>
-                                                    <td><img data-href="user/delete?id=<?php echo $bus->getId(); ?>" src="assets/img/Recycle_Bin.png" alt="Remove" border=3 height=20 width=20></td>
+                                                    <td><form id="deleteBus<?php echo $bus->getId(); ?>" action="<?php echo $GLOBALS['ROOT_URL'] ?>/admin/buses/<?php echo $bus->getId(); ?>" method="post">
+                                                        <input type="hidden" name="_method" value="DELETE"><img src="assets/img/Recycle_Bin.png" alt="Remove"  border=3 height=20 width=20 onclick="deleteHandler(<?php echo $bus->getId(); ?>)"></form></td>
                                                 </tr>
                                             <?php endforeach; ?>
                                         </tbody>
@@ -78,18 +79,11 @@ isset($this->buses) ? $buses = $this->buses : $buses = array();
 
                                 <script>
 
-                                    // Remove buses from the database
-                                    table = document.getElementById("busOverviewTable");
-                                    for (var i = 1; i < table.rows.length; i++)
-                                    {
-                                        table.rows[i].cells[5].onclick = function () {
-                                            var c = confirm("Do you want to delete this bus?");
-                                            if (c == true)
-                                            {
-                                                index = this.parentElement.rowIndex;
-                                                table.deleteRow(index);
-                                                // send index to database in order to delete the bus
-                                            }
+                                    //Remove bus
+                                    function deleteHandler(busId){
+                                        var c = confirm("Do you want to delete this bus?");
+                                        if(c){
+                                            $( "#deleteBus"+busId).submit();
                                         }
                                     }
 

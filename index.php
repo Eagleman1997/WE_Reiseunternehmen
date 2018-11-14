@@ -89,6 +89,7 @@ Router::route_auth("POST", "/travelers", $authFunction, function () {
 
 Router::route_auth("DELETE", "/travelers/{id}", $authFunction, function ($id) {
     UserController::deleteParticipant($id);
+    Router::redirect("/travelers");
 });
 
 Router::route_auth("GET", "/admin/buses", $authFunction, function () {
@@ -102,6 +103,7 @@ Router::route_auth("POST", "/admin/buses", $authFunction, function () {
 
 Router::route_auth("DELETE", "/admin/buses/{id}", $authFunction, function ($id) {
     BusController::deleteBus($id);
+    Router::redirect("/admin/buses");
 });
 
 Router::route_auth("GET", "/admin/hotels", $authFunction, function () {
@@ -115,6 +117,7 @@ Router::route_auth("POST", "/admin/hotels", $authFunction, function () {
 
 Router::route_auth("DELETE", "/admin/hotels/{id}", $authFunction, function ($id) {
     HotelController::deleteHotel($id);
+    Router::redirect("/admin/hotels");
 });
 
 Router::route_auth("GET", "/admin/insurances", $authFunction, function () {
@@ -128,6 +131,7 @@ Router::route_auth("POST", "/admin/insurances", $authFunction, function () {
 
 Router::route_auth("DELETE", "/admin/insurances/{id}", $authFunction, function ($id) {
     InsuranceController::deleteInsurance($id);
+    Router::redirect("/admin/insurances");
 });
 
 //no use of $authFunctin necessary to allow users without a loggin to see the packageOverview
@@ -150,6 +154,7 @@ Router::route_auth("POST", "/admin/tripTemplates", $authFunction, function () {
 
 Router::route_auth("DELETE", "/admin/tripTemplates/{id}", $authFunction, function ($id) {
     TripController::deleteTripTemplate($id);
+    Router::redirect("/admin/tripTemplates");
 });
 
 Router::route("GET", "/packageOverview/package/{id}", function ($id) {
@@ -157,9 +162,8 @@ Router::route("GET", "/packageOverview/package/{id}", function ($id) {
 });
 
 Router::route_auth("POST", "/packageOverview/package", $authFunction, function () {
-    if(TripController::bookTrip()){
-        Router::redirect("/bookedTrips");
-    }
+    TripController::bookTrip();
+    Router::redirect("/bookedTrips");
 });
 
 Router::route_auth("GET", "/admin/tripTemplates/package/{id}", $authFunction, function ($id) {
@@ -171,19 +175,18 @@ Router::route_auth("PUT", "/admin/tripTemplates/package/{id}", $authFunction, fu
 });
 
 Router::route_auth("POST", "/admin/tripTemplates/package", $authFunction, function () {
-    if(TripController::createDayprogram()){
-        //Update with AJAX
-    }
+    $id = TripController::createDayprogram();
+    Router::redirect("/admin/tripTemplates/package/".$id);
 });
 
-Router::route_auth("DELETE", "/admin/tripTemplates/package/{id}", $authFunction, function ($id) {
-    TripController::deleteDayprogram($id);
-    //AJAX?
+Router::route_auth("DELETE", "/admin/tripTemplates/package/{id}/{id}", $authFunction, function ($dayprogramId, $tripTemplateId) {
+    TripController::deleteDayprogram($dayprogramId);
+    Router::redirect("/admin/tripTemplates/package/".$tripTemplateId);
 });
 
 Router::route_auth("DELETE", "/admin/bookedTrips/{id}", $authFunction, function ($id) {
     TripController::cancelTrip($id);
-    //AJAX?
+    Router::redirect("/admin/bookedTrips");
 });
 
 Router::route_auth("GET", "/bookedTrips/detail/{id}", $authFunction, function ($id) {
@@ -196,11 +199,12 @@ Router::route_auth("GET", "/admin/bookedTrips/detail/{id}", $authFunction, funct
 
 Router::route_auth("POST", "/admin/bookedTrips/detail", $authFunction, function () {
     InvoiceController::createInvoice();
-    //AJAX?
+    Router::redirect("/admin/bookedTrips/detail");
 });
 
 Router::route_auth("DELETE", "/admin/bookedTrips/detail/{id}", $authFunction, function ($id) {
     InvoiceController::deleteInvoice($id);
+    Router::redirect("/admin/bookedTrips/detail");
 });
 
 Router::route_auth("PUT", "/admin/bookedTrips/detail/{id}", $authFunction, function ($id) {

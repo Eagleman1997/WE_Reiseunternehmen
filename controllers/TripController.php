@@ -7,6 +7,7 @@ use entities\TripTemplate;
 use entities\Dayprogram;
 use database\TripDBC;
 use database\BusDBC;
+use database\HotelDBC;
 use helpers\Validation;
 use helpers\Upload;
 use views\LayoutRendering;
@@ -23,7 +24,6 @@ class TripController {
      * Stores a new TripTemplate
      */
     public static function createTripTemplate(){
-        echo "createTripTemplate</br>";
         if(!isset($_SESSION['role']) or (isset($_SESSION['role']) and $_SESSION['role'] != "admin")){
             return false;
         }
@@ -97,14 +97,16 @@ class TripController {
     public static function getTripTemplate($tripTemplateId){
         $tripTemplate = new TripTemplate();
         $id = Validation::positiveInt($tripTemplateId);
-        if(!id){
+        if(!$id){
             return false;
         }
         $tripTemplate->setId($id);
         
         if(isset($_SESSION['role']) and $_SESSION['role'] == "admin"){
+            $hotelDBC = new HotelDBC();
             $adminTripOverview = new TemplateView("adminUnbookedTripOverview.php");
             $adminTripOverview->tripTemplate = $tripTemplate->find();
+            $adminTripOverview->hotels = $hotelDBC->findAllHotels();
             LayoutRendering::basicLayout($adminTripOverview);
         }else{
             $userTripOverview = new TemplateView("userUnbookedTripOverview.php");
@@ -123,8 +125,7 @@ class TripController {
      * @return boolean
      */
     public static function deleteTripTemplate($tripTemplateId){
-        echo "deleteTripTemplate</br>";
-        if($_SESSION['role'] != "admin"){
+        if(!isset($_SESSION['role']) or (isset($_SESSION['role']) and $_SESSION['role'] != "admin")){
             return false;
         }
         $tripTemplate = new TripTemplate();
@@ -134,7 +135,7 @@ class TripController {
         }
         $tripTemplate->setId($id);
         
-        return $tripTemplate->delete();
+        $tripTemplate->delete();
     }
     
     /**
@@ -142,29 +143,29 @@ class TripController {
      * @return boolean
      */
     public static function createDayprogram(){
-        echo "createDayprogram</br>";
-        if($_SESSION['role'] != "admin"){
+        if(!isset($_SESSION['role']) or (isset($_SESSION['role']) and $_SESSION['role'] != "admin")){
             return false;
         }
         
         //stores the Dayprogram
         $dayprogram = new Dayprogram();
-        $fk_tripTemplate_id = Validation::positiveInt(filter_input(INPUT_POST, $_POST['tripTemplateId'], FILTER_VALIDATE_INT));
+        $fk_tripTemplate_id = Validation::positiveInt(\filter_input(\INPUT_POST, 'tripTemplateId', \FILTER_VALIDATE_INT));
         if(!$fk_tripTemplate_id){
             return false;
         }
         $dayprogram->setFkTripTemplateId($fk_tripTemplate_id);
-        $dayprogram->setName(filter_input(INPUT_POST, $_POST['name'], FILTER_DEFAULT));
-        $dayNumber = Validation::positiveInt(filter_input(INPUT_POST, $_POST['dayNumber'], FILTER_VALIDATE_INT));
+        $dayprogram->setName(\filter_input(\INPUT_POST, 'name', \FILTER_DEFAULT));
+        $dayNumber = Validation::positiveInt(\filter_input(\INPUT_POST, 'dayNumber', \FILTER_VALIDATE_INT));
         if(!$dayNumber){
             return false;
         }
         $dayprogram->setDayNumber($dayNumber);
-        $dayprogram->setDescription(filter_input(INPUT_POST, $_POST['description'], FILTER_DEFAULT));
-        $fk_hotel_id = Validation::positiveInt(filter_input(INPUT_POST, $_POST['hotelId'], FILTER_VALIDATE_INT));
+        $dayprogram->setDescription(\filter_input(\INPUT_POST, 'description', \FILTER_DEFAULT));
+        $fk_hotel_id = Validation::positiveInt(\filter_input(\INPUT_POST, 'hotelId', \FILTER_VALIDATE_INT));
         if(!$fk_hotel_id){
             return false;
         }
+        $dayprogram->setFkHotelId($fk_hotel_id);
         $img = $_FILES['img'];
         if($img){
             $dayprogram->setPicturePath(Upload::uploadImage());
@@ -172,12 +173,8 @@ class TripController {
             $dayprogram->setPicturePath("views/assets/img/defaultDayprogram.jpg");
         }
         
-        $success = $dayprogram->create();
-        if(!$success){
-            return false;
-        }
-        //storage of dayprograms succeeded
-        return true;
+        $dayprogram->create();
+        return $fk_tripTemplate_id;//to ensure correct routing
     }
     
     /**
@@ -185,8 +182,7 @@ class TripController {
      * @return boolean
      */
     public static function deleteDayprogram($dayprogramId){
-        echo "deleteDayprogram</br>";
-        if($_SESSION['role'] != "admin"){
+        if(!isset($_SESSION['role']) or (isset($_SESSION['role']) and $_SESSION['role'] != "admin")){
             return false;
         }
         
