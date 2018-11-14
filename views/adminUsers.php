@@ -54,8 +54,10 @@ isset($this->users) ? $users = $this->users : $users = array();
                                                 <td><?php echo TemplateView::noHTML($user->getFirstname()); ?></td>
                                                 <td><?php echo TemplateView::noHTML($user->getLastname()); ?></td>
                                                 <td><?php echo TemplateView::noHTML($user->getEmail(), false); ?> </td>
-                                                <td><input type="checkbox" class="adminCheckboxes"  onclick="onClickHandler(<?php $user->getId(); ?>)" id="<?php $user->getId(); ?>" /></td>
-                                                <td><img data-href="admin/users/<?php echo $user->getId(); ?>" src="assets/img/Recycle_Bin.png" alt="Remove" method="delete" border=3 height=20 width=20></td>
+                                                <td><form id="changeRole<?php echo $user->getId(); ?>" action="<?php echo $GLOBALS['ROOT_URL'] ?>/admin/users/<?php echo $user->getId(); ?>" method="post">
+                                                        <input type="hidden" name="_method" value="PUT"><input type="checkbox" <?php if($user->getRole() == "admin"){echo 'checked';}; ?> class="adminCheckboxes"  onclick="onClickHandler(<?php echo $user->getId(); ?>)" id="userRole<?php echo $user->getId(); ?>" /></form></td>
+                                                <td><form id="deleteUser<?php echo $user->getId(); ?>" action="<?php echo $GLOBALS['ROOT_URL'] ?>/admin/users/<?php echo $user->getId(); ?>" method="post">
+                                                        <input type="hidden" name="_method" value="DELETE"><img src="assets/img/Recycle_Bin.png" alt="Remove"  border=3 height=20 width=20 onclick="deleteHandler(<?php echo $user->getId(); ?>)"></form></td>
                                             </tr>
                                         <?php endforeach; ?>
                                     </tbody>
@@ -72,45 +74,35 @@ isset($this->users) ? $users = $this->users : $users = array();
                                         });
                                     });
                                 });
+                                
+                                // remove user
+                                function deleteHandler(userId){
+                                    var c = confirm("Do you want to delete this user?");
+                                    if(c){
+                                        $( "#deleteUser"+userId).submit();
+                                    }
+                                }
 
                                 // Add/remove admin right from/to users
-                                function onClickHandler(id) {
-
+                                function onClickHandler(userId) {
+                                    
+                                    var id = "userRole"+userId;
                                     if (!document.getElementById(id).checked) { // if the user was already admin and therefore now unchecked the checkbox
                                         document.getElementById(id).checked = true; // temporarily recheck the checkbox
                                         var c = confirm("Do you want to remove admin rights from this user?");
-                                        if (c == true) {
+                                        if (c) {
                                             document.getElementById(id).checked = false;
-                                            // Tell the DB to remove the admin rights from this user
+                                            $( "#changeRole"+userId ).submit();
                                         }
                                     } else { // if the user wasn't admin yet and therefore just checked the checkbox
                                         document.getElementById(id).checked = false; // temoporarily uncheck the checkbox again
                                         var c = confirm("Do you want to assign admin rights to this user?");
-                                        if (c == true) {
+                                        if (c) {
                                             document.getElementById(id).checked = true;
-                                            // Tell the DB to assign admin rights to this user
+                                            $( "#changeRole"+userId ).submit();
                                         }
                                     }
                                 }
-
-                                // Remove users from the database
-                                function enableRemovalOfUsers() {
-                                    table = document.getElementById("userAdminTable");
-                                    for (var i = 1; i < table.rows.length; i++)
-                                    {
-                                        table.rows[i].cells[4].onclick = function () {
-                                            var c = confirm("Do you want to delete this user?");
-                                            if (c == true)
-                                            {
-                                                index = this.parentElement.rowIndex;
-                                                table.deleteRow(index);
-                                                // send index to database in order to delete the user
-                                            }
-                                        }
-                                    }
-                                }
-
-                                enableRemovalOfUsers();
 
                             </script>
 

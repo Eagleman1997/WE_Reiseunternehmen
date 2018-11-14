@@ -47,6 +47,14 @@ class Router
     public static function call_route($method, $path) {
         $path = trim(parse_url($path, PHP_URL_PATH), '/');
         $path_pieces = explode('/', $path);
+        //@author Lukas Gehrig
+        if($method == "POST"){
+            $change = \filter_input(\INPUT_POST, '_method', \FILTER_DEFAULT);
+            strtoupper($change);
+            if($change == "PUT" or $change == "DELETE"){
+                $method = $change;
+            }
+        }//
         $parameters = [];
         $parameter_number = 0;
         foreach($path_pieces as $path_value) {

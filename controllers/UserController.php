@@ -9,6 +9,9 @@ use database\UserDBC;
 use helpers\Validation;
 use views\LayoutRendering;
 use views\TemplateView;
+use http\HTTPException;
+use http\HTTPHeader;
+use http\HTTPStatusCode;
 
 /**
  * Controls the Login and Logout of a User
@@ -97,16 +100,15 @@ class UserController {
      * Deletes a User
      */
     public static function deleteUser($userId){
-        echo "deleteUser</br>";
         $user = new User();
         
-        if($_SESSION['role'] == "admin"){
+        if(isset($_SESSION['role']) and $_SESSION['role'] == "admin"){
             $id = Validation::positiveInt($userId);
             if(!$id){
                 return false;
             }
             $user->setId($id);
-            return $user->delete();
+            $user->delete();
         }
     }
     
@@ -184,6 +186,7 @@ class UserController {
         $user->setId($id);
         
         $user->changeRole();
+        HTTPHeader::setStatusHeader(HTTPStatusCode::HTTP_204_NO_CONTENT);
     }
     
     /**

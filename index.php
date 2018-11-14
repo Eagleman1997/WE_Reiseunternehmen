@@ -76,7 +76,6 @@ Router::route_auth("DELETE", "/profile", $authFunction, function () {
 
 Router::route_auth("PUT", "/admin/users/{id}", $authFunction, function ($id) {
     UserController::changeRole($id);
-    Router::redirect("/admin/users");
 });
 
 Router::route_auth("GET", "/travelers", $authFunction, function () {
