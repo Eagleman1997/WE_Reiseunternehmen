@@ -149,8 +149,28 @@ class TripTemplate {
         return $this->bus;
     }
     
+    public function getCustomerBusPrice(){
+        if($this->bus){
+            return round(Margin::addTrip($this->bus->getPricePerDay()*$this->durationInDays) * 20, 0) / 20;
+        }
+        return false;
+    }
+    
     public function getCustomerPrice(){
         return round(Margin::addTrip($this->price) * 20, 0) / 20;
+    }
+    
+    public function getCustomerHotelPricePerPerson(){
+        if($this->dayprograms){
+            $customerHotelPricePerPerson = 0;
+            foreach($this->dayprograms as $dayprogram){
+                if($dayprogram->getHotel()){
+                    $customerHotelPricePerPerson += $dayprogram->getHotel()->getPricePerPerson();
+                }
+            }
+            return round(Margin::addTrip($customerHotelPricePerPerson) * 20, 0) / 20;
+        }
+        return false;
     }
     
     public function setId($id) {

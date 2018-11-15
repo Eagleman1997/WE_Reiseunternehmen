@@ -5,9 +5,11 @@ namespace controllers;
 use entities\Trip;
 use entities\TripTemplate;
 use entities\Dayprogram;
+use entities\User;
 use database\TripDBC;
 use database\BusDBC;
 use database\HotelDBC;
+use database\InsuranceDBC;
 use helpers\Validation;
 use helpers\Upload;
 use views\LayoutRendering;
@@ -111,7 +113,15 @@ class TripController {
         }else{
             $userTripOverview = new TemplateView("userUnbookedTripOverview.php");
             $userTripOverview->tripTemplate = $tripTemplate->find();
+            //Loads booking relevant data
             if(isset($_SESSION['login'])){
+                $user = new User();
+                $user->setId($_SESSION['userId']);
+                $user = $user->findParticipants();
+                $userTripOverview->user = $user;
+                $insuranceDBC = new InsuranceDBC();
+                $insurances = $insuranceDBC->getAllInsurances();
+                $userTripOverview->insurances = $insurances;
                 LayoutRendering::basicLayout($userTripOverview, "headerUserLoggedIn");
             }else{
                 LayoutRendering::basicLayout($userTripOverview, "headerLoggedOut");

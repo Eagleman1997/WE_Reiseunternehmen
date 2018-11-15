@@ -3,6 +3,7 @@
 namespace entities;
 
 use database\InsuranceDBC;
+use helpers\Margin;
 
 /**
  * Insurance Entity
@@ -52,6 +53,10 @@ class Insurance {
 
     public function getPricePerPerson() {
         return $this->pricePerPerson;
+    }
+    
+    public function getCustomerPricePerPerson(){
+        return round(Margin::addInsurance($this->pricePerPerson) * 20, 0) / 20;;
     }
 
     public function setId($id) {
