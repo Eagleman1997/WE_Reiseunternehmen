@@ -169,7 +169,7 @@ class UserDBC extends DBConnector {
      * @return boolean|array
      */
     public function findParticipants($user){
-        $stmt = $this->mysqliInstance->prepare("SELECT * FROM participant WHERE fk_user_id = ? AND deleted = ?");
+        $stmt = $this->mysqliInstance->prepare("SELECT * FROM participant WHERE fk_user_id = ? AND deleted = ? ORDER BY firstName ASC");
         if(!$stmt){
             return false;
         }

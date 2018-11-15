@@ -172,11 +172,12 @@ Router::route_auth("GET", "/admin/tripTemplates/package/{id}", $authFunction, fu
 
 Router::route_auth("PUT", "/admin/tripTemplates/package/{id}", $authFunction, function ($id) {
     TripController::changeBookableOfTripTemplate($id);
+    Router::redirect("/admin/packageOverview");
 });
 
 Router::route_auth("POST", "/admin/tripTemplates/package", $authFunction, function () {
     $id = TripController::createDayprogram();
-    //Router::redirect("/admin/tripTemplates/package/".$id);
+    Router::redirect("/admin/tripTemplates/package/".$id);
 });
 
 Router::route_auth("DELETE", "/admin/tripTemplates/package/{id}/{id}", $authFunction, function ($dayprogramId, $tripTemplateId) {

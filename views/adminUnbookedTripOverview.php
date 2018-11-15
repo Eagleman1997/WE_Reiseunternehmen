@@ -84,7 +84,9 @@ if(isset($this->tripTemplate) and $this->tripTemplate and $tripTemplate->getDayp
                                                     <th>Hotel image</th>
                                                     <th>Hotel description</th>
                                                     <th>Hotel price</th>
+                                                    <?php if(!$tripTemplate->getBookable()): ?>
                                                     <th>Delete</th>
+                                                    <?php endif; ?>
                                                 </tr>
                                             </thead>
                                             <tbody id="dayProgramsTableBody">
@@ -98,8 +100,10 @@ if(isset($this->tripTemplate) and $this->tripTemplate and $tripTemplate->getDayp
                                                         <td><img src="<?php if($dayprogram->getHotel()){echo TemplateView::noHTML($dayprogram->getHotel()->getPicturePath());} ?>" alt="Not available" border=3 width=150></td>
                                                         <td><?php if($dayprogram->getHotel()){echo TemplateView::noHTML($dayprogram->getHotel()->getDescription());} ?> </td>
                                                         <td><?php if($dayprogram->getHotel()){echo TemplateView::noHTML($dayprogram->getHotel()->getPricePerPerson());} ?> </td>
+                                                        <?php if(!$tripTemplate->getBookable()): ?>
                                                         <td><form id="deleteDayprogram<?php echo $dayprogram->getId(); ?>" action="<?php echo $GLOBALS['ROOT_URL'] ?>/admin/tripTemplates/package/<?php echo $dayprogram->getId()."/".$tripTemplate->getId(); ?>" method="post">
                                                         <input type="hidden" name="_method" value="DELETE"><img src="assets/img/Recycle_Bin.png" alt="Remove"  border=3 height=20 width=20 onclick="deleteHandler(<?php echo $dayprogram->getId(); ?>)"></form></td>
+                                                        <?php endif; ?>
                                                     </tr>
                                                 <?php endforeach; ?>
                                             </tbody>
@@ -112,6 +116,7 @@ if(isset($this->tripTemplate) and $this->tripTemplate and $tripTemplate->getDayp
                 </div>
             </div>
         </div>
+        <?php if(!$tripTemplate->getBookable()): ?>
         <div role="tablist" id="accordionTripAdmin" style="margin-left: 0px;">
             <div class="card">
                 <div class="card-header" role="tab">
@@ -119,7 +124,9 @@ if(isset($this->tripTemplate) and $this->tripTemplate and $tripTemplate->getDayp
                 </div>
                 <div class="collapse item-1" role="tabpanel" data-parent="#accordionTripAdmin">
                     <div class="card-body">
-                        <div class="text-center border rounded border-info shadow d-flex d-sm-flex d-md-flex d-lg-flex justify-content-center justify-content-sm-center justify-content-md-center justify-content-lg-center"><form action="<?php echo $GLOBALS['ROOT_URL'] ?>/admin/tripTemplates/package/<?php echo $tripTemplate->getId(); ?>" method="GET" class="d-md-flex justify-content-md-center" style="padding-top: 0px;padding-right: 0px;padding-bottom: 0px;padding-left: 0px;">
+                        <div class="text-center border rounded border-info shadow d-flex d-sm-flex d-md-flex d-lg-flex justify-content-center justify-content-sm-center justify-content-md-center justify-content-lg-center">
+                            <form action="<?php echo $GLOBALS['ROOT_URL'] ?>/admin/tripTemplates/package/<?php echo $tripTemplate->getId(); ?>" method="POST" class="d-md-flex justify-content-md-center" style="padding-top: 0px;padding-right: 0px;padding-bottom: 0px;padding-left: 0px;">
+                                <input type="hidden" name="_method" value="PUT">
                                 <div class="text-center" >
                                     <p style="margin-bottom: 15px;margin-top: 15px;color: #000000;">Have you assigned all day programs to the trip?</p>
                                     <button class="btn btn-info" type="submit" id="btnDayProgramsComplete" style="margin-top: 0px;margin-bottom: 11px;">Make this trip bookable</button></div>
@@ -152,6 +159,7 @@ if(isset($this->tripTemplate) and $this->tripTemplate and $tripTemplate->getDayp
                 </div>
             </div>
         </div>
+        <?php endif; ?>
     </div>
 
     <script src="assets/js/Sidebar-Menu.js"></script>

@@ -162,8 +162,7 @@ class TripController {
         $dayprogram->setDayNumber($dayNumber);
         $dayprogram->setDescription(\filter_input(\INPUT_POST, 'description', \FILTER_DEFAULT));
         $fk_hotel_id = Validation::positiveInt(\filter_input(\INPUT_POST, 'hotelId', \FILTER_VALIDATE_INT));
-        if(!$fk_hotel_id){
-            echo "tripController not positive Int: ".\filter_input(\INPUT_POST, 'hotelId', \FILTER_VALIDATE_INT)."</br>";
+        if($fk_hotel_id === false){
             return false;
         }
         $dayprogram->setFkHotelId($fk_hotel_id);
@@ -173,7 +172,6 @@ class TripController {
         }else{
             $dayprogram->setPicturePath("views/assets/img/defaultDayprogram.jpg");
         }
-        
         $dayprogram->create();
         return $fk_tripTemplate_id;//to ensure correct routing
     }
@@ -202,8 +200,7 @@ class TripController {
      * @return boolean
      */
     public static function changeBookableOfTripTemplate($tripTemplateId){
-        echo "changeBookableOfTripTemplate</br>";
-        if($_SESSION['role'] != "admin"){
+        if(!isset($_SESSION['role']) or (isset($_SESSION['role']) and $_SESSION['role'] != "admin")){
             return false;
         }
         $tripTemplate = new TripTemplate();
@@ -214,7 +211,7 @@ class TripController {
         }
         $tripTemplate->setId($id);
         
-        return $tripTemplate->changeBookable();
+        $tripTemplate->changeBookable();
     }
     
     /**

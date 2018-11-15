@@ -134,7 +134,7 @@ class TripTemplate {
     }
     
     public function getBookable() {
-        return (boolean) $this->bookable;
+        return boolval($this->bookable);
     }
 
     public function getFkBusId() {
@@ -155,7 +155,7 @@ class TripTemplate {
     
     public function setId($id) {
         /* @var $id type int*/
-        $this->id = (int) $id;
+        $this->id = intval($id);
     }
 
     public function setName($name) {
@@ -168,22 +168,22 @@ class TripTemplate {
 
     public function setMinAllocation($minAllocation) {
         /* @var $minAllocation type int*/
-        $this->minAllocation = (int) $minAllocation;
+        $this->minAllocation = intval($minAllocation);
     }
 
     public function setMaxAllocation($maxAllocation) {
         /* @var $maxAllocation type int*/
-        $this->maxAllocation = (int) $maxAllocation;
+        $this->maxAllocation = intval($maxAllocation);
     }
 
     public function setDurationInDays($durationInDays) {
         /* @var $durationInDays type int*/
-        $this->durationInDays = (int) $durationInDays;
+        $this->durationInDays = intval($durationInDays);
     }
 
     public function setPrice($price) {
         /* @var $price type double*/
-        $this->price = (double) $price;
+        $this->price = doubleval($price);
     }
 
     public function setPicturePath($picturePath) {
@@ -192,12 +192,12 @@ class TripTemplate {
     
     public function setBookable($bookable) {
         /* @var $bookable type  boolean*/
-        $this->bookable = (boolean) $bookable;
+        $this->bookable = boolval($bookable);
     }
 
     public function setFkBusId($fk_bus_id) {
         /* @var $fk_bus_id type int*/
-        $this->fk_bus_id = (int) $fk_bus_id;
+        $this->fk_bus_id = intval($fk_bus_id);
     }
 
     public function setDayprograms($dayprograms) {

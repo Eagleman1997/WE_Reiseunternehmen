@@ -256,23 +256,25 @@ class TripDBC extends DBConnector {
         $description = $dayprogram->getDescription();
         $fk_tripTemplate_id = $dayprogram->getFkTripTemplateId();
         $hotelId = $dayprogram->getFkHotelId();
-        if($hotelId == 0){
+        if($hotelId === 0){
+
             $fk_hotel_id = null;
         }else{
+
             $fk_hotel_id = $hotelId;
         }
         if(!$stmt->execute()){
             $this->mysqliInstance->rollback();
             exit();
         }
-        
+
         //Gets the TripTemplate to update
         $tripTemplate = $this->findTripTemplateById($fk_tripTemplate_id, false);
         if(!$tripTemplate){
             $this->mysqliInstance->rollback();
             exit();
         }
-        
+
         //Gets the Bus of the TripTemplate to calculate with pricePerDay
         $busDBC = new BusDBC();
         $bus = $busDBC->findBusById($tripTemplate->getFkBusId(), false);
@@ -280,15 +282,15 @@ class TripDBC extends DBConnector {
             $this->mysqliInstance->rollback();
             exit();
         }
-        
+
         //Gets the Hotel of the Dayprogram to calculate with pricePerPerson
         $hotelDBC = new HotelDBC();
         $hotel = $hotelDBC->findHotelById($dayprogram->getFkHotelId(), false);
-        if(!$hotel){
+        if(!$hotel and $fk_hotel_id != null){
             $this->mysqliInstance->rollback();
             exit();
         }
-        
+
         //updates the price and durationInDays of the TripTemplate
         $stmt = $this->mysqliInstance->prepare("UPDATE triptemplate SET price = ?, durationInDays = ? WHERE id = ?");
         if(!$stmt){
@@ -297,7 +299,12 @@ class TripDBC extends DBConnector {
         }
         $stmt->bind_param('dii', $price, $durationInDays, $tripTemplateId);
         //Calculates and adds the minPrice for the TripTemplate
-        $price = $tripTemplate->getPrice() + $bus->getPricePerDay() + $tripTemplate->getMinAllocation() * $hotel->getPricePerPerson();
+        if($fk_hotel_id === null or $hotel === false){
+            $hotelPricePerPerson = 0;
+        }else{
+            $hotelPricePerPerson = $hotel->getPricePerPerson();
+        }
+        $price = $tripTemplate->getPrice() + $bus->getPricePerDay() + $tripTemplate->getMinAllocation() * $hotelPricePerPerson;
         $price = round($price * 20, 0) / 20;//round to the nearest 0.05
         $durationInDays = $tripTemplate->getDurationInDays() + 1;
         $tripTemplateId = $tripTemplate->getId();
