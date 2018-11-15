@@ -26,3 +26,6 @@
   color: white;
 }
 
+.scrollableDiv {
+  overflow-x: auto;
+}
