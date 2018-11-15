@@ -5,6 +5,12 @@
  */
 use views\TemplateView;
 
+isset($this->tripTemplate) ? $tripTemplate = $this->tripTemplate : $tripTemplate = new TripTemplate();
+if(isset($this->tripTemplate) and $this->tripTemplate and $tripTemplate->getDayprograms()){
+    $dayprograms = $tripTemplate->getDayprograms(); 
+}else{
+    $dayprograms = array();
+}   
 ?>
 
 <body>
@@ -31,6 +37,8 @@ use views\TemplateView;
                                             <th>Min. travelers</th>
                                             <th>Max. travelers</th>
                                             <th>Bus</th>
+                                            <th>From CHF</th>
+                                            <th>Min. CHF per person</th>
                                         </tr>
                                     </thead>
                                     <tbody id="tripTableBody">
@@ -40,7 +48,9 @@ use views\TemplateView;
                                             <td><?php echo TemplateView::noHTML($tripTemplate->getDescription()); ?></td>
                                             <td><?php echo TemplateView::noHTML($tripTemplate->getMinAllocation()); ?></td>
                                             <td><?php echo TemplateView::noHTML($tripTemplate->getMaxAllocation()); ?></td>
-                                            <td><?php echo TemplateView::noHTML($tripTemplate->getBus()->getPicturePath()); ?></td>
+                                            <td><img src="<?php if($tripTemplate->getBus()){echo TemplateView::noHTML($tripTemplate->getBus()->getPicturePath());} ?>" alt="Not available" border=3 width=200></td>
+                                            <td><?php echo TemplateView::noHTML($tripTemplate->getCustomerPrice()); ?></td>
+                                            <td><?php echo TemplateView::noHTML(round(($tripTemplate->getCustomerPrice()/$tripTemplate->getMinAllocation()) * 20, 0) / 20); ?></td>
                                         </tr>
                                     </tbody>
                                 </table>
@@ -73,20 +83,18 @@ use views\TemplateView;
                                                     <th>Hotel name</th>
                                                     <th>Hotel image</th>
                                                     <th>Hotel description</th>
-                                                    <th>Hotel price</th>
                                                 </tr>
                                             </thead>
                                             <tbody id="dayProgramsTableBody">
-                                                <?php foreach ($this->trips as $trips): ?>
+                                                <?php foreach ($dayprograms as $dayprogram): ?>
                                                     <tr>
-                                                        <td><?php echo TemplateView::noHTML($trips->getTripTemplate()->getDayprograms()->getDayNumber()); ?></td>
-                                                        <td><?php echo TemplateView::noHTML($trips->getTripTemplate()->getDayprograms()->getPicturePath()); ?> </td>
-                                                        <td><?php echo TemplateView::noHTML($trips->getTripTemplate()->getDayprograms()->getName()); ?> </td>
-                                                        <td><?php echo TemplateView::noHTML($trips->getTripTemplate()->getDayprograms()->getDescription()); ?> </td>
-                                                        <td><?php echo TemplateView::noHTML($trips->getTripTemplate()->getDayprograms()->getHotel()->getName()); ?> </td>
-                                                        <td><?php echo TemplateView::noHTML($trips->getTripTemplate()->getDayprograms()->getHotel()->getPicturePath()); ?> </td>
-                                                        <td><?php echo TemplateView::noHTML($trips->getTripTemplate()->getDayprograms()->getHotel()->getDescription()); ?> </td>
-                                                        <td><?php echo TemplateView::noHTML($trips->getTripTemplate()->getDayprograms()->getHotel()->getPrice()); ?> </td>
+                                                        <td><?php echo TemplateView::noHTML($dayprogram->getDayNumber()); ?></td>
+                                                        <td><img src="<?php echo TemplateView::noHTML($dayprogram->getPicturePath()); ?>" alt="Not available" border=3 width=150></td>
+                                                        <td><?php echo TemplateView::noHTML($dayprogram->getName()); ?> </td>
+                                                        <td><?php echo TemplateView::noHTML($dayprogram->getDescription()); ?> </td>
+                                                        <td><?php if($dayprogram->getHotel()){echo TemplateView::noHTML($dayprogram->getHotel()->getName());} ?> </td>
+                                                        <td><?php if($dayprogram->getHotel()): ?><img src="<?php echo TemplateView::noHTML($dayprogram->getHotel()->getPicturePath()); ?>" alt="Not available" border=3 width=150><?php endif; ?></td>
+                                                        <td><?php if($dayprogram->getHotel()){echo TemplateView::noHTML($dayprogram->getHotel()->getDescription());} ?> </td>
                                                     </tr>
                                                 <?php endforeach; ?>
                                             </tbody>
@@ -104,7 +112,9 @@ use views\TemplateView;
             <div style="margin-bottom: 15px;margin-left: 15px;">
                 <form class="border-dark" action="index.php" method="post" id="tripBookingForm" style="background-color: rgba(96,175,221,0.21);padding-right: 25px;padding-left: 25px;min-width: 600px;background-image: url(&quot;assets/img/spanish%20beach.png&quot;);background-position: center;background-size: cover;background-repeat: no-repeat;">
                     <div class="form-group"><label style="color: #222222;"><strong>Departure date</strong></label><input class="form-control" type="date" name="departureDate" required=""></div>
-                    <div class="form-group"><label style="margin-top: 13px;color: #222222;"><strong>Insurance (optional)</strong></label><select class="form-control" name="insurance" required="" id="insuranceDropdown"><optgroup label="Select insurance"><option value="" selected="">This is item 1</option><option value="">This is item 2</option><option value="" selected="">No insurance</option></optgroup></select></div>
+                    <div class="form-group"><label style="margin-top: 13px;color: #222222;"><strong>Insurance (optional)</strong></label><select class="form-control" name="insurance" required="" id="insuranceDropdown"><optgroup label="Select insurance">
+                                <option value="" selected="">This is item 1</option><option value="">This is item 2</option><option value="" selected="">No insurance</option>
+                            </optgroup></select></div>
                     <div
                         class="form-group"><label style="margin-top: 13px;color: #222222;"><strong>Participants (min. 11, max. 19)</strong></label><select class="form-control" name="participants" required="" multiple="" id="selectedParticipants" style="min-height: 200px;min-width: 180px;background-color: #f7f9fc;max-width: 500px;"><optgroup label="Select multiple with CTRL"><option value="nameParticipant1" selected="">Participant 1</option><option value="nameParticipant2">Participant 2</option><option value="nameParticipant3">Participant 3</option><option value="nameParticpant4">Participant 4</option></optgroup></select>
                         <div><label style="margin-left: 0px;margin-top: 25px;color: #222222;" for="tripPrice"><strong>Price</strong></label><input class="form-control" type="text" name="price" readonly="" id="price"></div>

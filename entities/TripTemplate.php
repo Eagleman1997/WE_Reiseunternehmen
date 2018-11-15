@@ -150,7 +150,7 @@ class TripTemplate {
     }
     
     public function getCustomerPrice(){
-        return Margin::addTrip($this->price);
+        return round(Margin::addTrip($this->price) * 20, 0) / 20;
     }
     
     public function setId($id) {

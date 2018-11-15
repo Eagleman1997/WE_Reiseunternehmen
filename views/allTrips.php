@@ -15,7 +15,13 @@ isset($this->trips) ? $trips = $this->trips : $trips = array();
 <body style="background-color: rgb(241,247,252);font-family: Capriola, sans-serif;padding-bottom: 0px;">
     <div style="min-height: 850px;">
         <ul class="nav nav-tabs" style="margin-top: 15px;margin-bottom: 15px;">
-            <li class="nav-item"><a class="nav-link active" role="tab" data-toggle="tab" href="#tab-1">All trips</a></li>
+            <li class="nav-item"><a class="nav-link active" role="tab" data-toggle="tab" href="#tab-1">
+                <?php if(isset($_SESSION['role']) and $_SESSION['role'] == "admin"){
+                            echo "All trip templates";
+                        }else{
+                            echo "All trips";
+                        }
+                ?></a></li>
             <?php if(isset($_SESSION['login'])) : ?>
             <li class="nav-item"><a class="nav-link" role="tab" data-toggle="tab" href="#tab-2">Booked trips</a></li>
             <?php endif; ?>
@@ -32,7 +38,7 @@ isset($this->trips) ? $trips = $this->trips : $trips = array();
                         <div class="col-md-6 col-lg-4">
                             <div class="card border-0"><a href="<?php
                                     if(isset($_SESSION['role']) and $_SESSION['role'] == "admin"){
-                                        $adminTemplatePath = $GLOBALS['ROOT_URL']."/admin/packageOverview/package/".$tripTemplate->getId();
+                                        $adminTemplatePath = $GLOBALS['ROOT_URL']."/admin/tripTemplates/package/".$tripTemplate->getId();
                                         echo $adminTemplatePath;
                                     }else{
                                         $userTemplatePath = $GLOBALS['ROOT_URL']."/packageOverview/package/".$tripTemplate->getId();
@@ -66,8 +72,7 @@ isset($this->trips) ? $trips = $this->trips : $trips = array();
                             ?></h2>
                     </div>
                     <div class="row">
-                        <?php 
-                        foreach ($trips as $trip) : ?>
+                        <?php foreach ($trips as $trip) : ?>
                         <?php if(!$trip->getTripTemplate()){continue;};//Ensures that just Trips with a TripTemplate are shown ?>
                         <div class="col-md-6 col-lg-4">
                             <div class="card border-0"><a href="<?php
