@@ -38,6 +38,7 @@ isset($this->users) ? $users = $this->users : $users = array();
 
                                 <input class="form-control" id="myInput" type="text" placeholder="Search users...">
                                 <br>
+                                <div style="overflow-x: auto;">
                                 <table id="userAdminTable" class="tableStyle">
                                     <thead>
                                         <tr>
@@ -62,6 +63,7 @@ isset($this->users) ? $users = $this->users : $users = array();
                                         <?php endforeach; ?>
                                     </tbody>
                                 </table>
+                                </div>
                             </div>
 
                             <!--Make the table searchable-->

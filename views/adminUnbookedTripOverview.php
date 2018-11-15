@@ -136,6 +136,7 @@ if(isset($this->tripTemplate) and $this->tripTemplate and $tripTemplate->getDayp
                         <div class="border rounded-0 border-primary shadow form-container" style="min-width: 400px;max-width: 632px;margin-top: 30px;">
                             <h4 class="text-center" style="margin-bottom: 16px;margin-top: 18px;min-width: 400px;"><strong>Add a new day program to the trip.</strong><br></h4>
                             <div style="margin-bottom: 15px;margin-left: 15px;">
+                                <div style="overflow-x: auto;">
                                 <form class="form-inline" action="<?php echo $GLOBALS['ROOT_URL']; ?>/admin/tripTemplates/package" method="post" enctype="multipart/form-data" id="dayProgramForm" style="background-color: rgba(147,198,224,0.36);font-family: Capriola, sans-serif;padding-right: 0px;padding-bottom: 30px;padding-top: 0px;padding-left: 30px;min-width: 600px;">
                                     <input type="hidden" name="tripTemplateId" value="<?php echo $tripTemplate->getId(); ?>">
                                     <div class="form-group" style="margin: 10px;"><label class="labelsFormDayProgram">For which day of the trip would you like to add a day program?</label><input class="form-control" type="number" name="dayNumber" value="1" required="" min="1" max="7" step="1" id="dayNumber"></div>
@@ -155,6 +156,7 @@ if(isset($this->tripTemplate) and $this->tripTemplate and $tripTemplate->getDayp
                                     <button
                                         class="btn btn-primary btn-block" type="submit" style="width: 100px;margin: 10px;margin-top: 50px;margin-left: 10px;">Save</button>
                                 </form>
+                                </div>
                             </div>
                         </div>
                     </div>

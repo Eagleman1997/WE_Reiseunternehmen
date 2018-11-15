@@ -35,6 +35,7 @@ isset($this->participants) ? $participants = $this->participants : $participants
 
                         <input class="form-control" id="participantInput" type="text" placeholder="Search travelers...">
                         <br>
+                        <div style="overflow-x: auto;">
                         <table id="participantOverviewTable" class="tableStyle">
                             <thead>
                                 <tr>
@@ -55,6 +56,7 @@ isset($this->participants) ? $participants = $this->participants : $participants
                                 <?php endforeach; ?>
                             </tbody>
                         </table>
+                        </div>
                     </div>
 
                     <script>

@@ -27,6 +27,7 @@ isset($this->tripTemplates) ? $tripTemplates = $this->tripTemplates : $tripTempl
             <div class="page-content-wrapper">
                 <div class="container-fluid" style="background-image: url(&quot;assets/img/Mountains.jpg&quot;);background-position: center;background-size: cover;background-repeat: no-repeat;padding-bottom: 33px;"><a class="btn btn-link bg-light" role="button" href="#menu-toggle" id="menu-toggle"><i class="fa fa-bars"></i></a>
                     <h2 class="text-center" style="font-family: Capriola, sans-serif;color: #000000;"><strong>Create a new trip template.</strong></h2>
+                    <div style="overflow-x: auto;">
                     <form class="form-inline pulse animated" action="<?php echo $GLOBALS['ROOT_URL'] ?>/admin/tripTemplates" method="post" enctype="multipart/form-data" id="tripTemplateForm" style="background-color: rgba(255,255,255,0.6);margin: 20px;padding: 20px;font-family: Capriola, sans-serif;">
                         <div class="form-group" style="margin: 10px;margin-right: 10px;width: 400px;"><label class="labelsFormTripTemplates">Trip name</label><textarea class="form-control" name="name" required="" minlength="3" style="width: 400px;"></textarea></div>
                         <div class="form-group" style="margin: 10px;"><label class="labelsFormTripTemplates">Description</label><textarea class="form-control" name="description" required="" minlength="3" style="width: 400px;margin-right: 0px;"></textarea></div>
@@ -45,6 +46,7 @@ isset($this->tripTemplates) ? $tripTemplates = $this->tripTemplates : $tripTempl
                         <div class="form-group mt-auto"
                              style="margin-top: 0px;padding-top: 20px;"><button class="btn btn-primary" type="submit" style="width: 100px;margin: 10px;margin-top: 10px;margin-left: 10px;">Save</button></div>
                     </form>
+                    </div>
                     <div style="background-color: rgba(255,255,255,0.53);padding-top: 0px;margin-top: 65px;margin-bottom: 65px;padding-bottom: 20px;">
                         <h2 class="text-center" style="margin-bottom: 40px;padding: 0px;padding-top: 23px;font-family: Capriola, sans-serif;"><strong>Overview of added trip templates.</strong></h2><!DOCTYPE html>
                         <html lang="en">
@@ -58,6 +60,8 @@ isset($this->tripTemplates) ? $tripTemplates = $this->tripTemplates : $tripTempl
 
                                     <input class="form-control" id="tripTemplateInput" type="text" placeholder="Search trip template...">
                                     <br>
+                                    
+                                    <div style="overflow-x: auto;">
                                     <table id="tripTemplateOverviewTable" class="tableStyle">
                                         <thead>
                                             <tr>
@@ -89,6 +93,7 @@ isset($this->tripTemplates) ? $tripTemplates = $this->tripTemplates : $tripTempl
                                             <?php endforeach;  ?>
                                         </tbody>
                                     </table>
+                                    </div>
                                 </div>
 
                                 <script>

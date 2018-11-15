@@ -26,13 +26,15 @@ isset($this->insurances) ? $insurances = $this->insurances : $insurances = array
             <div class="page-content-wrapper">
                 <div class="container-fluid" style="background-image: url(&quot;assets/img/europe%20skyline%20uncut.png&quot;);background-position: center;background-size: cover;background-repeat: no-repeat;padding-bottom: 26px;min-height: 800px;"><a class="btn btn-link" role="button" href="#menu-toggle" id="menu-toggle"><i class="fa fa-bars"></i></a>
                     <h2 class="text-center" style="font-family: Capriola, sans-serif;color: #000000;"><strong>Add a new insurance.</strong></h2>
+                    <div style="overflow-x: auto;">
                     <form class="form-inline pulse animated" action="<?php echo $GLOBALS['ROOT_URL'] ?>/admin/insurances" method="post" id="insuranceForm" style="background-color: rgba(255,255,255,0.77);margin: 20px;padding: 20px;font-family: Capriola, sans-serif;">
                         <div class="form-group" style="width: 400px;margin: 10px;margin-right: 10px;"><label class="labelsFormTripTemplates">Insurance name</label><textarea class="form-control" name="name" required="" minlength="3" style="width: 400px;"></textarea></div>
                         <div class="form-group" style="margin: 10px;"><label class="labelsFormTripTemplates">Description</label><textarea class="form-control" name="description" required="" minlength="3" style="width: 400px;margin-right: 0px;"></textarea></div>
                         <div class="form-group" style="margin: 10px;width: 200px;margin-right: 50px;"><label class="labelsFormTripTemplates">Price per person</label><input class="form-control" type="number" step="0.05" name="pricePerPerson" required="" min="1"></div>
                         <div class="form-group mt-auto" style="margin-top: 0px;padding-top: 20px;"><button class="btn btn-primary btn-block" type="submit" style="width: 100px;margin: 10px;margin-top: 10px;margin-left: 10px;">Save</button></div>
                     </form>
-                    <div style="font-family: Capriola, sans-serif;margin-bottom: 40px;padding-bottom: 20px;margin-top: 65px;min-width: 705px;background-color: rgba(255,255,255,0.77);margin-right: 0px;">
+                    </div>
+                    <div style="font-family: Capriola, sans-serif;margin-bottom: 40px;padding-bottom: 20px;margin-top: 65px;background-color: rgba(255,255,255,0.77);margin-right: 0px;">
                         <h2 class="text-center" style="margin-bottom: 16px;padding: 0px;padding-top: 23px;"><strong>Overview of added insurances.</strong></h2><!DOCTYPE html>
                         <html lang="en">
                             <head>
@@ -45,6 +47,7 @@ isset($this->insurances) ? $insurances = $this->insurances : $insurances = array
 
                                     <input class="form-control" id="insuranceInput" type="text" placeholder="Search insurance...">
                                     <br>
+                                    <div style="overflow-x: auto;">
                                     <table id="insuranceOverviewTable" class="tableStyle">
                                         <thead>
                                             <tr>
@@ -61,24 +64,25 @@ isset($this->insurances) ? $insurances = $this->insurances : $insurances = array
                                                     <td><?php echo TemplateView::noHTML($insurance->getDescription()); ?> </td>
                                                     <td><?php echo TemplateView::noHTML($insurance->getPricePerPerson()); ?> </td>
                                                     <td><form id="deleteInsurance<?php echo $insurance->getId(); ?>" action="<?php echo $GLOBALS['ROOT_URL'] ?>/admin/insurances/<?php echo $insurance->getId(); ?>" method="post">
-                                                        <input type="hidden" name="_method" value="DELETE"><img src="assets/img/Recycle_Bin.png" alt="Remove"  border=3 height=20 width=20 onclick="deleteHandler(<?php echo $insurance->getId(); ?>)"></form></td>
+                                                            <input type="hidden" name="_method" value="DELETE"><img src="assets/img/Recycle_Bin.png" alt="Remove"  border=3 height=20 width=20 onclick="deleteHandler(<?php echo $insurance->getId(); ?>)"></form></td>
                                                 </tr>
                                             <?php endforeach; ?>
                                         </tbody>
                                     </table>
+                                    </div>
                                 </div>
 
                                 <script>
 
-                                //Remove insurance
-                                function deleteHandler(insuranceId){
-                                    var c = confirm("Do you want to delete this insurance?");
-                                    if(c){
-                                        $("#deleteInsurance"+insuranceId).submit();
+                                    //Remove insurance
+                                    function deleteHandler(insuranceId) {
+                                        var c = confirm("Do you want to delete this insurance?");
+                                        if (c) {
+                                            $("#deleteInsurance" + insuranceId).submit();
+                                        }
                                     }
-                                }
 
-                                //Make the table searchable
+                                    //Make the table searchable
                                     $(document).ready(function () {
                                         $("#insuranceInput").on("keyup", function () {
                                             var value = $(this).val().toLowerCase();
@@ -87,6 +91,13 @@ isset($this->insurances) ? $insurances = $this->insurances : $insurances = array
                                             });
                                         });
                                     });
+
+                                    //Make the table scrollable
+                                    $(document).ready(function () {
+                                        $(".container").css("overflow-x", "auto");
+                                    });
+
+
 
                                 </script>
 
@@ -97,5 +108,5 @@ isset($this->insurances) ? $insurances = $this->insurances : $insurances = array
             </div>
         </div>
     </section>
-    
+
     <script src="assets/js/Sidebar-Menu.js"></script>

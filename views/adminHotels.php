@@ -27,6 +27,7 @@ isset($this->hotels) ? $hotels = $this->hotels : $hotels = array();
             <div class="page-content-wrapper">
                 <div class="container-fluid" style="background-image: url(&quot;assets/img/paris.jpg&quot;);background-position: center;background-size: cover;background-repeat: no-repeat;padding-bottom: 20px;min-height: 830px;"><a class="btn btn-link bg-light" role="button" href="#menu-toggle" id="menu-toggle"><i class="fa fa-bars"></i></a>
                     <h2 class="text-center" style="font-family: Capriola, sans-serif;color: #000000;"><strong>Add a new hotel.</strong></h2>
+                    <div style="overflow-x: auto;">
                     <form class="form-inline pulse animated" action="<?php echo $GLOBALS['ROOT_URL'] ?>/admin/hotels" method="post" enctype="multipart/form-data" id="hotelForm" style="background-color: rgba(255,255,255,0.6);margin: 20px;padding: 20px;font-family: Capriola, sans-serif;">
                         <div class="form-group" style="width: 400px;margin: 10px;margin-right: 10px;"><label class="labelsFormTripTemplates">Hotel name</label><textarea class="form-control" name="name" required="" minlength="3" style="width: 400px;"></textarea></div>
                         <div class="form-group" style="margin: 10px;"><label class="labelsFormTripTemplates">Description</label><textarea class="form-control" name="description" required="" minlength="3" style="width: 400px;margin-right: 0px;"></textarea></div>
@@ -35,7 +36,8 @@ isset($this->hotels) ? $hotels = $this->hotels : $hotels = array();
                         <div
                             class="form-group mt-auto" style="margin-top: 0px;padding-top: 20px;"><button class="btn btn-primary btn-block" type="submit" style="width: 100px;margin: 10px;margin-top: 10px;margin-left: 10px;">Save</button></div>
                     </form>
-                    <div style="font-family: Capriola, sans-serif;margin-bottom: 40px;padding-bottom: 20px;margin-top: 65px;min-width: 705px;background-color: rgba(255,255,255,0.72);margin-right: 0px;">
+                    </div>
+                    <div style="font-family: Capriola, sans-serif;margin-bottom: 40px;padding-bottom: 20px;margin-top: 65px;background-color: rgba(255,255,255,0.72);margin-right: 0px;">
                         <h2 class="text-center" style="margin-bottom: 16px;padding: 0px;padding-top: 23px;"><strong>Overview of added hotels.</strong></h2><!DOCTYPE html>
                         <html lang="en">
                             <head>
@@ -48,6 +50,8 @@ isset($this->hotels) ? $hotels = $this->hotels : $hotels = array();
 
                                     <input class="form-control" id="hotelInput" type="text" placeholder="Search hotel...">
                                     <br>
+                                    
+                                    <div style="overflow-x: auto;">
                                     <table id="hotelOverviewTable" class="tableStyle">
                                         <thead>
                                             <tr>
@@ -71,6 +75,7 @@ isset($this->hotels) ? $hotels = $this->hotels : $hotels = array();
                                             <?php endforeach; ?>
                                         </tbody>
                                     </table>
+                                    </div>
                                 </div>
 
                                 <script>

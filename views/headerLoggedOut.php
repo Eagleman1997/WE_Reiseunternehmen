@@ -46,17 +46,17 @@ use views\TemplateView;
             <div class="container-fluid"><a class="navbar-brand" href="<?php echo $GLOBALS['ROOT_URL'] ?>/login" data-bs-hover-animate="tada"></a><button class="navbar-toggler" data-toggle="collapse" data-target="#navcol-1"><span class="sr-only">noggle navigation</span><span class="navbar-toggler-icon"></span></button>
                 <div
                     class="collapse navbar-collapse" id="navcol-1">
-                    <ul class="nav navbar-nav mr-auto">
+                    <ul class="nav navbar-nav mr-auto" style="font-family: Capriola">
                         <li class="nav-item" role="presentation"><a class="nav-link" href="<?php echo $GLOBALS['ROOT_URL'] ?>/packageOverview" style="color: #000000;">Trip overview</a></li>
                     </ul><span class="ml-auto navbar-text actions"> <div class="topnav">
-  <div class="login-container">
+  <div class="login-container" style="font-family:Capriola">
     <form action="<?php echo $GLOBALS['ROOT_URL'] ?>/login" method="post">
       <input type="email" required placeholder="Email" name="email">
       <input type="password" required placeholder="Password" name="password">
       <button id=loginButton type="submit">Login</button>
     </form>
   </div>
-</div><a class="btn btn-link btn-sm border rounded border-primary" role="button" href="<?php echo $GLOBALS["ROOT_URL"]; ?>/registration" style="background-color: #ffffff;color: #0080f7;padding-top: 2px;padding-bottom: 2px;margin-top: 4px;">Sign up</a></span>
+</div><a class="btn btn-link btn-sm border rounded border-primary" role="button" href="<?php echo $GLOBALS["ROOT_URL"]; ?>/registration" style="background-color: #ffffff;color: #0080f7;padding-top: 2px;padding-bottom: 2px;margin-top: 4px; font-family:Capriola">Sign up</a></span>
             </div>
     </div>
     </nav>

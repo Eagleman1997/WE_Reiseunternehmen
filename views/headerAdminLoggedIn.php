@@ -46,10 +46,10 @@ use views\TemplateView;
             <div class="container-fluid"><a class="navbar-brand" href="<?php echo $GLOBALS['ROOT_URL'] ?>/admin" data-bs-hover-animate="tada"></a><button class="navbar-toggler" data-toggle="collapse" data-target="#navcol-1"><span class="sr-only">Toggle navigation</span><span class="navbar-toggler-icon"></span></button>
                 <div
                     class="collapse navbar-collapse float-right" id="navcol-1">
-                    <ul class="nav navbar-nav">
+                    <ul class="nav navbar-nav" style="font-family: Capriola">
                         <li class="nav-item" role="presentation"><a class="nav-link" href="<?php echo $GLOBALS['ROOT_URL'] ?>/admin/packageOverview" style="color: #000000;">Trip overview</a></li>
                         <li class="nav-item" role="presentation"><a class="nav-link" href="<?php echo $GLOBALS['ROOT_URL'] ?>/admin" style="color: #000000;">Administration</a></li>
-                    </ul><span class="ml-auto navbar-text actions" style="background-position: right;color: #000000;"> <a class="float-right" href="<?php echo $GLOBALS['ROOT_URL'] ?>/logout" style="background-position: right;">Sign out</a></span></div>
+                    </ul><span class="ml-auto navbar-text actions" style="background-position: right;color: #000000;"> <a class="float-right" href="<?php echo $GLOBALS['ROOT_URL'] ?>/logout" style="background-position: right; font-family:Capriola">Sign out</a></span></div>
     </div>
     </nav>
     </div>
