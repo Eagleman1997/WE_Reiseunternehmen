@@ -163,6 +163,7 @@ class TripController {
         $dayprogram->setDescription(\filter_input(\INPUT_POST, 'description', \FILTER_DEFAULT));
         $fk_hotel_id = Validation::positiveInt(\filter_input(\INPUT_POST, 'hotelId', \FILTER_VALIDATE_INT));
         if(!$fk_hotel_id){
+            echo "tripController not positive Int: ".\filter_input(\INPUT_POST, 'hotelId', \FILTER_VALIDATE_INT)."</br>";
             return false;
         }
         $dayprogram->setFkHotelId($fk_hotel_id);

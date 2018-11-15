@@ -255,7 +255,12 @@ class TripDBC extends DBConnector {
         $dayNumber = $dayprogram->getDayNumber();
         $description = $dayprogram->getDescription();
         $fk_tripTemplate_id = $dayprogram->getFkTripTemplateId();
-        $fk_hotel_id = $dayprogram->getFkHotelId();
+        $hotelId = $dayprogram->getFkHotelId();
+        if($hotelId == 0){
+            $fk_hotel_id = null;
+        }else{
+            $fk_hotel_id = $hotelId;
+        }
         if(!$stmt->execute()){
             $this->mysqliInstance->rollback();
             exit();

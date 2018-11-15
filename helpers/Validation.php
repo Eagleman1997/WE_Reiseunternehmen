@@ -15,8 +15,13 @@ class Validation {
      * @return boolean
      */
     public static function positiveInt($number){
-        $number = (int) $number;
-        if(is_int($number) and $number > 0){
+        if(is_numeric($number)){
+            $number = intval($number);
+        }
+        if(!is_int($number)){
+            return false;
+        }
+        if(!($number < 0)){
             return $number;
         }else{
             return false;
@@ -29,8 +34,13 @@ class Validation {
      * @return boolean
      */
     public static function positivePrice($price){
-        $price = (double) $price;
-        if(is_double($price) and $price > 0){
+        if(is_numeric($price)){
+            $price = doubleval($price);
+        }
+        if(!is_double($price)){
+            return false;
+        }
+        if(!($price < 0)){
             return $price;
         }else{
             return false;
@@ -87,8 +97,7 @@ class Validation {
      * @return boolean
      */
     public static function zipCode($zipCode){
-        $zipCode = (int) $zipCode;
-        if(is_int($zipCode) and $zipCode > 0 and $zipCode < 100000){
+        if(is_numeric($zipCode) and $zipCode > 0 and $zipCode < 100000){
             return $zipCode;
         }else{
             return false;
