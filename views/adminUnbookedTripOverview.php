@@ -39,7 +39,8 @@ if(isset($this->tripTemplate) and $this->tripTemplate and $tripTemplate->getDayp
                                             <th>Min. travelers</th>
                                             <th>Max. travelers</th>
                                             <th>Bus</th>
-                                            <th>Price from CHF</th>
+                                            <th>Internal price from CHF</th>
+                                            <th>Customer price from CHF</th>
                                         </tr>
                                     </thead>
                                     <tbody id="tripTableBody">
@@ -51,6 +52,7 @@ if(isset($this->tripTemplate) and $this->tripTemplate and $tripTemplate->getDayp
                                             <td><?php echo TemplateView::noHTML($tripTemplate->getMaxAllocation()); ?></td>
                                             <td><?php echo TemplateView::noHTML($tripTemplate->getBus()->getName()) . "</br>(seats: " . TemplateView::noHTML($tripTemplate->getBus()->getSeats()) . ")"; ?></td>
                                             <td><?php echo TemplateView::noHTML($tripTemplate->getPrice()); ?></td>
+                                            <td><?php echo TemplateView::noHTML($tripTemplate->getCustomerPrice()); ?></td>
                                         </tr>
                                     </tbody>
                                 </table>
@@ -97,7 +99,7 @@ if(isset($this->tripTemplate) and $this->tripTemplate and $tripTemplate->getDayp
                                                         <td><?php echo TemplateView::noHTML($dayprogram->getName()); ?> </td>
                                                         <td><?php echo TemplateView::noHTML($dayprogram->getDescription()); ?> </td>
                                                         <td><?php if($dayprogram->getHotel()){echo TemplateView::noHTML($dayprogram->getHotel()->getName());} ?> </td>
-                                                        <td><img src="<?php if($dayprogram->getHotel()){echo TemplateView::noHTML($dayprogram->getHotel()->getPicturePath());} ?>" alt="Not available" border=3 width=150></td>
+                                                        <td><?php if($dayprogram->getHotel()): ?><img src="<?php echo TemplateView::noHTML($dayprogram->getHotel()->getPicturePath()); ?>" alt="Not available" border=3 width=150><?php endif; ?></td>
                                                         <td><?php if($dayprogram->getHotel()){echo TemplateView::noHTML($dayprogram->getHotel()->getDescription());} ?> </td>
                                                         <td><?php if($dayprogram->getHotel()){echo TemplateView::noHTML($dayprogram->getHotel()->getPricePerPerson());} ?> </td>
                                                         <?php if(!$tripTemplate->getBookable()): ?>
@@ -145,10 +147,10 @@ if(isset($this->tripTemplate) and $this->tripTemplate and $tripTemplate->getDayp
                                         class="form-group mt-auto" style="margin-right: 100px;padding: 10px;padding-right: 50px;margin-bottom: 20px;padding-bottom: 0px;"><label class="labelsFormDayProgram">Picture of day program</label><input type="file" name="img" required="" id="image" style="width: 400px;font-family: Capriola, sans-serif;background-color: #ffffff;margin-right: 0;"></div>
                                     <div
                                         class="form-group" style="margin: 10px;width: 200px;margin-right: 50px;"><label class="labelsFormDayProgram">Hotel (if applicable)</label><select class="form-control" name="hotelId" id="hotel"><optgroup label="Add a hotel">
-                                                <option value="0" selected="">none</option>
                                                 <?php foreach ($hotels as $hotel) :  ?>
                                                 <option value="<?php echo $hotel->getId();  ?>" selected=""><?php echo TemplateView::noHTML($hotel->getName())." (price per person: ".TemplateView::noHTML($hotel->getPricePerPerson()).")"; ?></option>
                                                 <?php endforeach;  ?>
+                                                <option value="0" selected="">No hotel</option>
                                             </optgroup></select></div>
                                     <button
                                         class="btn btn-primary btn-block" type="submit" style="width: 100px;margin: 10px;margin-top: 50px;margin-left: 10px;">Save</button>
