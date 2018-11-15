@@ -28,8 +28,8 @@ if(isset($this->tripTemplate) and $this->tripTemplate and $tripTemplate->getDayp
                         </head>
                         <body>
 
-                            <div class="container" style="font-family: Capriola, sans-serif;">
-
+                            <div class="container" style="font-family: Capriola, sans-serif; overflow-x: auto;">
+                                
                                 <table id="tripOverviewTable" class="tableStyle">
                                     <thead>
                                         <tr>
@@ -65,7 +65,7 @@ if(isset($this->tripTemplate) and $this->tripTemplate and $tripTemplate->getDayp
                 <h4 class="text-center" style="margin-bottom: 16px;">Already added <strong>day programs</strong> of the selected trip.<br></h4>
                 <div><a class="btn btn-secondary" data-toggle="collapse" aria-expanded="true" aria-controls="collapseDayPrograms" role="button" href="#collapseDayPrograms" style="margin-bottom: 10px;">Show/hide day programs</a>
                     <div class="collapse show" id="collapseDayPrograms">
-                        <div class="text-left d-xl-flex justify-content-xl-center scrollableDiv"><!DOCTYPE html>
+                        <div class="text-left d-xl-flex justify-content-xl-center"><!DOCTYPE html>
                             <html lang="en">
                                 <head>
                                     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
@@ -73,7 +73,7 @@ if(isset($this->tripTemplate) and $this->tripTemplate and $tripTemplate->getDayp
                                 </head>
                                 <body>
 
-                                    <div class="container" style="font-family: Capriola, sans-serif;">
+                                    <div style="font-family: Capriola, sans-serif; overflow-x: auto;">
 
                                         <table id="dayProgramsOverviewTable" class="tableStyle">
                                             <thead>
