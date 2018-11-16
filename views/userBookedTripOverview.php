@@ -4,6 +4,32 @@
  * @author Adrian Mathys
  */
 use views\TemplateView;
+use entities\Trip;
+use entities\TripTemplate;
+use entities\User;
+
+
+isset($this->trip) ? $trip = $this->trip : $trip = new Trip();
+if(isset($this->trip) and $trip){
+    $tripTemplate = $trip->getTripTemplate();
+}else{
+    $tripTemplate = new TripTemplate();
+}
+if($tripTemplate->getDayprograms()){
+    $dayprograms = $tripTemplate->getDayprograms();
+}else{
+    $dayprograms = array();
+}
+if(isset($this->trip) and $trip){
+    $participants = $trip->getParticipants();
+}else{
+    $participants = array();
+}
+if(isset($this->trip) and $trip){
+    $user = $trip->getUser();
+}else{
+    $user = new User();
+}
 
 ?>
 
@@ -29,20 +55,20 @@ use views\TemplateView;
                                             <th>Trip name</th>
                                             <th>Description</th>
                                             <th>Departure date</th>
-                                            <th>Insurance</th>
+                                            <?php if($trip->getInsurance()): ?><th>Insurance</th><?php endif; ?>
                                             <th>Bus</th>
-                                            <th>Price</th>
+                                            <th>Price in CHF</th>
                                         </tr>
                                     </thead>
                                     <tbody id="tripTableBody">
                                         <tr>
-                                            <td><img src="<?php echo $tripTemplate->getPicturePath(); ?>" alt="Not available" border=3 width=150></td>
+                                            <td><img src="<?php echo TemplateView::noHTML($tripTemplate->getPicturePath()); ?>" alt="Not available" border=3 width=150></td>
                                             <td><?php echo TemplateView::noHTML($tripTemplate->getName()); ?></td>
                                             <td><?php echo TemplateView::noHTML($tripTemplate->getDescription()); ?></td>
                                             <td><?php echo TemplateView::noHTML($trip->getDepartureDate()); ?></td>
-                                            <td><?php echo TemplateView::noHTML($trip->getInsurance()->getName()); ?></td>
-                                            <td><?php echo TemplateView::noHTML($tripTemplate->getBus()->getName()) . " (seats: " . TemplateView::noHTML($tripTemplate->getBus()->getSeats()) . ")"; ?></td>
-                                            <td><?php echo TemplateView::noHTML($trip->getPrice()); ?></td>
+                                            <?php if($trip->getInsurance()): ?><td><?php echo TemplateView::noHTML($trip->getInsurance()->getName()); ?></td><?php endif; ?>
+                                            <td><?php echo TemplateView::noHTML($tripTemplate->getBus()->getName()) . "</br>(seats: " . TemplateView::noHTML($tripTemplate->getBus()->getSeats()) . ")"; ?></td>
+                                            <td><?php echo TemplateView::noHTML($trip->getCustomerPrice()); ?></td>
                                         </tr>
                                     </tbody>
                                 </table>
@@ -80,7 +106,7 @@ use views\TemplateView;
                                                 </tr>
                                             </thead>
                                             <tbody id="tripParticipantTableBody">
-                                                <?php foreach ($this->participants as $participant): ?>
+                                                <?php foreach ($participants as $participant): ?>
                                                     <tr>
                                                         <td><?php echo TemplateView::noHTML($participant->getFirstName()); ?></td>
                                                         <td><?php echo TemplateView::noHTML($participant->getLastName()); ?> </td>
@@ -133,20 +159,18 @@ use views\TemplateView;
                                                     <th>Hotel name</th>
                                                     <th>Hotel image</th>
                                                     <th>Hotel description</th>
-                                                    <th>Hotel price</th>
                                                 </tr>
                                             </thead>
                                             <tbody id="dayProgramsTableBody">
-                                                <?php foreach ($this->trips as $trips): ?>
+                                                <?php foreach ($dayprograms as $dayprogram): ?>
                                                     <tr>
-                                                        <td><?php echo TemplateView::noHTML($trips->getTripTemplate()->getDayprograms()->getDayNumber()); ?></td>
-                                                        <td><?php echo TemplateView::noHTML($trips->getTripTemplate()->getDayprograms()->getPicturePath()); ?> </td>
-                                                        <td><?php echo TemplateView::noHTML($trips->getTripTemplate()->getDayprograms()->getName()); ?> </td>
-                                                        <td><?php echo TemplateView::noHTML($trips->getTripTemplate()->getDayprograms()->getDescription()); ?> </td>
-                                                        <td><?php echo TemplateView::noHTML($trips->getTripTemplate()->getDayprograms()->getHotel()->getName()); ?> </td>
-                                                        <td><?php echo TemplateView::noHTML($trips->getTripTemplate()->getDayprograms()->getHotel()->getPicturePath()); ?> </td>
-                                                        <td><?php echo TemplateView::noHTML($trips->getTripTemplate()->getDayprograms()->getHotel()->getDescription()); ?> </td>
-                                                        <td><?php echo TemplateView::noHTML($trips->getTripTemplate()->getDayprograms()->getHotel()->getPrice()); ?> </td>
+                                                        <td><?php echo TemplateView::noHTML($dayprogram->getDayNumber()); ?></td>
+                                                        <td><img src="<?php echo TemplateView::noHTML($dayprogram->getPicturePath()); ?>" alt="Not available" border=3 width=150></td>
+                                                        <td><?php echo TemplateView::noHTML($dayprogram->getName()); ?></td>
+                                                        <td><?php echo TemplateView::noHTML($dayprogram->getDescription()); ?></td>
+                                                        <td><?php if($dayprogram->getHotel()){echo TemplateView::noHTML($dayprogram->getHotel()->getName());} ?></td>
+                                                        <td><?php if($dayprogram->getHotel()): ?><img src="<?php echo TemplateView::noHTML($dayprogram->getHotel()->getPicturePath()); ?>" alt="Not available" border=3 width=150><?php endif; ?></td>
+                                                        <td><?php if($dayprogram->getHotel()){echo TemplateView::noHTML($dayprogram->getHotel()->getDescription());} ?></td>
                                                     </tr>
                                                 <?php endforeach; ?>
                                             </tbody>

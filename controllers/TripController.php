@@ -308,7 +308,7 @@ class TripController {
         }else if(isset($_SESSION['role']) and $_SESSION['role'] == "user"){
             $userBookedTripOverview = new TemplateView("userBookedTripOverview.php");
             $userBookedTripOverview->trip = $trip->find();
-            LayoutRendering::basicLayout($userBookedTripOverview);
+            LayoutRendering::basicLayout($userBookedTripOverview, "headerUserLoggedIn");
         }
     }
     

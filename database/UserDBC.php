@@ -240,14 +240,13 @@ class UserDBC extends DBConnector {
         $stmt->bind_param('i', $fk_trip_id);
         $fk_trip_id = $tripId;
         $stmt->execute();
-        $participants = array();
         $result = $stmt->get_result();
-        $participantIds = $result->fetch_array(MYSQLI_NUM);
         $stmt->close();
         
         //Gets the real Participant objects into an array
-        foreach($participantIds as $participantId){
-            $participant = $this->findParticipantById($participantId);
+        $participants = array();
+        while($participantId = $result->fetch_assoc()){
+            $participant = $this->findParticipantById($participantId["fk_participant_id"]);
             array_push($participants, $participant);
         }
 
