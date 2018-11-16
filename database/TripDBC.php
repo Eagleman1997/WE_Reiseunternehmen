@@ -523,13 +523,13 @@ class TripDBC extends DBConnector {
         }
         
         //Insert of Trip
-        $stmt = $this->mysqliInstance->prepare("INSERT INTO trip VALUES (NULL, ?, ?, ?, NULL, ?, ?, ?)");
+        $stmt = $this->mysqliInstance->prepare("INSERT INTO trip VALUES (NULL, ?, ?, ?, ?, NULL, ?, ?, ?)");
         if(!$stmt){
             $this->mysqliInstance->rollback();
             exit();
         }
-        $stmt->bind_param('idsiii', $numOfParticipation, $price, $departureDate, $fk_user_id, 
-                $fk_insurance_id, $fk_tripTemplate_id);
+        $stmt->bind_param('idssiii', $numOfParticipation, $price, $departureDate, $bookingDate, 
+                $fk_user_id, $fk_insurance_id, $fk_tripTemplate_id);
         $numOfParticipation = $trip->getNumOfParticipation();
         
         //Calculates the price
@@ -539,6 +539,7 @@ class TripDBC extends DBConnector {
         }
         
         $departureDate = $trip->getDepartureDate();
+        $bookingDate = \date("Y-m-d");
         $fk_user_id = $trip->getFkUserId();
         $fk_insurance_id = $trip->getFkInsuranceId();
         $fk_tripTemplate_id = $trip->getFkTripTemplateId();

@@ -71,7 +71,7 @@ class Validation {
         if(!self::date($date)){
             return false;
         }
-        $today = date("Y-m-d");
+        $today = \date("Y-m-d");
         if($date > $today){
             return $date;
         }

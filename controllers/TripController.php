@@ -268,7 +268,7 @@ class TripController {
         }
         $trip->setFkInsuranceId($insuranceId);
 
-        $trip->book();
+        return $trip->book();
     }
     
     /**

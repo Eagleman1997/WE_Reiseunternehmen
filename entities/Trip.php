@@ -17,6 +17,7 @@ class Trip {
     private $numOfParticipation;
     private $price;
     private $departureDate;
+    private $bookingDate;
     private $invoicesRegistered;
     private $fk_user_id;
     private $fk_insurance_id;
@@ -86,6 +87,10 @@ class Trip {
 
     public function getDepartureDate() {
         return $this->departureDate;
+    }
+    
+    public function getBookingDate() {
+        return $this->bookingDate;
     }
     
     public function getInvoicesRegistered(){
@@ -165,6 +170,10 @@ class Trip {
 
     public function setDepartureDate($departureDate) {
         $this->departureDate = $departureDate;
+    }
+    
+    public function setBookingDate($bookingDate) {
+        $this->bookingDate = $bookingDate;
     }
     
     public function setInvoicesRegistered($invoicesRegistered){
