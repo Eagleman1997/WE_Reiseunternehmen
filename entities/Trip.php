@@ -4,7 +4,7 @@ namespace entities;
 
 use database\TripDBC;
 use helpers\Margin;
-use entities\Insurance;
+use helpers\Numbers;
 
 /**
  * Trip Entity
@@ -38,9 +38,11 @@ class Trip {
      * @return boolean
      */
     public function book(){
-        if($this->numOfParticipation < 11){
-            //too less participants involved
-            return false;
+        if($this->numOfParticipation < Numbers::getMinAllocation()){
+            $this->numOfParticipation = Numbers::getMinAllocation();
+        }
+        if($this->numOfParticipation > Numbers::getMaxAllocation()){
+            $this->numOfParticipation = Numbers::getMaxAllocation();
         }
         return $this->tripDBC->createTrip($this);
     }

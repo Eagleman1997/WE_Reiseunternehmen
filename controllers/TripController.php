@@ -14,6 +14,8 @@ use helpers\Validation;
 use helpers\Upload;
 use views\LayoutRendering;
 use views\TemplateView;
+use http\HTTPHeader;
+use http\HTTPStatusCode;
 
 /**
  * Controlls the storage and querys of Trips
@@ -229,47 +231,44 @@ class TripController {
      * @return boolean
      */
     public static function bookTrip(){
-        echo "bookTrip</br>";
+        if(!isset($_SESSION['login'])){
+            return false;
+        }
         $trip = new Trip();
         
-        $fkTripTemplateId = Validation::positiveInt(filter_input(INPUT_POST, $_POST['tripTemplateId'], FILTER_VALIDATE_INT));
+        $fkTripTemplateId = Validation::positiveInt(\filter_input(\INPUT_POST, 'tripTemplateId', \FILTER_VALIDATE_INT));
         if(!$fkTripTemplateId){
             return false;
         }
         $trip->setFkTripTemplateId($fkTripTemplateId);
         
         //Adds the participants
-        $numOfParticipation = Validation::positiveInt(filter_input(INPUT_POST, $_POST['numOfParticipation'], FILTER_VALIDATE_INT));
-        if(!$numOfParticipation){
+        $participantIds = \filter_input(\INPUT_POST, 'participants', \FILTER_VALIDATE_INT, \FILTER_REQUIRE_ARRAY);
+        if($participantIds){
+            foreach($participantIds as $participantId){
+                if(!Validation::positiveInt($participantId)){
+                    return false;
+                }
+            }
+        }else{
             return false;
         }
-        $participantIds = array();
-        for($i = 0; $i < $numOfParticipation; $i++){
-            $participantId = Validation::positiveInt(filter_input(INPUT_POST, $_POST['participantId'.$i], FILTER_VALIDATE_INT));
-            if(!$participantId){
-                return false;
-            }
-            array_push($participantIds, $participantId);
-        }
         $trip->setParticipantIds($participantIds);
-        $numOfParticipation++;//To count the User 
-        $trip->setNumOfParticipation($numOfParticipation);
+        $trip->setNumOfParticipation(sizeof($participantIds)+1);//+1 to count the User 
         
-        $departureDate = Validation::upToDate(filter_input(INPUT_POST, $_POST['departureDate'], FILTER_DEFAULT));
+        $departureDate = Validation::upToDate(\filter_input(\INPUT_POST, 'departureDate', \FILTER_DEFAULT));
         if(!$departureDate){
             return false;
         }
         $trip->setDepartureDate($departureDate);
         $trip->setFkUserId($_SESSION['userId']);
-        if(isset($_POST['insuranceId'])){
-            $insuranceId = Validation::positiveInt(filter_input(INPUT_POST, $_POST['insuranceId'], FILTER_VALIDATE_INT));
-            if(!$insuranceId){
-                return false;
-            }
-            $trip->setFkInsuranceId($insuranceId);
+        $insuranceId = Validation::positiveInt(\filter_input(\INPUT_POST, 'insurance', \FILTER_VALIDATE_INT));
+        if($insuranceId === false){
+            return false;
         }
+        $trip->setFkInsuranceId($insuranceId);
 
-        return $trip->book();
+        $trip->book();
     }
     
     /**

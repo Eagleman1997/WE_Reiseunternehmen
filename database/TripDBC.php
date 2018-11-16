@@ -10,6 +10,7 @@ use database\HotelDBC;
 use database\InsuranceDBC;
 use database\UserDBC;
 use database\InvoiceDBC;
+use helpers\Numbers;
 
 /**
  * Description of TripDBC
@@ -305,7 +306,6 @@ class TripDBC extends DBConnector {
             $hotelPricePerPerson = $hotel->getPricePerPerson();
         }
         $price = $tripTemplate->getPrice() + $bus->getPricePerDay() + $tripTemplate->getMinAllocation() * $hotelPricePerPerson;
-        $price = round($price * 20, 0) / 20;//round to the nearest 0.05
         $durationInDays = $tripTemplate->getDurationInDays() + 1;
         $tripTemplateId = $tripTemplate->getId();
         if(!$stmt->execute()){
@@ -394,7 +394,6 @@ class TripDBC extends DBConnector {
         $stmt->bind_param('dii', $price, $durationInDays, $tripTemplateId);
         //Calculates and decreases the minPrice for the TripTemplate
         $price = $tripTemplate->getPrice() - $bus->getPricePerDay() - $tripTemplate->getMinAllocation() * $hotel->getPricePerPerson();
-        $price = round($price * 20, 0) / 20;//round to the nearest 0.05
         $durationInDays = $tripTemplate->getDurationInDays() - 1;
         $tripTemplateId = $tripTemplate->getId();
         if(!$stmt->execute()){
@@ -493,21 +492,29 @@ class TripDBC extends DBConnector {
      * @return boolean
      */
     public function createTrip2($trip){
+        //Ensures that the User doesn't book several trips in 30 sec
+        $userDBC = new UserDBC();
+        $user = $userDBC->findUserById($_SESSION['userId']);
+        if($user->getLastBooking() != null and $user->getLastBooking() + 30 > \time()){
+            return false;
+        }
+        
         //Gets the TripTemplate
         $tripTemplate = $this->findTripTemplateById($trip->getFkTripTemplateId(), false);
         if(!$tripTemplate){
             return false;
         }
         
-        //Validation of min- and maxAllocation
-        if($trip->getNumOfParticipation() < $tripTemplate->getMinAllocation() or
-                $trip->getNumOfParticipation() > $tripTemplate->getMaxAllocation()){
+        //Adds the Dayprograms to the TripTemplate
+        $dayprograms = $this->getDayprogramsFromTemplate($tripTemplate);
+        if(!$dayprograms){
             return false;
         }
+        $tripTemplate->setDayprograms($dayprograms);
         
         //Gets the Insurance if chosen
         $insurance = null;
-        if($trip->getFkInsuranceId()){
+        if($trip->getFkInsuranceId() > 0){
             $insuranceDBC = new InsuranceDBC();
             $insurance = $insuranceDBC->findInsuranceById($trip->getFkInsuranceId(), false);
             if(!$insurance){
@@ -525,9 +532,11 @@ class TripDBC extends DBConnector {
                 $fk_insurance_id, $fk_tripTemplate_id);
         $numOfParticipation = $trip->getNumOfParticipation();
         
-        //Calculates the price (tripTemplatePrice / minAllocation is price per person without any insurance)
-        $price = $tripTemplate->getPrice() / $tripTemplate->getMinAllocation() * $numOfParticipation;
-        $price = round($price * 20, 0) / 20;//round to the nearest 0.05
+        //Calculates the price
+        $price = $tripTemplate->getHotelPricePerPerson() * $numOfParticipation + $tripTemplate->getBusPrice();
+        if($insurance){
+            $price += $insurance->getPricePerPerson() * $numOfParticipation;
+        }
         
         $departureDate = $trip->getDepartureDate();
         $fk_user_id = $trip->getFkUserId();
@@ -556,9 +565,14 @@ class TripDBC extends DBConnector {
             }
         }
         
-        $this->mysqliInstance->commit();
+        $success = $this->mysqliInstance->commit();
         $stmt->close();
-        return true;
+        
+        //Updates the timestamp on the User
+        if($success){
+            $userDBC->setTimeStamp();
+        }
+        return $success;
     }
     
     /** (tested)

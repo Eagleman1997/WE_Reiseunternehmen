@@ -5,6 +5,7 @@ namespace entities;
 use database\TripDBC;
 use database\BusDBC;
 use helpers\Margin;
+use helpers\Numbers;
 
 /**
  * Description of TripTemplate
@@ -47,11 +48,11 @@ class TripTemplate {
         if(!$this->bus){
             return false;
         }
-        if(!$this->maxAllocation or $this->maxAllocation > 20){
-            $this->maxAllocation = 20;
+        if(!$this->maxAllocation or $this->maxAllocation > Numbers::getMaxAllocation()){
+            $this->maxAllocation = Numbers::getMaxAllocation();
         }
-        if(!$this->minAllocation or $this->minAllocation < 12){
-            $this->minAllocation = 12;
+        if(!$this->minAllocation or $this->minAllocation < Numbers::getMinAllocation()){
+            $this->minAllocation = Numbers::getMinAllocation();
         }
         if($this->bus->getSeats() < $this->maxAllocation){
             //maxAllocation is bigger than busSeats
@@ -149,15 +150,35 @@ class TripTemplate {
         return $this->bus;
     }
     
+    public function getBusPrice(){
+        if($this->bus){
+            return $this->bus->getPricePerDay()*$this->durationInDays;
+        }
+        return false;
+    }
+    
+    public function getHotelPricePerPerson(){
+        if($this->dayprograms){
+            $customerHotelPricePerPerson = 0;
+            foreach($this->dayprograms as $dayprogram){
+                if($dayprogram->getHotel()){
+                    $customerHotelPricePerPerson += $dayprogram->getHotel()->getPricePerPerson();
+                }
+            }
+            return $customerHotelPricePerPerson;
+        }
+        return false;
+    }
+    
     public function getCustomerBusPrice(){
         if($this->bus){
-            return round(Margin::addTrip($this->bus->getPricePerDay()*$this->durationInDays) * 20, 0) / 20;
+            return Numbers::roundPrice(Margin::addTrip($this->bus->getPricePerDay()*$this->durationInDays));
         }
         return false;
     }
     
     public function getCustomerPrice(){
-        return round(Margin::addTrip($this->price) * 20, 0) / 20;
+        return Numbers::roundPrice(Margin::addTrip($this->price));
     }
     
     public function getCustomerHotelPricePerPerson(){
@@ -168,7 +189,7 @@ class TripTemplate {
                     $customerHotelPricePerPerson += $dayprogram->getHotel()->getPricePerPerson();
                 }
             }
-            return round(Margin::addTrip($customerHotelPricePerPerson) * 20, 0) / 20;
+            return Numbers::roundPrice(Margin::addTrip($customerHotelPricePerPerson));
         }
         return false;
     }

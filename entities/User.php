@@ -23,6 +23,7 @@ class User {
     private $birthDate;
     private $password;
     private $participants;
+    private $lastBooking;
     private $userDBC;
     
     public function __construct() {
@@ -200,6 +201,10 @@ class User {
     public function getPassword() {
         return $this->password;
     }
+    
+    public function getLastBooking(){
+        return $this->lastBooking;
+    }
 
     public function setId($id) {
         /* @var $id type int*/
@@ -249,6 +254,10 @@ class User {
 
     public function setPassword($password) {
         $this->password = $password;
+    }
+    
+    public function setLastBooking($lastBooking){
+        $this->lastBooking = $lastBooking;
     }
     
     public function setParticipants($participants){

@@ -18,7 +18,7 @@ class UserDBC extends DBConnector {
      * @return boolean if registration was successful (usually email does already exist)
      */
     public function createUser($user){
-        $stmt = $this->mysqliInstance->prepare("INSERT INTO user VALUES (NULL, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+        $stmt = $this->mysqliInstance->prepare("INSERT INTO user VALUES (NULL, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, NULL)");
         if(!$stmt){
             return false;
         }
@@ -63,6 +63,22 @@ class UserDBC extends DBConnector {
         }else{
             return false;
         }
+    }
+    
+    /**
+     * Sets the current timestamp for booking to avoid to fast booking
+     * @return boolean
+     */
+    public function setTimeStamp(){
+        $stmt = $this->mysqliInstance->prepare("UPDATE user SET lastBooking = ? WHERE id = ? AND deleted = ?");
+        if(!$stmt){
+            return false;
+        }
+        $stmt->bind_param('dii', $lastBooking, $id, $deleted);
+        $lastBooking = \time();
+        $id = $_SESSION['userId'];
+        $deleted = intval(false);
+        return $this->executeInsert($stmt);
     }
     
     /** (tested)

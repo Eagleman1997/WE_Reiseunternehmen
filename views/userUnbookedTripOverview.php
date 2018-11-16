@@ -120,18 +120,19 @@ if(isset($this->tripTemplate) and $this->tripTemplate and $tripTemplate->getDayp
         <div class="border rounded-0 border-primary shadow form-container" id="divBookingForm" style="min-width: 400px;max-width: 632px;">
             <h2 class="text-center" style="margin-bottom: 16px;margin-top: 18px;min-width: 400px;"><strong>Book your trip.</strong><br></h2>
             <div style="margin-bottom: 15px;margin-left: 15px;">
-                <form class="border-dark" action="index.php" method="post" id="tripBookingForm" style="background-color: rgba(96,175,221,0.21);padding-right: 25px;padding-left: 25px;min-width: 600px;background-image: url(&quot;assets/img/spanish%20beach.png&quot;);background-position: center;background-size: cover;background-repeat: no-repeat;">
+                <form class="border-dark" action="<?php echo $GLOBALS['ROOT_URL'] ?>/packageOverview/package" method="post" id="tripBookingForm" style="background-color: rgba(96,175,221,0.21);padding-right: 25px;padding-left: 25px;min-width: 600px;background-image: url(&quot;assets/img/spanish%20beach.png&quot;);background-position: center;background-size: cover;background-repeat: no-repeat;">
+                    <input type="hidden" name="tripTemplateId" value="<?php echo $tripTemplate->getId(); ?>">
                     <div class="form-group"><label style="color: #222222;"><strong>Departure date</strong></label><input class="form-control" type="date" name="departureDate" required=""></div>
                     <div class="form-group"><label style="margin-top: 13px;color: #222222;"><strong>Insurance (optional)</strong></label><select class="form-control" name="insurance" required="" id="insuranceDropdown"><optgroup label="Select insurance">
                                 <?php foreach ($insurances as $insurance) :  ?>
-                                <option value="<?php echo "insurance".$insurance->getId();  ?>"><?php echo TemplateView::noHTML($insurance->getName())." (price per person: CHF ".$insurance->getCustomerPricePerPerson().")"; ?></option>
-                                <?php endforeach;  ?><option value="0" selected="">No insurance</option>
+                                <option value="<?php echo $insurance->getId(); ?>"><?php echo TemplateView::noHTML($insurance->getName())." (price per person: CHF ".$insurance->getCustomerPricePerPerson().")"; ?></option>
+                                <?php endforeach;  ?><option name="insuranceId" value="0" selected="">No insurance</option>
                             </optgroup></select></div>
                     <div
-                        class="form-group"><label style="margin-top: 13px;color: #222222;"><strong>Participants (min. 11, max. 19)</strong></label><select class="form-control" name="participants" required="" multiple="" id="selectedParticipants" style="min-height: 200px;min-width: 180px;background-color: #f7f9fc;max-width: 500px;"><optgroup label="Select multiple with CTRL">
+                        class="form-group"><label style="margin-top: 13px;color: #222222;"><strong>Participants <?php echo "(min. ".($tripTemplate->getMinAllocation()-1).", max. ".($tripTemplate->getMaxAllocation()-1).")"; ?></strong></label><select class="form-control" name="participants[]" required="" multiple="" id="selectedParticipants" style="min-height: 200px;min-width: 180px;background-color: #f7f9fc;max-width: 500px;"><optgroup label="Select multiple with CTRL">
                                 <?php foreach ($participants as $participant) :  ?>
-                                <option value="<?php echo "participant".$participant->getId();  ?>"><?php echo TemplateView::noHTML($participant->getFirstName()." ".$participant->getLastName()); ?></option>
-                                <?php endforeach;  ?>
+                                <option value="<?php echo $participant->getId(); ?>"><?php echo TemplateView::noHTML($participant->getFirstName()." ".$participant->getLastName()); ?></option>
+                                <?php endforeach; ?>
                             </optgroup></select>
                         <div><label style="margin-left: 0px;margin-top: 25px;color: #222222;" for="tripPrice"><strong>Price</strong></label><input class="form-control" value="<?php if($tripTemplate->getCustomerHotelPricePerPerson() and $tripTemplate->getCustomerBusPrice()){echo $tripTemplate->getCustomerHotelPricePerPerson()+$tripTemplate->getCustomerBusPrice();} ?>" style="grey" type="text" name="price" readonly="" id="price"></div>
                     </div><button id="bookTrip" disabled class="btn btn-primary" type="submit" style="margin-top: 21px;">Book your trip now</button></form>
@@ -148,6 +149,8 @@ if(isset($this->tripTemplate) and $this->tripTemplate and $tripTemplate->getDayp
                 echo "var insurancePrices = ".$js_array.";\n";
                 echo "var busPrice = ".$tripTemplate->getCustomerBusPrice().";\n";
                 echo "var hotelPricePerPerson = ".$tripTemplate->getCustomerHotelPricePerPerson().";\n";
+                echo "var maxAllocation = ".$tripTemplate->getMaxAllocation().";\n";
+                echo "var minAllocation = ".$tripTemplate->getMinAllocation().";\n";
                 ?>
                 var insuranceDropdown = document.getElementById('insuranceDropdown');
                 var participantsChoice = document.getElementById('selectedParticipants');
@@ -155,22 +158,25 @@ if(isset($this->tripTemplate) and $this->tripTemplate and $tripTemplate->getDayp
                 function actualPriceCalculator(){
                     actualPrice = busPrice;
                     var index = insuranceDropdown.selectedIndex;
-                    var count = $('#selectedParticipants option:selected').length;
+                    var count = $('#selectedParticipants option:selected').length+1;//+1 to count the user
                     
                     //ensures that the no insurance choice does not add any number or an invalid number to the actualPrice
                     if(!(index >= insurancePrices.length)){
-                        actualPrice += insurancePrices[index]*(count+1);//+ the user
+                        actualPrice += insurancePrices[index]*(count);
                     }
                     
                     //adds the hotelPricePerPerson
-                    actualPrice += hotelPricePerPerson*(count+1);
+                    actualPrice += hotelPricePerPerson*(count);
                     
                     //Ensures that the trip booking is disabled until the minimum of travelers are selected
                     var bookTripButton = document.getElementById('bookTrip');
                     var priceField = document.getElementById('price');
-                    if(count < 11){//
+                    if(count < minAllocation){//
                         bookTripButton.disabled = true;
                         priceField.style.color = "grey";
+                    }else if(count > maxAllocation){
+                        bookTripButton.disabled = true;
+                        priceField.style.color = "red";
                     }else{
                         bookTripButton.disabled = false;
                         priceField.style.color = "blue";

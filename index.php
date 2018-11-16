@@ -162,8 +162,11 @@ Router::route("GET", "/packageOverview/package/{id}", function ($id) {
 });
 
 Router::route_auth("POST", "/packageOverview/package", $authFunction, function () {
-    TripController::bookTrip();
-    Router::redirect("/bookedTrips");
+    if(TripController::bookTrip()){
+        Router::redirect("/packageOverview");
+    }else{
+        HTTPHeader::setStatusHeader(HTTPStatusCode::HTTP_204_NO_CONTENT);
+    }
 });
 
 Router::route_auth("GET", "/admin/tripTemplates/package/{id}", $authFunction, function ($id) {
