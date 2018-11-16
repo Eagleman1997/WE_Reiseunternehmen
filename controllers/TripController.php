@@ -71,8 +71,8 @@ class TripController {
         }else{
             $homepage->tripTemplates = $tripDBC->getBookableTripTemplates();
             if(isset($_SESSION['login'])){
-                LayoutRendering::basicLayout($homepage, "headerUserLoggedIn");
                 $homepage->trips = $tripDBC->getBookedTrips($_SESSION['userId']);
+                LayoutRendering::basicLayout($homepage, "headerUserLoggedIn");
             }else{
                 LayoutRendering::basicLayout($homepage, "headerLoggedOut");
             }
@@ -305,7 +305,7 @@ class TripController {
             $adminBookedTripOverview = new TemplateView("adminBookedTripOverview.php");
             $adminBookedTripOverview->trip = $trip->find();
             LayoutRendering::basicLayout($adminBookedTripOverview);
-        }else{
+        }else if(isset($_SESSION['role']) and $_SESSION['role'] == "user"){
             $userBookedTripOverview = new TemplateView("userBookedTripOverview.php");
             $userBookedTripOverview->trip = $trip->find();
             LayoutRendering::basicLayout($userBookedTripOverview);

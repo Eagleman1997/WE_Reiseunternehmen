@@ -1,6 +1,6 @@
 <?php
 
-namespace pdf;
+//namespace pdf;
 
 /*
 require_once '../entities/Trip.php';
@@ -10,8 +10,69 @@ $newTrip = $trip->find();
 
 */
 
-include("fpdf/fpdf.php");
+include("../fpdf/fpdf.php");
 
+$tripName = 'Oversea Beauty';
+$date = new DateTime();
+$bookingDate = $date->format('d.m.Y');
+$date->add(new DateInterval('P30D'));
+$departureDate = $date->format('d.m.Y');
+
+// Creating Trip ID
+$tId = 20202;
+switch (true) {
+    case $tId < 10:
+        $tripId = '00000'.$tId;
+        break;
+
+    case $tId < 100:
+        $tripId = '0000'.$tId;
+        break;
+
+    case $tId < 1000:
+        $tripId = '000'.$tId;
+        break;
+    
+    case $tId < 10000:
+        $tripId = '00'.$tId;
+        break;
+    
+    case $tId < 100000:
+        $tripId = '0'.$tId;
+        break;
+    
+    case $tId < 1000000:
+        $tripId = ''.$tId;
+        break;
+}
+
+
+
+// customer variables
+$hotelCalcCost = 500;
+$hotelActualCost = 600;
+$hotelDelta = (($hotelActualCost - $hotelCalcCost)/($hotelCalcCost/100));
+
+$busCalcCost = 500;
+$busActualCost = 400;
+$busDelta = (($busActualCost - $busCalcCost)/($busCalcCost/100));
+
+$insuranceCalcCost = 200;
+$insuranceActualCost = 200;
+$insuranceDelta = (($insuranceActualCost - $insuranceCalcCost)/($insuranceCalcCost/100));
+
+$calcCostTotal = $hotelCalcCost + $busCalcCost + $insuranceCalcCost;
+$actualCostTotal = $hotelActualCost + $busActualCost + $insuranceActualCost;
+$totalDelta = (($actualCostTotal - $calcCostTotal)/($calcCostTotal/100));
+
+$marge = 10;
+$hotelRevenue = $hotelCalcCost + ($hotelCalcCost * $marge/100);
+$busRevenue = $busCalcCost + ($busCalcCost * $marge /100);
+$insuranceRevenue = $insuranceCalcCost + ($insuranceCalcCost * $marge/100);
+$totalRevenue = $hotelRevenue + $busRevenue + $insuranceRevenue;
+
+$grossProfit = $totalRevenue - $actualCostTotal;
+    
 
 class PDF extends \FPDF
 {
@@ -30,26 +91,12 @@ function Header()
     $this->Line(10, 55, 200, 55);
     
     // Invoice
-    $this->SetFont('Helvetica','I',37);
+    $this->SetFont('Helvetica','I',33);
     $this->SetTextColor(233, 156, 28);
-    $this->Cell(55,15,'INVOICE',0,0);
-    
-    
-    // customer details
-    $this->SetFont('Arial','B',8);
-    $this->SetTextColor(0,0,0);
-    $this->Cell(0,3,'',0,1);
-    $this->Cell(80);    
-    $this->Cell(30,5,'Prepared for:',0,0);
-    $this->SetFont('Arial','',8);
-    $this->Cell(40,4,'Ms.',0,0);
-    $this->Cell(40,4,'Buechstrasse 9',0,1);
-    $this->Cell(110);
-    $this->Cell(40,4,'Vanessa Cajochen',0,0);
-    $this->Cell(40,4,'5436 Wurenlos',0,1);
-        
+    $this->Cell(55,15,'FINAL SETTLEMENT',0,0);
+         
     // Line break
-    $this->Ln(20);
+    $this->Ln(31);
     
     
     $this->Line(10, 75, 50, 75);
@@ -57,24 +104,43 @@ function Header()
     $this->Line(110, 75, 150, 75);
     $this->Line(160, 75, 200, 75);
     
+
+    $this->SetTextColor(0,0,0);
+    
     $this->SetFont('Arial','BI',8);
-    $this->Cell(30,4,'Invoice #',0,0);
+    $this->Cell(30,4,'Trip #',0,0);
     $this->Cell(20);
-    $this->Cell(30,4,'Invoice date',0,0);
+    $this->Cell(30,4,'Booking date',0,0);
     $this->Cell(20);
-    $this->Cell(30,4,'Payment Due',0,0);
+    $this->Cell(30,4,'Departure Due',0,0);
     $this->Cell(20);
     $this->Cell(30,4,'Trip Name',0,1);
     $this->Ln(1);
     
+     /*
+     * 
+     * Load Trip ID, booking date, trip name
+     * 
+     */
+    global $tripName;
+    global $bookingDate;
+    global $departureDate;
+    global $tripId;
+    
+    
+    
     $this->SetFont('Arial','',8);
-    $this->Cell(30,4,'#000001',0,0);
+    // Invoice ID
+    $this->Cell(30,4,'#'.$tripId,0,0);
+    $this->Cell(20);    
+    // Booking date
+    $this->Cell(30,4,''.$bookingDate,0,0);
     $this->Cell(20);
-    $this->Cell(30,4,'02.02.2018',0,0);
-    $this->Cell(20);
-    $this->Cell(30,4,'02.03.2018',0,0);
-    $this->Cell(20);
-    $this->Cell(30,4,'Oversea Beauty',0,1);     
+    // Booking date + 30 days
+    $this->Cell(30,4,''.$departureDate,0,0);
+    $this->Cell(20);    
+    // Trip name
+    $this->Cell(30,4,''.$tripName,0,1);     
     
     $this->Ln(20);
     
@@ -123,74 +189,142 @@ function Footer()
 
 function CreateTable()
 {
-    $this->SetY(106);
-    $this->Line(10, 110, 200, 110);
+    
+    // customer variables
+    global $hotelCalcCost;
+    global $hotelActualCost;
+    global $hotelDelta;
+    global $busCalcCost;
+    global $busActualCost;
+    global $busDelta;
+    global $insuranceCalcCost;
+    global $insuranceActualCost;
+    global $insuranceDelta;
+    global $calcCostTotal;
+    global $actualCostTotal;
+    global $totalDelta;
+    global $hotelRevenue;
+    global $busRevenue;
+    global $insuranceRevenue;
+    global $totalRevenue;
+    global $grossProfit;
+    
+    
+    //$this->SetY(106);
+    
+    $this->SetY(100);
+    $this->SetFont('Helvetica','I',15);
+    $this->SetTextColor(233, 156, 28);
+    $this->Cell(110,15,'Costs',0,0);
+    $this->Cell(50,15,'Revenue',0,0);
+    
+    $this->SetY(116);
+    $this->SetTextColor(0,0,0);
+    $this->Line(10, 120, 110, 120);
+    $this->Line(120, 120, 200, 120);
     
     $this->SetFont('Arial','BI',8);
+    $this->Cell(22,4,'Description',0,0);
+    $this->Cell(30,4,'Calculated costs',0,0,'R');
+    $this->Cell(30,4,'Actual costs',0,0,'R');
+    $this->Cell(18,4,'Delta',0,0,'R');
+    $this->Cell(10);
     $this->Cell(30,4,'Description',0,0);
-    $this->Cell(60);
-    $this->Cell(30,4,'Amount',0,0,'R');
-    $this->Cell(40,4,'Price/Rate',0,0,'R');
-    $this->Cell(30,4,'Subtotal',0,1,'R');
+    $this->Cell(30,4,'Revenue',0,1,'R');
     
     $this->SetFont('Arial','',8);
-    $this->Cell(30,6,'Hotel',0,0);
-    $this->Cell(60);
-    $this->Cell(30,6,'x '.'10',0,0,'R');
-    $this->Cell(40,6,'CHF '.'50',0,0,'R');
-    $this->Cell(30,6,'CHF '.'500',0,1, 'R');
+    $this->Cell(22,5,'Hotel',0,0);
+    $this->Cell(30,5,'CHF '.$hotelCalcCost,0,0,'R');
+    $this->Cell(30,5,'CHF '.$hotelActualCost,0,0,'R');
+    
+    if ($hotelDelta < 0){
+        $this->SetTextColor(255, 0, 0);
+    } else if ($hotelDelta > 0){
+        $this->SetTextColor(0, 153, 0);
+    }
+    $this->Cell(18,5,''.$hotelDelta.'%',0,0,'R');
+    $this->SetTextColor(0,0,0);
+    $this->Cell(10);
+    $this->Cell(30,5,'Hotel',0,0);
+    $this->Cell(30,5,'CHF '.$hotelRevenue,0,1,'R');
     
     $this->SetDrawColor(217, 217, 217);
-    $this->Line(10, 116, 200, 116);
+    $this->Line(10, 125, 110, 125);
     
-    $this->Cell(30,6,'Bus',0,0);
-    $this->Cell(60);
-    $this->Cell(30,6,'x '.'1',0,0,'R');
-    $this->Cell(40,6,'CHF '.'500',0,0,'R');
-    $this->Cell(30,6,'CHF '.'500',0,1, 'R');
-    $this->Line(10, 122, 200, 122);
+    $this->Line(120, 125, 200, 125);
+ 
+    $this->SetFont('Arial','',8);
+    $this->Cell(22,5,'Bus',0,0);
+    $this->Cell(30,5,'CHF '.$busCalcCost,0,0,'R');
+    $this->Cell(30,5,'CHF '.$busActualCost,0,0,'R');
+    if ($busDelta < 0){
+        $this->SetTextColor(255, 0, 0);
+    } else if ($busDelta > 0){
+        $this->SetTextColor(0, 153, 0);
+    }
+    $this->Cell(18,5,''.$busDelta.'%',0,0,'R');
+    $this->SetTextColor(0,0,0);
+    $this->Cell(10);
+    $this->Cell(30,5,'Bus',0,0);
+    $this->Cell(30,5,'CHF '.$busRevenue,0,1,'R');
     
-    $this->Cell(30,6,'Insurance',0,0);
-    $this->Cell(60);
-    $this->Cell(30,6,'x '.'10',0,0,'R');
-    $this->Cell(40,6,'CHF '.'22',0,0,'R');
-    $this->Cell(30,6,'CHF '.'220',0,1, 'R');
+    $this->Line(10, 130, 110, 130);
+    $this->Line(120, 130, 200, 130);
     
+    $this->Cell(22,5,'Insurance',0,0);
+    $this->Cell(30,5,'CHF '.$insuranceCalcCost,0,0,'R');
+    $this->Cell(30,5,'CHF '.$insuranceActualCost,0,0,'R');
+    if ($insuranceDelta < 0){
+        $this->SetTextColor(255, 0, 0);
+    } else if ($insuranceDelta > 0){
+        $this->SetTextColor(0, 153, 0);
+    }
+    $this->Cell(18,5,''.$insuranceDelta.'%',0,0,'R');
+    $this->SetTextColor(0,0,0);
+    $this->Cell(10);
+    $this->Cell(30,5,'Insurance',0,0);
+    $this->Cell(30,5,'CHF '.$insuranceRevenue,0,1,'R');
+   
     $this->SetDrawColor(0, 0, 0);
-    $this->Line(10, 128, 200, 128);
+    $this->Line(10, 135, 110, 135);
+    $this->Line(120, 135, 200, 135);
     
     $this->Ln(5);
-    $this->Cell(160);
+    
+    $this->Line(10, 145, 110, 145);  
+    $this->Line(120, 145, 200, 145); 
+    
+    
     $this->SetFont('Arial','BI',8);
-    $this->Cell(30,4,'Total',0,1,'R');
-    $this->Line(180, 137, 200, 137);
-    
+    $this->Cell(22,5,'Total',0,0);
     $this->SetFont('Arial','',8);
-    $this->Cell(160);
-    $this->Cell(30,6,'CHF '.'1220',0,1, 'R');
+    $this->Cell(30,5,'CHF '.$calcCostTotal,0,0,'R');
+    $this->Cell(30,5,'CHF '.$actualCostTotal,0,0,'R');
+    $this->Cell(18,5,''.$totalDelta.'%',0,0,'R');
+    $this->Cell(10);
     
-    // TERMS & CONDITIONS
-    
-    $this->SetY(164);
-    $this->SetFont('Arial','B',8);
-    $this->Cell(100,6,'TERMS & CONDITIONS',0,0);
-    $this->Cell(90,6,'AMOUNT DUE',0,1, 'R');
-    $this->Line(10, 169, 200, 169);
-    
-    $this->Ln(1);
-    $this->SetFont('Arial','I',7);
-    $this->MultiCell(100, 3, 'Dream Trips reserves the right to change the Tour Price according to the price list or the agreed Tour Price, respectively, in case of extraordinary circumstances. Dream Trips reserves the right to change the Tour program at any time, prematurely curtail the Tour or offer alternative solutions in case of extraordinary circumstances. Any additional costs of the Tour shall be borne by the Customer. Dream Trips undertakes to immediately inform the Customer of any changes in services and/or in the program. If the alternative solution is more expensive than the initially booked Tour or unreasonable for the Customer, Customer is offered withdrawal free of charge. Refunds are effected in the same way as payment has been made. ');
+    $this->SetFont('Arial','BI',8);
+    $this->Cell(30,5,'Total',0,0);
+    $this->SetFont('Arial','',8);
+    $this->Cell(30,5,'CHF '.$totalRevenue,0,1,'R');
+
+
 
     
     // Big Price
-    $this->SetY(171);
-    $this->Cell(110);
-    $this->SetFont('Helvetica','B',30);
-    $this->SetTextColor(233, 156, 28);
-    $this->Cell(80,15,'CHF 1220.-',0,0,'R');
+    $this->SetY(160);
+    $this->Line(10, 165, 40, 165);
+    $this->SetFont('Arial','BI',8);
+    $this->Cell(30,5,'Gross profit',0,0);
+    $this->Ln(3);
     
 
+    $this->SetFont('Helvetica','I',15);
+    $this->SetTextColor(233, 156, 28);
+    $this->Cell(80,15,'CHF '.$grossProfit,0,0);   
+
 }
+
 
 }
 
@@ -201,115 +335,6 @@ $pdf->AliasNbPages();
 $pdf->AddPage();
 $pdf->CreateTable();
 
+
 $pdf->Output();
 ob_end_flush();
-
-/*
- * $pdf=new \FPDF('P','mm','A4');
-$pdf->AddPage();
-//set font to arial, bold, 14pt
-$pdf->SetFont('Arial','B',14);
- * 
-//Cell(source, x, y, width , height)
-$pdf->Image('logo.jpeg',10,10,30,30);
-$pdf->Cell(130 ,5,'',0,0);//end of line
-$pdf->Cell(59 ,5,'INVOICE',0,1);//end of line
-
-$pdf->Cell(189 ,10,'',0,1);//end of line
-$pdf->Cell(189 ,10,'',0,1);//end of line
-$pdf->Cell(189 ,10,'',0,1);//end of line
-$pdf->Cell(189 ,10,'',0,1);//end of line
-
-//Cell(width , height , text , border , end line , [align] )
-
-$pdf->Cell(130 ,5,'Dream Trips',0,0);
-$pdf->Cell(59 ,5,'INVOICE',0,1);//end of line
-
-//set font to arial, regular, 12pt
-$pdf->SetFont('Arial','',12);
-
-$pdf->Cell(130 ,5,'Bahnstrasse 1',0,0);
-$pdf->Cell(59 ,5,'',0,1);//end of line
-
-$pdf->Cell(130 ,5,'3008 Bern',0,0);
-$pdf->Cell(25 ,5,'Date',0,0);
-$pdf->Cell(34 ,5,'[dd/mm/yyyy]',0,1);//end of line
-
-$pdf->Cell(130 ,5,'Schweiz',0,0);
-$pdf->Cell(25 ,5,'Invoice #',0,0);
-$pdf->Cell(34 ,5,'[1234567]',0,1);//end of line
-
-$pdf->Cell(130 ,5,'',0,0);
-$pdf->Cell(25 ,5,'Customer ID',0,0);
-$pdf->Cell(34 ,5,'[1234567]',0,1);//end of line
-
-//make a dummy empty cell as a vertical spacer
-$pdf->Cell(189 ,10,'',0,1);//end of line
-
-//billing address
-$pdf->Cell(100 ,5,'Bill to',0,1);//end of line
-
-//add dummy cell at beginning of each line for indentation
-$pdf->Cell(10 ,5,'',0,0);
-$pdf->Cell(90 ,5,'[Name]',0,1);
-
-$pdf->Cell(10 ,5,'',0,0);
-$pdf->Cell(90 ,5,'[Company Name]',0,1);
-
-$pdf->Cell(10 ,5,'',0,0);
-$pdf->Cell(90 ,5,'[Address]',0,1);
-
-$pdf->Cell(10 ,5,'',0,0);
-$pdf->Cell(90 ,5,'[Phone]',0,1);
-
-//make a dummy empty cell as a vertical spacer
-$pdf->Cell(189 ,10,'',0,1);//end of line
-
-//invoice contents
-$pdf->SetFont('Arial','B',12);
-
-$pdf->Cell(130 ,5,'Description',1,0);
-$pdf->Cell(25 ,5,'Taxable',1,0);
-$pdf->Cell(34 ,5,'Amount',1,1);//end of line
-
-$pdf->SetFont('Arial','',12);
-
-//Numbers are right-aligned so we give 'R' after new line parameter
-
-$pdf->Cell(130 ,5,'UltraCool Fridge',1,0);
-$pdf->Cell(25 ,5,'-',1,0);
-$pdf->Cell(34 ,5,'3,250',1,1,'R');//end of line
-
-$pdf->Cell(130 ,5,'Supaclean Diswasher',1,0);
-$pdf->Cell(25 ,5,'-',1,0);
-$pdf->Cell(34 ,5,'1,200',1,1,'R');//end of line
-
-$pdf->Cell(130 ,5,'Something Else',1,0);
-$pdf->Cell(25 ,5,'-',1,0);
-$pdf->Cell(34 ,5,'1,000',1,1,'R');//end of line
-
-//summary
-$pdf->Cell(130 ,5,'',0,0);
-$pdf->Cell(25 ,5,'Subtotal',0,0);
-$pdf->Cell(4 ,5,'$',1,0);
-$pdf->Cell(30 ,5,'4,450',1,1,'R');//end of line
-
-$pdf->Cell(130 ,5,'',0,0);
-$pdf->Cell(25 ,5,'Taxable',0,0);
-$pdf->Cell(4 ,5,'$',1,0);
-$pdf->Cell(30 ,5,'0',1,1,'R');//end of line
-
-$pdf->Cell(130 ,5,'',0,0);
-$pdf->Cell(25 ,5,'Tax Rate',0,0);
-$pdf->Cell(4 ,5,'$',1,0);
-$pdf->Cell(30 ,5,'10%',1,1,'R');//end of line
-
-$pdf->Cell(130 ,5,'',0,0);
-$pdf->Cell(25 ,5,'Total Due',0,0);
-$pdf->Cell(4 ,5,'$',1,0);
-$pdf->Cell(30 ,5,'4,450',1,1,'R');//end of line
-        
-        $pdf->Output();
-        ?>
- 
- */

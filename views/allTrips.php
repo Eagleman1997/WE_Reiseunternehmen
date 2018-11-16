@@ -8,7 +8,6 @@ use entities\Trip;
 
 isset($this->tripTemplates) ? $tripTemplates = $this->tripTemplates : $tripTemplates = array();
 isset($this->trips) ? $trips = $this->trips : $trips = array();
-
 ?>
 
 
@@ -77,10 +76,10 @@ isset($this->trips) ? $trips = $this->trips : $trips = array();
                         <div class="col-md-6 col-lg-4">
                             <div class="card border-0"><a href="<?php
                                     if(isset($_SESSION['role']) and $_SESSION['role'] == "admin"){
-                                        $adminTripPath = $GLOBALS['ROOT_URL']."/admin/bookedtrips/detail/".$trip->getId();
+                                        $adminTripPath = $GLOBALS['ROOT_URL']."/admin/bookedTrips/detail/".$trip->getId();
                                         echo $adminTripPath;
                                     }else{
-                                        $userTripPath = $GLOBALS['ROOT_URL']."/bookedtrips/detail/".$trip->getId();
+                                        $userTripPath = $GLOBALS['ROOT_URL']."/bookedTrips/detail/".$trip->getId();
                                         echo $userTripPath;
                                     }
                                     ?>"><img src="<?php echo TemplateView::noHTML($trip->getTripTemplate()->getPicturePath()); ?>" alt="Card Image" class="card-img-top scale-on-hover"></a>
