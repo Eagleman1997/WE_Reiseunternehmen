@@ -133,8 +133,8 @@ if(isset($this->tripTemplate) and $this->tripTemplate and $tripTemplate->getDayp
                                 <option value="<?php echo "participant".$participant->getId();  ?>"><?php echo TemplateView::noHTML($participant->getFirstName()." ".$participant->getLastName()); ?></option>
                                 <?php endforeach;  ?>
                             </optgroup></select>
-                        <div><label style="margin-left: 0px;margin-top: 25px;color: #222222;" for="tripPrice"><strong>Price</strong></label><input class="form-control" value="<?php //echo $tripTemplate->getCustomerPrice(); ?>" type="text" name="price" readonly="" id="price"></div>
-                    </div><button class="btn btn-primary" type="submit" style="margin-top: 21px;">Book your trip now</button></form>
+                        <div><label style="margin-left: 0px;margin-top: 25px;color: #222222;" for="tripPrice"><strong>Price</strong></label><input class="form-control" value="<?php if($tripTemplate->getCustomerHotelPricePerPerson() and $tripTemplate->getCustomerBusPrice()){echo $tripTemplate->getCustomerHotelPricePerPerson()+$tripTemplate->getCustomerBusPrice();} ?>" style="grey" type="text" name="price" readonly="" id="price"></div>
+                    </div><button id="bookTrip" disabled class="btn btn-primary" type="submit" style="margin-top: 21px;">Book your trip now</button></form>
             </div>
         </div>
         <script>
@@ -148,14 +148,12 @@ if(isset($this->tripTemplate) and $this->tripTemplate and $tripTemplate->getDayp
                 echo "var insurancePrices = ".$js_array.";\n";
                 echo "var busPrice = ".$tripTemplate->getCustomerBusPrice().";\n";
                 echo "var hotelPricePerPerson = ".$tripTemplate->getCustomerHotelPricePerPerson().";\n";
-                echo "var minPrice = ".$tripTemplate->getCustomerPrice().";\n";
                 ?>
                 var insuranceDropdown = document.getElementById('insuranceDropdown');
                 var participantsChoice = document.getElementById('selectedParticipants');
-                document.getElementById("price").value = minPrice;
                 
                 function actualPriceCalculator(){
-                    actualPrice = 0;
+                    actualPrice = busPrice;
                     var index = insuranceDropdown.selectedIndex;
                     var count = $('#selectedParticipants option:selected').length;
                     
@@ -164,8 +162,20 @@ if(isset($this->tripTemplate) and $this->tripTemplate and $tripTemplate->getDayp
                         actualPrice += insurancePrices[index]*(count+1);//+ the user
                     }
                     
-                    //Ensures that the shown price never falls to a lower price than the price with the minAllocation
-                    actualPrice = Math.max(actualPrice, minPrice);
+                    //adds the hotelPricePerPerson
+                    actualPrice += hotelPricePerPerson*(count+1);
+                    
+                    //Ensures that the trip booking is disabled until the minimum of travelers are selected
+                    var bookTripButton = document.getElementById('bookTrip');
+                    var priceField = document.getElementById('price');
+                    if(count < 11){//
+                        bookTripButton.disabled = true;
+                        priceField.style.color = "grey";
+                    }else{
+                        bookTripButton.disabled = false;
+                        priceField.style.color = "blue";
+                    }    
+                    actualPrice = (Math.round(actualPrice / 0.05)*0.05).toFixed(2);
                     
                     // Add that data to the input
                     document.getElementById("price").value = actualPrice;

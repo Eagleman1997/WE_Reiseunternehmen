@@ -53,7 +53,7 @@ isset($this->trips) ? $trips = $this->trips : $trips = array();
                                         echo $userTemplatePath;
                                     }
                                     ?>"><?php echo TemplateView::noHTML($tripTemplate->getName()); ?></a></h6>
-                                    <p class="text-muted card-text"><?php echo TemplateView::noHTML($tripTemplate->getDescription()); ?></p><strong class="d-lg-flex justify-content-lg-end align-items-lg-end priceTag">from CHF &nbsp &nbsp <?php echo TemplateView::noHTML($tripTemplate->getPrice()); ?></strong></div>
+                                    <p class="text-muted card-text"><?php echo TemplateView::noHTML($tripTemplate->getDescription()); ?></p><strong class="d-lg-flex justify-content-lg-end align-items-lg-end priceTag">from CHF &nbsp &nbsp <?php echo TemplateView::noHTML($tripTemplate->getCustomerPrice()); ?></strong></div>
                             </div>
                         </div>
                         <?php endforeach; ?>
