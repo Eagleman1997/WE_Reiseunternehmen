@@ -123,13 +123,13 @@ if(isset($this->tripTemplate) and $this->tripTemplate and $tripTemplate->getDayp
                 <form class="border-dark" action="<?php echo $GLOBALS['ROOT_URL'] ?>/packageOverview/package" method="post" id="tripBookingForm" style="background-color: rgba(96,175,221,0.21);padding-right: 25px;padding-left: 25px;min-width: 600px;background-image: url(&quot;assets/img/spanish%20beach.png&quot;);background-position: center;background-size: cover;background-repeat: no-repeat;">
                     <input type="hidden" name="tripTemplateId" value="<?php echo $tripTemplate->getId(); ?>">
                     <div class="form-group"><label style="color: #222222;"><strong>Departure date</strong></label><input class="form-control" type="date" name="departureDate" required=""></div>
-                    <div class="form-group"><label style="margin-top: 13px;color: #222222;"><strong>Insurance (optional)</strong></label><select class="form-control" name="insurance" required="" id="insuranceDropdown"><optgroup label="Select insurance">
+                    <div class="form-group"><label style="margin-top: 13px;color: #222222;"><strong>Insurance (optional)</strong></label><select class="form-control" name="insurance" required="" id="insuranceDropdown" style="min-width: 500px;"><optgroup label="Select insurance">
                                 <?php foreach ($insurances as $insurance) :  ?>
                                 <option value="<?php echo $insurance->getId(); ?>"><?php echo TemplateView::noHTML($insurance->getName())." (price per person: CHF ".$insurance->getCustomerPricePerPerson().")"; ?></option>
                                 <?php endforeach;  ?><option name="insuranceId" value="0" selected="">No insurance</option>
                             </optgroup></select></div>
                     <div
-                        class="form-group"><label style="margin-top: 13px;color: #222222;"><strong>Participants <?php echo "(min. ".($tripTemplate->getMinAllocation()-1).", max. ".($tripTemplate->getMaxAllocation()-1).")"; ?></strong></label><select class="form-control" name="participants[]" required="" multiple="" id="selectedParticipants" style="min-height: 200px;min-width: 180px;background-color: #f7f9fc;max-width: 500px;"><optgroup label="Select multiple with CTRL">
+                        class="form-group"><label style="margin-top: 13px;color: #222222;"><strong>Participants <?php echo "(min. ".($tripTemplate->getMinAllocation()-1).", max. ".($tripTemplate->getMaxAllocation()-1).")"; ?></strong></label><select class="form-control" name="participants[]" required="" multiple="" id="selectedParticipants" style="min-height: 400px;min-width: 180px;background-color: #f7f9fc;max-width: 500px;"><optgroup label="Select multiple with CTRL">
                                 <?php foreach ($participants as $participant) :  ?>
                                 <option value="<?php echo $participant->getId(); ?>"><?php echo TemplateView::noHTML($participant->getFirstName()." ".$participant->getLastName()); ?></option>
                                 <?php endforeach; ?>
