@@ -75,7 +75,7 @@ if(isset($this->tripTemplate) and $this->tripTemplate and $tripTemplate->getDayp
 
                                     <div style="font-family: Capriola, sans-serif; overflow-x: auto;">
 
-                                        <table id="dayProgramsOverviewTable" class="tableStyle">
+                                        <table id="dayProgramsOverviewTable" class="tableStyle" style="max-width:1200px">
                                             <thead>
                                                 <tr>
                                                     <th>Day</th>
@@ -103,7 +103,7 @@ if(isset($this->tripTemplate) and $this->tripTemplate and $tripTemplate->getDayp
                                                         <td><?php if($dayprogram->getHotel()){echo TemplateView::noHTML($dayprogram->getHotel()->getDescription());} ?> </td>
                                                         <td><?php if($dayprogram->getHotel()){echo TemplateView::noHTML($dayprogram->getHotel()->getPricePerPerson());} ?> </td>
                                                         <?php if(!$tripTemplate->getBookable()): ?>
-                                                        <td><form id="deleteDayprogram<?php echo $dayprogram->getId(); ?>" action="<?php echo $GLOBALS['ROOT_URL'] ?>/admin/tripTemplates/package/<?php echo $dayprogram->getId()."/".$tripTemplate->getId(); ?>" method="post">
+                                                        <td><form style="background-color: transparent; padding: 0px; margin: 0px; min-width: 0px; min-height: 0px" id="deleteDayprogram<?php echo $dayprogram->getId(); ?>" action="<?php echo $GLOBALS['ROOT_URL'] ?>/admin/tripTemplates/package/<?php echo $dayprogram->getId()."/".$tripTemplate->getId(); ?>" method="post">
                                                         <input type="hidden" name="_method" value="DELETE"><img src="assets/img/Recycle_Bin.png" alt="Remove"  border=3 height=20 width=20 onclick="deleteHandler(<?php echo $dayprogram->getId(); ?>)"></form></td>
                                                         <?php endif; ?>
                                                     </tr>
