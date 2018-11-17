@@ -67,7 +67,7 @@ if(isset($this->trip) and $trip){
                                             <td><?php echo TemplateView::noHTML($tripTemplate->getDescription()); ?></td>
                                             <td><?php echo TemplateView::noHTML($trip->getDepartureDate()); ?></td>
                                             <?php if($trip->getInsurance()): ?><td><?php echo TemplateView::noHTML($trip->getInsurance()->getName()); ?></td><?php endif; ?>
-                                            <td><?php echo TemplateView::noHTML($tripTemplate->getBus()->getName()) . "</br>(seats: " . TemplateView::noHTML($tripTemplate->getBus()->getSeats()) . ")"; ?></td>
+                                            <td><img src="<?php echo TemplateView::noHTML($tripTemplate->getBus()->getPicturePath()); ?>" alt="Not available" border=3 width=150></td>
                                             <td><?php echo TemplateView::noHTML($trip->getCustomerPrice()); ?></td>
                                         </tr>
                                     </tbody>
@@ -182,7 +182,7 @@ if(isset($this->trip) and $trip){
                     </div>
                 </div>
             </div>
-            <div class="container-fluid text-center" id="containerInvoice" style="margin-top: 50px;">
+            <div class="container-fluid text-center" id="containerInvoice" style="margin-top: 50px; max-width: 1100px;">
                 <h4 class="text-center" style="margin-bottom: 16px;"><strong>Invoice </strong>for the trip.<br></h4>
                 <div class="border rounded-0 border-dark scrollableDiv" style="padding-left: 15px;padding-top: 0px;padding-bottom: 0px;padding-right: 15px;background-color: rgba(255,255,255,0.61);">
                     <h4 class="text-left" style="margin-bottom: 16px;margin-top: 18px;min-width: 400px;"><strong>Your invoice.</strong><br></h4>
