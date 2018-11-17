@@ -6,6 +6,8 @@ use entities\Invoice;
 use database\TripDBC;
 use helpers\Validation;
 use helpers\Upload;
+use http\HTTPHeader;
+use http\HTTPStatusCode;
 use views\LayoutRendering;
 use views\TemplateView;
 
@@ -87,7 +89,10 @@ class InvoiceController{
      * @return boolean|Invoice
      */
     public static function getCustomersInvoice($tripId){
-        echo "getInvoice</br>";
+        if(!isset($_SESSION['role'])){
+            HTTPHeader::setStatusHeader(HTTPStatusCode::HTTP_204_NO_CONTENT);
+            return false;
+        }
         $id = Validation::positiveInt($tripId);
         if(!$id){
             return false;
@@ -95,10 +100,16 @@ class InvoiceController{
         $tripDBC = new TripDBC();
         $trip = $tripDBC->findTripById($id);
         if(!$trip){
+            HTTPHeader::setStatusHeader(HTTPStatusCode::HTTP_204_NO_CONTENT);
             return false;
         }
-        
-        //pdf toDo
+        if(($trip->getUser()->getId() != $_SESSION['userId']) and ($_SESSION['role'] != "admin")){
+            HTTPHeader::setStatusHeader(HTTPStatusCode::HTTP_204_NO_CONTENT);
+            return false;
+        }
+        $customerInvoice = new TemplateView("pdf/customerInvoice.php");
+        $customerInvoice->trip = $trip;
+        $customerInvoice->render();
     }
     
     /**
