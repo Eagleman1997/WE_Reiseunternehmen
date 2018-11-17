@@ -193,15 +193,15 @@ if(isset($this->trip) and $trip){
                                     <th>Description</th>
                                     <th>Date</th>
                                     <th>Amount</th>
-                                    <th>Download PDF</th>
+                                    <th>Show Invoice</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 <tr>
-                                    <td>Final invoice for trip "Badeferien in Spanien"</td>
-                                    <td>21.10.2018</td>
-                                    <td>1200.00</td>
-                                    <td><a href="assets/img/Beach.jpg" download="Name of file">
+                                    <td>Final invoice for trip "<?php echo $trip->getTripTemplate()->getName(); ?>"</td>
+                                    <td><?php echo $trip->getDepartureDate(); ?></td>
+                                    <td><?php echo $trip->getCustomerPrice()." CHF"; ?></td>
+                                    <td><!--<a href="assets/img/Beach.jpg" download="Name of file">--><a href="<?php echo $GLOBALS['ROOT_URL'] ?>/bookedTrips/detail/invoices/<?php echo $trip->getId(); ?>" >
                                             <img src="assets/img/paper-clip.png" alt="Download" width="25px" height="25px">
                                         </a>
                                     </td>
