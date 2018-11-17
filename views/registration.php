@@ -11,7 +11,7 @@ use views\TemplateView;
 <div class="register-photo" style="padding: 40px;font-family: Capriola, sans-serif;padding-bottom: 60px;">
     <div class="form-container">
         <div class="image-holder" style="background-image: url(&quot;assets/img/Hiking.jpg&quot;);"></div>
-        <form name="registrationForm" action="<?php echo $GLOBALS['ROOT_URL']."/registration" ?>" method="post" onsubmit="return validateForm()" style="font-family: Capriola, sans-serif;">
+        <form name="registrationForm" action="<?php echo $GLOBALS['ROOT_URL'] . "/registration" ?>" method="post" style="font-family: Capriola, sans-serif;">
             <h2 class="text-center"><strong>Create</strong> an account.</h2>
             <div class="form-group">
                 <label>Name</label>    
@@ -23,19 +23,50 @@ use views\TemplateView;
                 <input class="form-control" type="number" name="zipCode" required placeholder="ZIP code" min="0"
                        /><input class="form-control" type="text" name="location" required placeholder="City or village" maxlength="40" minlength="2" /></div>
             <div class="form-group"><label>Email</label><input class="form-control" type="email" name="email" required placeholder="Email" /></div>
-            <div class="form-group"><label>Birth date</label><input class="form-control" type="date" name="birthDate" required /></div>
-            <div class="form-group"><label>Password</label><input class="form-control" type="password" name="password" required placeholder="Password" maxlength="40" minlength="5" /><input type="password" name="password-repeat" required placeholder="Password (repeat)"
-                                                                                                                                                                                             class="form-control" /></div>
-            <div class="form-group"><button class="btn btn-primary btn-block" type="submit" style="background-color: #f77f00;">Sign Up</button></div>
+            <div class="form-group"><label>Birth date</label><input class="form-control" type="date" id="birthDate" name="birthDate" required /></div>
+            <div class="form-group"><label>Password</label>
+                <input class="form-control" type="password" id="userPassword" name="password" required placeholder="Password" maxlength="40" minlength="5" />
+                <input type="password" id="repeatedPassword" name="password-repeat" required placeholder="Password (repeat)" class="form-control" /></div>
+            <div class="form-group"><button class="btn btn-primary btn-block" id="btnSubmit" disabled="true" type="submit" style="background-color: #f77f00;">Sign Up</button></div>
         </form>
 
         <script>
-            function validateForm() {
-                if (document.registrationForm.password.value != document.registrationForm.password - repeat.value) {
-                    alert("Please repeat the password");
-                    return false;
+
+            $(document).ready(function () {
+
+                // Validate if the repeated password matches the entered password
+                function checkPasswords() {
+                    var password = document.getElementById('userPassword').value;
+                    var repeatedPassword = document.getElementById('repeatedPassword').value;
+
+                    document.getElementById('btnSubmit').disabled = true;
+
+                    if (password === repeatedPassword && password !== "" && repeatedPassword !== "") {
+                        document.getElementById('btnSubmit').innerHTML = "Sign up";
+                        document.getElementById('btnSubmit').disabled = false;
+                    } else {
+                        document.getElementById('btnSubmit').innerHTML = "Passwords are not equal";
+                        document.getElementById('btnSubmit').disabled = true;
+                    }
                 }
-            }
+
+                document.getElementById('repeatedPassword').addEventListener('keyup', function () {
+                    checkPasswords();
+                })
+
+                document.getElementById('userPassword').addEventListener('keyup', function () {
+                    checkPasswords();
+                })
+
+                document.getElementById('btnSubmit').addEventListener('click', function () {
+                    var password = document.getElementById('userPassword').value;
+                    var repeatedPassword = document.getElementById('repeatedPassword').value;
+
+                    if (password !== repeatedPassword) {
+                        alert("The first password you entered will be stored in our database.");
+                    }
+                })
+            });
 
         </script></div>
 </div>
