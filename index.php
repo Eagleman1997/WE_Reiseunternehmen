@@ -37,7 +37,7 @@ Router::route("GET", "/registration", function () {
 
 Router::route("POST", "/registration", function () {
     UserController::register();
-    //Router::redirect("/");
+    Router::redirect("/");
 });
 
 Router::route("POST", "/login", function () {
