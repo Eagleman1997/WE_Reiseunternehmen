@@ -44,9 +44,13 @@ class User {
         $userId = $this->userDBC->createUser($this);
         if($userId){
             session_regenerate_id();
-            $_SESSION['userId'] = $userId;
-            $_SESSION['login'] = true;
-            $_SESSION['role'] = $this->role;
+            if((isset($_SESSION['role']) and $_SESSION['role'] == "admin")){
+                //nothing toDo here
+            }else{
+                $_SESSION['userId'] = $userId;
+                $_SESSION['login'] = true;
+                $_SESSION['role'] = $this->role;
+            }
             return $userId;
         }else{
             //creation failed

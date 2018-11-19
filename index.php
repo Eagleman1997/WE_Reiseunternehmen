@@ -36,8 +36,15 @@ Router::route("GET", "/registration", function () {
 });
 
 Router::route("POST", "/registration", function () {
-    UserController::register();
-    Router::redirect("/");
+    if(UserController::register()){
+        if(isset($_SESSION['role']) and $_SESSION['role'] == "admin"){
+            Router::redirect("/admin/users");
+        }else{
+            Router::redirect("/");
+        }
+    }else{
+        Router::redirect("/");
+    }
 });
 
 Router::route("POST", "/login", function () {
