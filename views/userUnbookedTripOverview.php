@@ -173,7 +173,7 @@ if (isset($this->tripTemplate) and $this->tripTemplate and $tripTemplate->getDay
     ?>
 
                     function countSelectedParticipants() {
-                        document.getElementById("fieldNumParticipants").value = $('#selectedParticipants option:selected').length + " (of min. " +<?php echo ($tripTemplate->getMinAllocation() - 1); ?> + " and max. " +<?php echo ($tripTemplate->getMaxAllocation() - 1); ?> + ")";
+                        document.getElementById("fieldNumParticipants").value = $('#selectedParticipants option:selected').length + " (of min. " +(minAllocation-1) + " and max. " +(maxAllocation-1) + ")";
                         if ($('#selectedParticipants option:selected').length + 1 > maxAllocation || $('#selectedParticipants option:selected').length + 1 < minAllocation) {
                             document.getElementById('bookTrip').disabled = true;
                             document.getElementById('fieldNumParticipants').style.color = "red";
