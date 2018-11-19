@@ -381,8 +381,7 @@ class TripDBC extends DBConnector {
         $hotelDBC = new HotelDBC();
         $hotel = $hotelDBC->findHotelById($dayprogram->getFkHotelId(), false);
         if(!$hotel){
-            $this->mysqliInstance->rollback();
-            exit();
+            $hotelPricePerPerson = 0;
         }
         
         //updates the price and durationInDays of the TripTemplate
@@ -393,7 +392,7 @@ class TripDBC extends DBConnector {
         }
         $stmt->bind_param('dii', $price, $durationInDays, $tripTemplateId);
         //Calculates and decreases the minPrice for the TripTemplate
-        $price = $tripTemplate->getPrice() - $bus->getPricePerDay() - $tripTemplate->getMinAllocation() * $hotel->getPricePerPerson();
+        $price = $tripTemplate->getPrice() - $bus->getPricePerDay() - $tripTemplate->getMinAllocation() * $hotelPricePerPerson;
         $durationInDays = $tripTemplate->getDurationInDays() - 1;
         $tripTemplateId = $tripTemplate->getId();
         if(!$stmt->execute()){
