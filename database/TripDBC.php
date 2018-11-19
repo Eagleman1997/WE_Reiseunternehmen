@@ -660,7 +660,9 @@ class TripDBC extends DBConnector {
         $stmt->execute();
         $trips = array();
         $result = $stmt->get_result();
+        $userDBC = new UserDBC();
         while($trip = $result->fetch_object("entities\Trip")){
+            $trip->setUser($userDBC->findUserById($trip->getFkUserId()));
             array_push($trips, $trip);
         }
         $stmt->close();
