@@ -57,11 +57,11 @@ class Upload {
      */
     public static function uploadPdf(){
         
-        $fileName = $_FILES['pdf']['name'];
-        $fileTmpName = $_FILES['pdf']['tmp_name'];
-        $fileSize = $_FILES['pdf']['size'];
-        $fileError = $_FILES['pdf']['error'];
-        $fileType = $_FILES['pdf']['type'];
+        $fileName = $_FILES['invoice']['name'];
+        $fileTmpName = $_FILES['invoice']['tmp_name'];
+        $fileSize = $_FILES['invoice']['size'];
+        $fileError = $_FILES['invoice']['error'];
+        $fileType = $_FILES['invoice']['type'];
         
         $fileExt = explode('.', $fileName);
         $fileActualExt = strtolower(end($fileExt));

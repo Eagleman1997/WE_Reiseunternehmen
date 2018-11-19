@@ -209,13 +209,17 @@ Router::route_auth("GET", "/admin/bookedTrips/detail/{id}", $authFunction, funct
 });
 
 Router::route_auth("POST", "/admin/bookedTrips/detail", $authFunction, function () {
-    InvoiceController::createInvoice();
-    Router::redirect("/admin/bookedTrips/detail");
+    $tripId = InvoiceController::createInvoice();
+    if($tripId){
+        Router::redirect("/admin/bookedTrips/detail/".$tripId);
+    }else{
+        HTTPHeader::setStatusHeader(HTTPStatusCode::HTTP_204_NO_CONTENT);
+    }
 });
 
-Router::route_auth("DELETE", "/admin/bookedTrips/detail/{id}", $authFunction, function ($id) {
-    InvoiceController::deleteInvoice($id);
-    Router::redirect("/admin/bookedTrips/detail");
+Router::route_auth("DELETE", "/admin/bookedTrips/detail/{id}/{id}", $authFunction, function ($invoiceId, $tripId) {
+    InvoiceController::deleteInvoice($invoiceId);
+    Router::redirect("/admin/bookedTrips/detail/".$tripId);
 });
 
 Router::route_auth("PUT", "/admin/bookedTrips/detail/{id}", $authFunction, function ($id) {

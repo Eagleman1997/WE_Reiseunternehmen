@@ -76,6 +76,15 @@ class Invoice {
     public function getFkTripId() {
         return $this->fk_trip_id;
     }
+    
+    public function getFileName(){
+        if(isset($this->pdfPath)){
+            $expl = explode("/", $this->pdfPath);
+            return end($expl);
+        }else{
+            return false;
+        }
+    }
 
     public function setId($id) {
         $this->id = $id;
