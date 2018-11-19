@@ -5,4 +5,4 @@ nbbuild/
 dist/
 nbdist/
 .nb-gradle/
-.env/
+*.env
