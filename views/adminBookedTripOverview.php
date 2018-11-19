@@ -89,8 +89,8 @@ if(isset($this->trip) and $trip){
                 <div><a class="btn btn-secondary" data-toggle="collapse" aria-expanded="false" aria-controls="collapseParticipants" role="button" href="#collapseParticipants" style="margin-bottom: 10px;">Show/hide participants</a>
                     <div class="collapse" id="collapseParticipants">
                         <div>
-                            <fieldset style="margin-bottom: 20px;margin-top: 10px;"><div><label>Booked by</label></div>
-                                <div><textarea name="userName" value="" readonly="" style="margin-left: 10px; text-align: center; min-width: 350px; width: 400px;margin-right: 0px;min-height: 130px;"><?php echo TemplateView::noHTML($user->getFirstName()." ".$user->getLastName()."\n"
+                            <fieldset style="margin-bottom: 20px;margin-top: 10px;"><div><label style="color: darkorange;">Booked by</label></div>
+                                <div style="overflow-x: auto;" ><textarea name="userName" value="" readonly="" style="margin-left: 10px; text-align: center; min-width: 350px; width: 400px;margin-right: 0px;min-height: 130px;"><?php echo TemplateView::noHTML($user->getFirstName()." ".$user->getLastName()."\n"
                                         . $user->getStreet()."\n".$user->getZipCode()." ".$user->getLocation()."\n".$user->getEmail()."\n".$user->getBirthDate()); ?></textarea></div></fieldset>
                         </div>
                         <div class="text-left">
@@ -257,10 +257,10 @@ if(isset($this->trip) and $trip){
                             </div>
                         </div>
                         <?php if(!$trip->getInvoicesRegistered()): ?>
-                        <div class="border rounded-0 border-primary shadow form-container" style="min-width: 400px;max-width: 632px;margin-top: 30px;">
-                            <h4 class="text-center" style="margin-bottom: 16px;margin-top: 18px;min-width: 400px;"><strong>Add a new invoice to the trip.</strong><br></h4>
-                            <div style="margin-bottom: 15px;margin-left: 15px;">
-                                <form class="form-inline" target="_bottom" action="<?php echo $GLOBALS['ROOT_URL']; ?>/admin/bookedTrips/detail" method="post" enctype="multipart/form-data" id="invoiceForm" style="background-color: rgba(176,224,147,0.36);font-family: Capriola, sans-serif;padding-right: 0px;padding-bottom: 30px;padding-top: 0px;padding-left: 30px;min-width: 600px;">
+                        <div class="border rounded-0 border-primary shadow form-container" style="max-width: 632px;margin-top: 30px;">
+                            <h4 class="text-center" style="margin-bottom: 16px;margin-top: 18px;"><strong>Add a new invoice to the trip.</strong><br></h4>
+                            <div style="overflow-x: auto; background-color: rgba(176,224,147,0.36); margin: 15px;">
+                                <form class="form-inline" target="_bottom" action="<?php echo $GLOBALS['ROOT_URL']; ?>/admin/bookedTrips/detail" method="post" enctype="multipart/form-data" id="invoiceForm" style="background-color: transparent;font-family: Capriola, sans-serif;padding-right: 0px;padding-bottom: 30px;padding-top: 0px;padding-left: 30px;">
                                     <input type="hidden" name="tripId" value="<?php echo $trip->getId(); ?>">
                                     <div class="form-group" style="margin: 10px;width: 200px;margin-right: 50px;"><label class="labelsFormDayProgram">Type of invoice</label><select class="form-control" name="type" required="" id="type"><optgroup label="Select an invoice type"><option value="hotel" selected="">Hotel</option><option value="insurance">Insurance</option><option value="bus">Bus</option><option value="other">Other</option></optgroup></select></div>
                                     <div

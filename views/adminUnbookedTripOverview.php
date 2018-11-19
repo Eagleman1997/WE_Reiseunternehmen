@@ -133,11 +133,11 @@ if(isset($this->tripTemplate) and $this->tripTemplate and $tripTemplate->getDayp
                                     <p style="margin-bottom: 15px;margin-top: 15px;color: #000000;">Have you assigned all day programs to the trip?</p>
                                     <button class="btn btn-info" type="submit" id="btnDayProgramsComplete" style="margin-top: 0px;margin-bottom: 11px;">Make this trip bookable</button></div>
                             </form></div>
-                        <div class="border rounded-0 border-primary shadow form-container" style="min-width: 400px;max-width: 632px;margin-top: 30px;">
-                            <h4 class="text-center" style="margin-bottom: 16px;margin-top: 18px;min-width: 400px;"><strong>Add a new day program to the trip.</strong><br></h4>
-                            <div style="margin-bottom: 15px;margin-left: 15px;">
-                                <div style="overflow-x: auto;">
-                                <form class="form-inline" action="<?php echo $GLOBALS['ROOT_URL']; ?>/admin/tripTemplates/package" method="post" enctype="multipart/form-data" id="dayProgramForm" style="background-color: rgba(147,198,224,0.36);font-family: Capriola, sans-serif;padding-right: 0px;padding-bottom: 30px;padding-top: 0px;padding-left: 30px;min-width: 600px;">
+                        <div class="border rounded-0 border-primary shadow form-container" style="margin-top: 30px; max-width: 600px;">
+                            <h4 class="text-center" style="margin-bottom: 16px;margin-top: 18px;"><strong>Add a new day program to the trip.</strong><br></h4>
+                            <div style="margin: 15px;">
+                                <div style="overflow-x: auto; background-color: rgba(147,198,224,0.36);">
+                                <form class="form-inline" action="<?php echo $GLOBALS['ROOT_URL']; ?>/admin/tripTemplates/package" method="post" enctype="multipart/form-data" id="dayProgramForm" style="background-color: transparent; font-family: Capriola, sans-serif;padding-right: 0px;padding-bottom: 30px;padding-top: 0px;padding-left: 30px;">
                                     <input type="hidden" name="tripTemplateId" value="<?php echo $tripTemplate->getId(); ?>">
                                     <div class="form-group" style="margin: 10px;"><label class="labelsFormDayProgram">For which day of the trip would you like to add a day program?</label><input class="form-control" type="number" name="dayNumber" value="1" required="" min="1" max="7" step="1" id="dayNumber"></div>
                                     <div
@@ -147,12 +147,17 @@ if(isset($this->tripTemplate) and $this->tripTemplate and $tripTemplate->getDayp
                                     <div
                                         class="form-group mt-auto" style="margin-right: 100px;padding: 10px;padding-right: 50px;margin-bottom: 20px;padding-bottom: 0px;"><label class="labelsFormDayProgram">Picture of day program</label><input type="file" name="img" required="" id="image" style="width: 400px;font-family: Capriola, sans-serif;background-color: #ffffff;margin-right: 0;"></div>
                                     <div
-                                        class="form-group" style="margin: 10px;width: 200px;margin-right: 50px;"><label class="labelsFormDayProgram">Hotel (if applicable)</label><select class="form-control" name="hotelId" id="hotel"><optgroup label="Add a hotel">
+                                        class="form-group" style="margin: 10px;width: 200px;margin-right: 50px;"><label class="labelsFormDayProgram">Hotel (if applicable)</label>
+                                        <select class="form-control" name="hotelDropdown" id="hotelDropdown" style="min-width: 400px;"><optgroup label="Add a hotel">
                                                 <?php foreach ($hotels as $hotel) :  ?>
                                                 <option value="<?php echo $hotel->getId();  ?>" selected=""><?php echo TemplateView::noHTML($hotel->getName())." (price per person: ".TemplateView::noHTML($hotel->getPricePerPerson()).")"; ?></option>
                                                 <?php endforeach;  ?>
                                                 <option value="0" selected="">No hotel</option>
-                                            </optgroup></select></div>
+                                            </optgroup></select>
+                                        
+                                        <textarea id="txtAreaHotelDescription" readonly="" style="padding: 10px; margin-top: 5px; min-width: 400px; min-height: 130px;"></textarea>
+                                        
+                                    </div>
                                     <button
                                         class="btn btn-primary btn-block" type="submit" style="width: 100px;margin: 10px;margin-top: 50px;margin-left: 10px;">Save</button>
                                 </form>
@@ -168,6 +173,7 @@ if(isset($this->tripTemplate) and $this->tripTemplate and $tripTemplate->getDayp
 
     <script src="assets/js/Sidebar-Menu.js"></script>
     <script>
+        
         //Remove dayprogram
         function deleteHandler(dayprogramId){
             var c = confirm("Do you want to delete this dayprogram?");
@@ -175,4 +181,39 @@ if(isset($this->tripTemplate) and $this->tripTemplate and $tripTemplate->getDayp
                 $( "#deleteDayprogram"+dayprogramId).submit();
             }
         }
+        
+        
+        $(document).ready(function () {
+    <?php
+
+    // Get hotel descriptions 
+    $hotelDescriptions = array();
+    foreach ($hotels as $hotel) {
+        array_push($hotelDescriptions, $hotel->getDescription());
+    }
+
+    $js_arrayHotelDescriptions = json_encode($hotelDescriptions);
+    echo "var hotelDescriptions = " . $js_arrayHotelDescriptions;
+    ?>
+            
+                    function getHotelDescription() {
+                        // Add the description of the selected hotel to the textarea
+                        var hotelDropdown = document.getElementById('hotelDropdown');
+                        var index = hotelDropdown.selectedIndex;
+                        document.getElementById("txtAreaHotelDescription").value = hotelDescriptions[index];
+                        
+                        // Get the selected hotel in plain text
+                        selectedOptionAsText = $("#hotelDropdown :selected").text();
+                        if (selectedOptionAsText === "No hotel"){
+                            document.getElementById("txtAreaHotelDescription").value = "";
+                        }
+                    }
+
+                    // When a new <option> is selected
+                    hotelDropdown.addEventListener('change', function () {
+                        getHotelDescription();
+                    })
+
+                });
+            </script>
     </script>

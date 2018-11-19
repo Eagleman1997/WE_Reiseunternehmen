@@ -129,31 +129,33 @@ if (isset($this->tripTemplate) and $this->tripTemplate and $tripTemplate->getDay
             </div>
         </div>
         <?php if (isset($_SESSION['login'])): ?>
-            <div class="border rounded-0 border-primary shadow form-container" id="divBookingForm">
+        <div class="border rounded-0 border-primary shadow form-container" id="divBookingForm" style="max-width: 650px;">
                 <h2 class="text-center" style="margin-bottom: 16px;margin-top: 18px;"><strong>Book your trip.</strong><br></h2>
                 <div style="overflow-x: auto; margin-bottom: 15px; margin-right: 15px; margin-left: 15px; padding-right: 25px;padding-left: 25px;background-image: url(&quot;assets/img/spanish%20beach.png&quot;);background-position: center;background-size: cover;background-repeat: no-repeat;">
                     <form class="border-dark" action="<?php echo $GLOBALS['ROOT_URL'] ?>/packageOverview/package" method="post" id="tripBookingForm" style="background-color: transparent;padding-right: 25px;padding-left: 25px;">
                         <input type="hidden" name="tripTemplateId" value="<?php echo $tripTemplate->getId(); ?>">
-                        <div class="form-group"><label style="color: #222222;"><strong>Departure date</strong></label><input class="form-control" type="date" name="departureDate" required=""></div>
-                        <div class="form-group"><label style="margin-top: 13px;color: #222222;"><strong>Insurance (optional)</strong></label>
-                            <select class="form-control" name="insurance" required="" id="insuranceDropdown" style="min-width: 500px;"><optgroup label="Select insurance">
-                                    <?php foreach ($insurances as $insurance) : ?>
-                                        <option value="<?php echo $insurance->getId(); ?>"><?php echo TemplateView::noHTML($insurance->getName()) . " (price per person: CHF " . $insurance->getCustomerPricePerPerson() . ")"; ?></option>
-                                    <?php endforeach; ?><option name="insuranceId" value="0" selected="">No insurance</option>
-                                </optgroup></select>
-                        
-                        <textarea name="insuranceDescription" id="insuranceDescription" readonly="" style="padding: 10px; margin-top: 5px; min-width: 500px; min-height: 130px;"></textarea></div>
-                                                
+                        <div class="form-group"><label style="color: #222222;"><strong>Departure date</strong></label><input style="margin-bottom: 15px;" class="form-control" type="date" name="departureDate" required=""></div>
+
                         <div
-                            class="form-group"><label style="margin-top: 13px;color: #222222;"><strong>Participants <?php echo "(min. " . ($tripTemplate->getMinAllocation() - 1) . ", max. " . ($tripTemplate->getMaxAllocation() - 1) . ")"; ?></strong></label><select class="form-control" name="participants[]" required="" multiple="" id="selectedParticipants" style="min-height: 400px; min-width: 500px;background-color: #f7f9fc;max-width: 500px;"><optgroup label="Unselect or select multiple with CTRL">
+                            class="form-group"><label style="margin-top: 15px;color: #222222;"><strong>Participants <?php echo "(min. " . ($tripTemplate->getMinAllocation() - 1) . ", max. " . ($tripTemplate->getMaxAllocation() - 1) . ")"; ?></strong></label><select class="form-control" name="participants[]" required="" multiple="" id="selectedParticipants" style="min-height: 400px; min-width: 500px;background-color: #f7f9fc;max-width: 500px;"><optgroup label="Unselect or select multiple with CTRL">
                                         <?php foreach ($participants as $participant) : ?>
                                         <option selected="" value="<?php echo $participant->getId(); ?>"><?php echo TemplateView::noHTML($participant->getFirstName() . " " . $participant->getLastName()); ?> </option>
                                     <?php endforeach; ?>
                                 </optgroup></select>
 
-                            <label style="margin-top: 15px; margin-left: 35px; color: #222222;">Number of selected participants</label><input style="margin-left: 35px;" class="form-control" value="" style="grey" type="text" readonly="" id="fieldNumParticipants">
+                            <label style="margin-top: 15px; margin-left: 35px; color: #222222;">Number of selected participants</label><input style="margin-bottom: 15px; margin-left: 35px;" class="form-control" value="" style="grey" type="text" readonly="" id="fieldNumParticipants">
 
-                            <div><label style="margin-left: 0px;margin-top: 25px;color: #222222;" for="tripPrice"><strong>Price</strong></label><input class="form-control" value="<?php
+                            <div class="form-group"><label style="margin-top: 15px;color: #222222;"><strong>Insurance (optional)</strong></label>
+                                <select class="form-control" name="insurance" required="" id="insuranceDropdown" style="min-width: 500px;"><optgroup label="Select insurance">
+                                        <?php foreach ($insurances as $insurance) : ?>
+                                            <option value="<?php echo $insurance->getId(); ?>"><?php echo TemplateView::noHTML($insurance->getName()) . " (price per person: CHF " . $insurance->getCustomerPricePerPerson() . ")"; ?></option>
+                                        <?php endforeach; ?><option name="insuranceId" value="0" selected="">No insurance</option>
+                                    </optgroup></select>
+
+                                <textarea name="insuranceDescription" id="txtAreaInsuranceDescription" readonly="" style="padding: 10px; margin-top: 5px; min-width: 500px; min-height: 130px;"></textarea></div>
+
+
+                            <div><label style="margin-left: 0px;margin-top: 15px;color: #222222;" for="tripPrice"><strong>Price</strong></label><input class="form-control" value="<?php
                                 if ($tripTemplate->getCustomerHotelPricePerPerson() and $tripTemplate->getCustomerBusPrice()) {
                                     echo $tripTemplate->getCustomerHotelPricePerPerson() + $tripTemplate->getCustomerBusPrice();
                                 }
@@ -164,24 +166,26 @@ if (isset($this->tripTemplate) and $this->tripTemplate and $tripTemplate->getDay
             <script>
                 $(document).ready(function () {
     <?php
-    // Get insurance prices
+// Get insurance prices
     $insuranceCustomerPrices = array();
     foreach ($insurances as $insurance) {
         array_push($insuranceCustomerPrices, $insurance->getCustomerPricePerPerson());
     }
-        
-    // Get insurance descriptions 
-    $insuranceCustomerDescriptions = array();
+
+// Get insurance descriptions 
+    $insuranceDescriptions = array();
     foreach ($insurances as $insurance) {
-        array_push($insuranceCustomerDescriptions, $insurance->getDescription());
-    
+        array_push($insuranceDescriptions, $insurance->getDescription());
     }
-    $js_array = json_encode($insuranceCustomerPrices);
-    echo "var insurancePrices = " . $js_array . ";\n";
+    $js_arrayCustomerPrices = json_encode($insuranceCustomerPrices);
+    echo "var insurancePrices = " . $js_arrayCustomerPrices . ";\n";
     echo "var busPrice = " . $tripTemplate->getCustomerBusPrice() . ";\n";
     echo "var hotelPricePerPerson = " . $tripTemplate->getCustomerHotelPricePerPerson() . ";\n";
     echo "var maxAllocation = " . $tripTemplate->getMaxAllocation() . ";\n";
     echo "var minAllocation = " . $tripTemplate->getMinAllocation() . ";\n";
+
+    $js_arrayInsuranceDescriptions = json_encode($insuranceDescriptions);
+    echo "var insuranceDescriptions = " . $js_arrayInsuranceDescriptions;
     ?>
 
                     function countSelectedParticipants() {
@@ -219,19 +223,33 @@ if (isset($this->tripTemplate) and $this->tripTemplate and $tripTemplate->getDay
 
                         // Add that data to the input
                         document.getElementById("price").value = actualPrice;
+
+                    }
+
+                    function getInsuranceDescription() {
+                        // Add the description of the selected insurance to the textarea
+                        var index = insuranceDropdown.selectedIndex;
+                        document.getElementById("txtAreaInsuranceDescription").value = insuranceDescriptions[index];
+                        
+                        // Get the selected insurance in plain text
+                        selectedOptionAsText = $("#insuranceDropdown :selected").text();
+                        if (selectedOptionAsText === "No insurance"){
+                            document.getElementById("txtAreaInsuranceDescription").value = "";
+                        }
                     }
 
                     // When a new <option> is selected
                     insuranceDropdown.addEventListener('change', function () {
                         actualPriceCalculator();
+                        getInsuranceDescription();
                     })
-                    
+
                     participantsChoice.addEventListener('change', function () {
                         actualPriceCalculator();
-                        document.getElementById("fieldNumParticipants").value = $('#selectedParticipants option:selected').length + " (of min. " +<?php echo ($tripTemplate->getMinAllocation() - 1); ?> + " and max. " +<?php echo ($tripTemplate->getMaxAllocation() - 1); ?> + ")";
+                        document.getElementById("fieldNumParticipants").value = $('#selectedParticipants option:selected').length + " (of min. " + (minAllocation - 1) + " and max. " + (maxAllocation - 1) + ")";
                     })
-                    
-                    
+
+
                 });
             </script>
         <?php endif; ?>
