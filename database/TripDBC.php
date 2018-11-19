@@ -735,31 +735,35 @@ class TripDBC extends DBConnector {
     }
     
     /** (tested)
-     * Changes the parameter of InvoicesRegistered in the Trip
+     * Locks InvoicesRegistered in the Trip
      * @param type $trip
      * @return boolean
      */
-    public function changeInvoicesRegistered($trip){
-        //Gets the object of the Trip (shallow request)
-        $tripObj = $this->findTripById($trip->getId(), true);
-        if(!$tripObj){
-            return false;
-        }
-        
-        //Locks or unlocks the invoicesRegistered
+    public function lockInvoicesRegistered($trip){      
         $stmt = $this->mysqliInstance->prepare("UPDATE trip SET invoicesRegistered = ? WHERE id = ?");
         if(!$stmt){
             return false;
         }
         $stmt->bind_param('si', $invoicesRegistered, $id);
-        $id = $tripObj->getId();
-        if($tripObj->getInvoicesRegistered()){
-            //Locks invoicesRegistered
-            $invoicesRegistered = null;
-        }else{
-            //Unlocks invoicesRegistered
-            $invoicesRegistered = date("Y-m-d");
+        $id = $trip->getId();
+        $invoicesRegistered = date("Y-m-d");
+        $result = $stmt->execute();
+        $stmt->close();
+        return $result;
+    }
+    
+    /** (tested)
+     * Unocks InvoicesRegistered in the Trip
+     * @param type $trip
+     * @return boolean
+     */
+    public function unlockInvoicesRegistered($trip){
+        $stmt = $this->mysqliInstance->prepare("UPDATE trip SET invoicesRegistered = NULL WHERE id = ?");
+        if(!$stmt){
+            return false;
         }
+        $stmt->bind_param('i', $id);
+        $id = $trip->getId();
         $result = $stmt->execute();
         $stmt->close();
         return $result;

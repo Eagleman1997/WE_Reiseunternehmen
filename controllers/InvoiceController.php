@@ -3,6 +3,7 @@
 namespace controllers;
 
 use entities\Invoice;
+use entities\Trip;
 use database\TripDBC;
 use helpers\Validation;
 use helpers\Upload;
@@ -75,17 +76,18 @@ class InvoiceController{
         if(!$id){
             return false;
         }
-        $tripDBC = new TripDBC();
-        $trip = $tripDBC->findTripById($tripId);
-        if(!$trip){
+        $trip = new Trip();
+        $trip->setId($tripId);
+        $tripObj = $trip->find();
+        if(!$tripObj){
             return false;
         }
-        if(!$trip->getInvoicesRegistered()){
-            //usually InvoiceRegistered is not set
-            //AJAX tell the client that InvoiceRegistered is not set
+        if(!$tripObj->getInvoicesRegistered()){
             return false;
         }
-        include 'pdf/finalSettlement.php';
+        $customerInvoice = new TemplateView("pdf/finalSettlement.php");
+        $customerInvoice->trip = $tripObj;
+        $customerInvoice->render();
     }
     
     /**

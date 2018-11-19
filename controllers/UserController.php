@@ -75,7 +75,6 @@ class UserController {
      * Controlls the logout process of a User
      */
     public static function logout(){
-        echo "logout</br>";
         $user = new User();
         
         return $user->logout();
@@ -100,9 +99,8 @@ class UserController {
      * Deletes a User
      */
     public static function deleteUser($userId){
-        $user = new User();
-        
         if(isset($_SESSION['role']) and $_SESSION['role'] == "admin"){
+            $user = new User();
             $id = Validation::positiveInt($userId);
             if(!$id){
                 return false;
@@ -119,6 +117,7 @@ class UserController {
         $user = new User();
         $user->setId($_SESSION['userId']);
         return $user->delete();
+        //not in use yet
     }
     
     /**
@@ -145,7 +144,6 @@ class UserController {
      * @return boolean
      */
     public static function deleteParticipant($participantId){
-        echo "deleteParticipant</br>";
         $participant = new Participant();
         
         $id = Validation::positiveInt($participantId);

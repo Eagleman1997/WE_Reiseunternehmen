@@ -197,7 +197,7 @@ Router::route_auth("DELETE", "/admin/tripTemplates/package/{id}/{id}", $authFunc
 
 Router::route_auth("DELETE", "/admin/bookedTrips/{id}", $authFunction, function ($id) {
     TripController::cancelTrip($id);
-    Router::redirect("/admin/bookedTrips");
+    Router::redirect("/admin/packageOverview");
 });
 
 Router::route_auth("GET", "/bookedTrips/detail/{id}", $authFunction, function ($id) {
@@ -223,7 +223,13 @@ Router::route_auth("DELETE", "/admin/bookedTrips/detail/{id}/{id}", $authFunctio
 });
 
 Router::route_auth("PUT", "/admin/bookedTrips/detail/{id}", $authFunction, function ($id) {
-    TripController::changeInvoicesRegistered($id);
+    TripController::lockInvoicesRegistered($id);
+    Router::redirect("/admin/bookedTrips/detail/finalSettlement/".$id);
+});
+
+Router::route_auth("PUT", "/admin/bookedTrips/detail/{id}/{id}", $authFunction, function ($id, $routeInfo) {
+    TripController::unlockInvoicesRegistered($id);
+    Router::redirect("/admin/bookedTrips/detail/".$id);
 });
 
 Router::route_auth("GET", "/admin/bookedTrips/detail/invoices/{id}", $authFunction, function ($id) {

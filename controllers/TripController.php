@@ -276,8 +276,7 @@ class TripController {
      * @return boolean
      */
     public static function cancelTrip($tripId){
-        echo "cancelTrip</br>";
-        if($_SESSION['role'] != "admin"){
+        if(!isset($_SESSION['role']) or (isset($_SESSION['role']) and $_SESSION['role'] != "admin")){
             return false;
         }
         $id = Validation::positiveInt($tripId);
@@ -313,13 +312,12 @@ class TripController {
     }
     
     /**
-     * Changes the InvoiceRegistered
+     * Locks the InvoiceRegistered
      * @param type $tripId
      * @return boolean
      */
-    public static function changeInvoicesRegistered($tripId){
-        echo "changeInvoicesRegistered</br>";
-        if($_SESSION['role'] != "admin"){
+    public static function lockInvoicesRegistered($tripId){
+        if(!isset($_SESSION['role']) or (isset($_SESSION['role']) and $_SESSION['role'] != "admin")){
             return false;
         }
         $id = Validation::positiveInt($tripId);
@@ -329,7 +327,26 @@ class TripController {
         $trip = new Trip();
         $trip->setId($id);
         
-        return $trip->changeInvoicesRegistered();
+        return $trip->lockInvoicesRegistered();
+    }
+    
+    /**
+     * Locks the InvoiceRegistered
+     * @param type $tripId
+     * @return boolean
+     */
+    public static function unlockInvoicesRegistered($tripId){
+        if(!isset($_SESSION['role']) or (isset($_SESSION['role']) and $_SESSION['role'] != "admin")){
+            return false;
+        }
+        $id = Validation::positiveInt($tripId);
+        if(!$id){
+            return false;
+        }
+        $trip = new Trip();
+        $trip->setId($id);
+        
+        return $trip->unlockInvoicesRegistered();
     }
     
 }

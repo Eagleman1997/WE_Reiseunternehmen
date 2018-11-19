@@ -65,11 +65,19 @@ class Trip {
     }
     
     /**
-     * Changes the InvoicesRegistered
+     * Locks the InvoicesRegistered
      * @return boolean
      */
-    public function changeInvoicesRegistered(){
-        return $this->tripDBC->changeInvoicesRegistered($this);
+    public function lockInvoicesRegistered(){
+        return $this->tripDBC->lockInvoicesRegistered($this);
+    }
+    
+    /**
+     * Unlocks the InvoicesRegistered
+     * @return boolean
+     */
+    public function unlockInvoicesRegistered(){
+        return $this->tripDBC->unlockInvoicesRegistered($this);
     }
     
     

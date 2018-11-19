@@ -85,7 +85,6 @@ class BusController {
      * @return boolean|Bus
      */
     public static function getBus($id){
-        echo "getBus</br>";
         $bus = new Bus();
         
         $id = Validation::positiveInt($id);
@@ -95,7 +94,7 @@ class BusController {
         $bus->setId($id);
         
         $bus = $bus->find();
-        //not in use
+        //not in use yet
     }
     
 }
