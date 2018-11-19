@@ -382,6 +382,8 @@ class TripDBC extends DBConnector {
         $hotel = $hotelDBC->findHotelById($dayprogram->getFkHotelId(), false);
         if(!$hotel){
             $hotelPricePerPerson = 0;
+        }else{
+            $hotelPricePerPerson = $hotel->getPricePerPerson();
         }
         
         //updates the price and durationInDays of the TripTemplate
