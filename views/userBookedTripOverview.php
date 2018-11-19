@@ -82,7 +82,7 @@ if(isset($this->trip) and $trip){
                 <div><a class="btn btn-secondary" data-toggle="collapse" aria-expanded="false" aria-controls="collapseParticipants" role="button" href="#collapseParticipants" style="margin-bottom: 10px;">Show/hide participants</a>
                     <div class="collapse" id="collapseParticipants">
                         <div>
-                            <fieldset style="margin-bottom: 20px;margin-top: 10px;"><label>User</label><input type="text" name="userName" value="<?php echo TemplateView::noHTML($user->getFirstName()); ?>" disabled="" readonly="" style="margin-left: 10px;min-width: 263px;"></fieldset>
+                            <fieldset style="margin-bottom: 20px;margin-top: 10px;"><label>User</label><input type="text" name="userName" value="<?php echo TemplateView::noHTML($user->getFirstName()." ".$user->getLastName()); ?>" disabled="" readonly="" style="margin-left: 10px;min-width: 263px;"></fieldset>
                         </div>
                         <div class="text-left scrollableDiv">
                             <!DOCTYPE html>

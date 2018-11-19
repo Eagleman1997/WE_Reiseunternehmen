@@ -68,7 +68,8 @@ class Validation {
      * @return boolean|string
      */
     public static function upToDate($date){
-        if(!self::date($date)){
+        $date = self::date($date);
+        if(!$date){
             return false;
         }
         $today = \date("Y-m-d");
@@ -85,7 +86,7 @@ class Validation {
      * @return boolean|string
      */
     public static function invoiceType($type){
-        $allowed = array("hotel", "bus", "insurance");
+        $allowed = array("hotel", "bus", "insurance", "other");
         if(in_array(strtolower($type), $allowed)){
             return strtolower($type);
         }else{

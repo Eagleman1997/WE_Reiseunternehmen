@@ -192,7 +192,7 @@ Router::route_auth("POST", "/admin/tripTemplates/package", $authFunction, functi
 
 Router::route_auth("DELETE", "/admin/tripTemplates/package/{id}/{id}", $authFunction, function ($dayprogramId, $tripTemplateId) {
     TripController::deleteDayprogram($dayprogramId);
-    //Router::redirect("/admin/tripTemplates/package/".$tripTemplateId);
+    Router::redirect("/admin/tripTemplates/package/".$tripTemplateId);
 });
 
 Router::route_auth("DELETE", "/admin/bookedTrips/{id}", $authFunction, function ($id) {

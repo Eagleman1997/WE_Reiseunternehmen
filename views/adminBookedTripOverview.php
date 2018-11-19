@@ -58,7 +58,8 @@ if(isset($this->trip) and $trip){
                                             <th>Departure date</th>
                                             <th>Insurance</th>
                                             <th>Bus</th>
-                                            <th>Price</th>
+                                            <th>Internal price from CHF</th>
+                                            <th>Customer price from CHF</th>
                                         </tr>
                                     </thead>
                                     <tbody id="tripTableBody">
@@ -70,6 +71,7 @@ if(isset($this->trip) and $trip){
                                             <td><?php echo TemplateView::noHTML($trip->getInsurance()->getName()); ?></td>
                                             <td><?php echo TemplateView::noHTML($tripTemplate->getBus()->getName()) . " (seats: " . TemplateView::noHTML($tripTemplate->getBus()->getSeats()) . ")"; ?></td>
                                             <td><?php echo TemplateView::noHTML($trip->getPrice()); ?></td>
+                                            <td><?php echo TemplateView::noHTML($trip->getCustomerPrice()); ?></td>
                                         </tr>
                                     </tbody>
                                 </table>
@@ -83,7 +85,9 @@ if(isset($this->trip) and $trip){
                 <div><a class="btn btn-secondary" data-toggle="collapse" aria-expanded="false" aria-controls="collapseParticipants" role="button" href="#collapseParticipants" style="margin-bottom: 10px;">Show/hide participants</a>
                     <div class="collapse" id="collapseParticipants">
                         <div>
-                            <fieldset style="margin-bottom: 20px;margin-top: 10px;"><label>User</label><input type="text" name="userName" value="<?php echo TemplateView::noHTML($user->getFirstName()); ?>" disabled="" readonly="" style="margin-left: 10px;min-width: 263px;"></fieldset>
+                            <fieldset style="margin-bottom: 20px;margin-top: 10px;"><div><label>Booked by</label></div>
+                                <div><textarea name="userName" value="" readonly="" style="margin-left: 10px; text-align: center; min-width: 350px; width: 400px;margin-right: 0px;min-height: 130px;"><?php echo TemplateView::noHTML($user->getFirstName()." ".$user->getLastName()."\n"
+                                        . $user->getStreet()."\n".$user->getZipCode()." ".$user->getLocation()."\n".$user->getEmail()."\n".$user->getBirthDate()); ?></textarea></div></fieldset>
                         </div>
                         <div class="text-left">
                             <!DOCTYPE html>
@@ -193,7 +197,7 @@ if(isset($this->trip) and $trip){
                 </div>
                 <div class="collapse item-1" role="tabpanel" data-parent="#accordionTripAdmin">
                     <div class="card-body">
-                        <div class="text-center border rounded border-info shadow d-flex d-sm-flex d-md-flex d-lg-flex justify-content-center justify-content-sm-center justify-content-md-center justify-content-lg-center"><form action="<?php echo $GLOBALS['ROOT_URL'] ?>/admin/bookedTrips/detail/<?php echo $bookedTrip->getId(); ?>" method="get" class="d-md-flex justify-content-md-center" style="padding-top: 0px;padding-right: 0px;padding-bottom: 0px;padding-left: 0px;">
+                        <div class="text-center border rounded border-info shadow d-flex d-sm-flex d-md-flex d-lg-flex justify-content-center justify-content-sm-center justify-content-md-center justify-content-lg-center"><form action="<?php echo $GLOBALS['ROOT_URL'] ?>/admin/bookedTrips/detail/<?php echo $trip->getId(); ?>" method="get" class="d-md-flex justify-content-md-center" style="padding-top: 0px;padding-right: 0px;padding-bottom: 0px;padding-left: 0px;">
                                 <div class="text-center" >
                                     <p style="margin-bottom: 15px;margin-top: 15px;color: #000000;">Are there no more invoices to this trip?</p>
                                     <button class="btn btn-info" type="submit" id="btnInvoicesComplete" style="margin-top: 0px;margin-bottom: 11px;">Prepare final invoice</button></div>
