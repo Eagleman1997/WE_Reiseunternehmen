@@ -134,15 +134,14 @@ class Trip {
     }
     
     public function getCustomerPrice(){
-        return Margin::addTrip($this->price);
+        return Numbers::roundPrice(Margin::addTrip($this->price));
     }
     
     public function getInsurancePrice(){
         if(!$this->insurance){
             return false;
         }
-        $insurancePrice = $this->insurance->getPricePerPerson() * $this->numOfParticipation;
-        return round($insurancePrice * 20, 0) / 20;//round to the nearest 0.05
+        return $this->insurance->getPricePerPerson() * $this->numOfParticipation;
     }
     
     public function getInsuranceCustomerPrice(){
@@ -150,7 +149,7 @@ class Trip {
             return false;
         }
         $insuranceCustomerPrice = Margin::addInsurance($this->insurance->getPricePerPerson() * $this->numOfParticipation);
-        return round($insuranceCustomerPrice * 20, 0) / 20;//round to the nearest 0.05
+        return Numbers::roundPrice($insuranceCustomerPrice);
     }
     
     public function setId($id) {

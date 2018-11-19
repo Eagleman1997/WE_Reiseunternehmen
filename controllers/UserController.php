@@ -161,13 +161,16 @@ class UserController {
      * Gets a complete User-object with the related Participants if available
      */
     public static function getParticipants(){
+        if(!isset($_SESSION['role']) or (isset($_SESSION['role']) and $_SESSION['role'] != "user")){
+            return false;
+        }
         $user = new User();
 
         $user->setId($_SESSION['userId']);
             
         $travelersView = new TemplateView("addTravelers.php");
         $travelersView->participants = $user->findParticipants()->getParticipants();
-        LayoutRendering::basicLayout($travelersView);
+        LayoutRendering::basicLayout($travelersView, "headerUserLoggedIn");
     }
     
     /**

@@ -51,7 +51,8 @@ isset($this->participants) ? $participants = $this->participants : $participants
                                         <td><?php echo TemplateView::noHTML($participant->getFirstName()); ?></td>
                                         <td><?php echo TemplateView::noHTML($participant->getLastName()); ?> </td>
                                         <td><?php echo TemplateView::noHTML($participant->getBirthDate()); ?> </td>
-                                        <td><img data-href="user/delete?id=<?php echo $participant->getId(); ?>" src="assets/img/Recycle_Bin.png" alt="Remove" border=3 height=20 width=20></td>
+                                        <td><form style="background-color: transparent; padding: 0px; margin: 0px; min-width: 0px; min-height: 0px; max-width: 20px" id="deleteParticipant<?php echo $participant->getId(); ?>" action="<?php echo $GLOBALS['ROOT_URL'] ?>/travelers/<?php echo $participant->getId(); ?>" method="post">
+                                            <input type="hidden" name="_method" value="DELETE"><img src="assets/img/Recycle_Bin.png" alt="Remove"  border=3 height=20 width=20 onclick="deleteHandler(<?php echo $participant->getId(); ?>)"></form></td>
                                     </tr>
                                 <?php endforeach; ?>
                             </tbody>
@@ -60,19 +61,12 @@ isset($this->participants) ? $participants = $this->participants : $participants
                     </div>
 
                     <script>
-
-                        // Remove travelers from the database
-                        table = document.getElementById("participantOverviewTable");
-                        for (var i = 1; i < table.rows.length; i++)
-                        {
-                            table.rows[i].cells[3].onclick = function () {
-                                var c = confirm("Do you want to delete this user?");
-                                if (c == true)
-                                {
-                                    index = this.parentElement.rowIndex;
-                                    table.deleteRow(index);
-                                    // send index to database in order to delete the user
-                                }
+                        
+                        //Remove hotel
+                        function deleteHandler(participantId){
+                            var c = confirm("Do you want to delete this traveler?");
+                            if(c){
+                                $( "#deleteParticipant"+participantId).submit();
                             }
                         }
 
