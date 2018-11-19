@@ -28,14 +28,14 @@ class Config
     }
 
     private static function loadENV(){        
-        if (isset($_ENV["DATABASE_URL"])) {
-            $dbopts = parse_url($_ENV["DATABASE_URL"]);
-            self::$config["database.dsn"] = "pgsql" . ":host=" . $dbopts["host"] . ";port=" . $dbopts["port"] . "; dbname=" . ltrim($dbopts["path"], '/') . "; sslmode=require";
+        if (isset($_ENV["JAWSDB_MARIA_URL"])) {
+            $dbopts = parse_url($_ENV["JAWSDB_MARIA_URL"]);
             self::$config["database.user"] = $dbopts["user"];
             self::$config["database.host"] = $dbopts["host"];
             self::$config["database.port"] = $dbopts["port"];
             self::$config["database.name"] = ltrim($dbopts["path"], '/');   
             self::$config["database.password"] = $dbopts["pass"];
+            
         }
     }
 }
