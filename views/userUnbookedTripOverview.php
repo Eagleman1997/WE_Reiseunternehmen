@@ -99,25 +99,25 @@ if (isset($this->tripTemplate) and $this->tripTemplate and $tripTemplate->getDay
                                                 </tr>
                                             </thead>
                                             <tbody id="dayProgramsTableBody">
-<?php foreach ($dayprograms as $dayprogram): ?>
+                                                <?php foreach ($dayprograms as $dayprogram): ?>
                                                     <tr>
                                                         <td><?php echo TemplateView::noHTML($dayprogram->getDayNumber()); ?></td>
                                                         <td><img src="<?php echo TemplateView::noHTML($dayprogram->getPicturePath()); ?>" alt="Not available" border=3 width=150></td>
                                                         <td><?php echo TemplateView::noHTML($dayprogram->getName()); ?> </td>
                                                         <td><?php echo TemplateView::noHTML($dayprogram->getDescription()); ?> </td>
                                                         <td><?php
-                                                        if ($dayprogram->getHotel()) {
-                                                            echo TemplateView::noHTML($dayprogram->getHotel()->getName());
-                                                        }
-    ?> </td>
+                                                            if ($dayprogram->getHotel()) {
+                                                                echo TemplateView::noHTML($dayprogram->getHotel()->getName());
+                                                            }
+                                                            ?> </td>
                                                         <td><?php if ($dayprogram->getHotel()): ?><img src="<?php echo TemplateView::noHTML($dayprogram->getHotel()->getPicturePath()); ?>" alt="Not available" border=3 width=150><?php endif; ?></td>
                                                         <td><?php
-                                                        if ($dayprogram->getHotel()) {
-                                                            echo TemplateView::noHTML($dayprogram->getHotel()->getDescription());
-                                                        }
-                                                        ?> </td>
+                                                            if ($dayprogram->getHotel()) {
+                                                                echo TemplateView::noHTML($dayprogram->getHotel()->getDescription());
+                                                            }
+                                                            ?> </td>
                                                     </tr>
-<?php endforeach; ?>
+                                                <?php endforeach; ?>
                                             </tbody>
                                         </table>
                                     </div>
@@ -128,41 +128,53 @@ if (isset($this->tripTemplate) and $this->tripTemplate and $tripTemplate->getDay
                 </div>
             </div>
         </div>
-<?php if (isset($_SESSION['login'])): ?>
-            <div class="border rounded-0 border-primary shadow form-container" id="divBookingForm" style="min-width: 400px;max-width: 632px;">
-                <h2 class="text-center" style="margin-bottom: 16px;margin-top: 18px;min-width: 400px;"><strong>Book your trip.</strong><br></h2>
-                <div style="margin-bottom: 15px;margin-left: 15px;">
-                    <form class="border-dark" action="<?php echo $GLOBALS['ROOT_URL'] ?>/packageOverview/package" method="post" id="tripBookingForm" style="background-color: rgba(96,175,221,0.21);padding-right: 25px;padding-left: 25px;min-width: 600px;background-image: url(&quot;assets/img/spanish%20beach.png&quot;);background-position: center;background-size: cover;background-repeat: no-repeat;">
+        <?php if (isset($_SESSION['login'])): ?>
+            <div class="border rounded-0 border-primary shadow form-container" id="divBookingForm">
+                <h2 class="text-center" style="margin-bottom: 16px;margin-top: 18px;"><strong>Book your trip.</strong><br></h2>
+                <div style="overflow-x: auto; margin-bottom: 15px; margin-right: 15px; margin-left: 15px; padding-right: 25px;padding-left: 25px;background-image: url(&quot;assets/img/spanish%20beach.png&quot;);background-position: center;background-size: cover;background-repeat: no-repeat;">
+                    <form class="border-dark" action="<?php echo $GLOBALS['ROOT_URL'] ?>/packageOverview/package" method="post" id="tripBookingForm" style="background-color: transparent;padding-right: 25px;padding-left: 25px;">
                         <input type="hidden" name="tripTemplateId" value="<?php echo $tripTemplate->getId(); ?>">
                         <div class="form-group"><label style="color: #222222;"><strong>Departure date</strong></label><input class="form-control" type="date" name="departureDate" required=""></div>
-                        <div class="form-group"><label style="margin-top: 13px;color: #222222;"><strong>Insurance (optional)</strong></label><select class="form-control" name="insurance" required="" id="insuranceDropdown" style="min-width: 500px;"><optgroup label="Select insurance">
-                                        <?php foreach ($insurances as $insurance) : ?>
+                        <div class="form-group"><label style="margin-top: 13px;color: #222222;"><strong>Insurance (optional)</strong></label>
+                            <select class="form-control" name="insurance" required="" id="insuranceDropdown" style="min-width: 500px;"><optgroup label="Select insurance">
+                                    <?php foreach ($insurances as $insurance) : ?>
                                         <option value="<?php echo $insurance->getId(); ?>"><?php echo TemplateView::noHTML($insurance->getName()) . " (price per person: CHF " . $insurance->getCustomerPricePerPerson() . ")"; ?></option>
                                     <?php endforeach; ?><option name="insuranceId" value="0" selected="">No insurance</option>
-                                </optgroup></select></div>
+                                </optgroup></select>
+                        
+                        <textarea name="insuranceDescription" id="insuranceDescription" readonly="" style="padding: 10px; margin-top: 5px; min-width: 500px; min-height: 130px;"></textarea></div>
+                                                
                         <div
                             class="form-group"><label style="margin-top: 13px;color: #222222;"><strong>Participants <?php echo "(min. " . ($tripTemplate->getMinAllocation() - 1) . ", max. " . ($tripTemplate->getMaxAllocation() - 1) . ")"; ?></strong></label><select class="form-control" name="participants[]" required="" multiple="" id="selectedParticipants" style="min-height: 400px; min-width: 500px;background-color: #f7f9fc;max-width: 500px;"><optgroup label="Unselect or select multiple with CTRL">
-    <?php foreach ($participants as $participant) : ?>
+                                        <?php foreach ($participants as $participant) : ?>
                                         <option selected="" value="<?php echo $participant->getId(); ?>"><?php echo TemplateView::noHTML($participant->getFirstName() . " " . $participant->getLastName()); ?> </option>
-                                <?php endforeach; ?>
+                                    <?php endforeach; ?>
                                 </optgroup></select>
 
                             <label style="margin-top: 15px; margin-left: 35px; color: #222222;">Number of selected participants</label><input style="margin-left: 35px;" class="form-control" value="" style="grey" type="text" readonly="" id="fieldNumParticipants">
 
                             <div><label style="margin-left: 0px;margin-top: 25px;color: #222222;" for="tripPrice"><strong>Price</strong></label><input class="form-control" value="<?php
-                            if ($tripTemplate->getCustomerHotelPricePerPerson() and $tripTemplate->getCustomerBusPrice()) {
-                                echo $tripTemplate->getCustomerHotelPricePerPerson() + $tripTemplate->getCustomerBusPrice();
-                            }
-                            ?>" style="grey" type="text" name="price" readonly="" id="price"></div>
+                                if ($tripTemplate->getCustomerHotelPricePerPerson() and $tripTemplate->getCustomerBusPrice()) {
+                                    echo $tripTemplate->getCustomerHotelPricePerPerson() + $tripTemplate->getCustomerBusPrice();
+                                }
+                                ?>" style="grey" type="text" name="price" readonly="" id="price"></div>
                         </div><button id="bookTrip" disabled class="btn btn-primary" type="submit" style="margin-top: 21px;">Book your trip now</button></form>
                 </div>
             </div>
             <script>
                 $(document).ready(function () {
     <?php
+    // Get insurance prices
     $insuranceCustomerPrices = array();
     foreach ($insurances as $insurance) {
         array_push($insuranceCustomerPrices, $insurance->getCustomerPricePerPerson());
+    }
+        
+    // Get insurance descriptions 
+    $insuranceCustomerDescriptions = array();
+    foreach ($insurances as $insurance) {
+        array_push($insuranceCustomerDescriptions, $insurance->getDescription());
+    
     }
     $js_array = json_encode($insuranceCustomerPrices);
     echo "var insurancePrices = " . $js_array . ";\n";
@@ -173,7 +185,7 @@ if (isset($this->tripTemplate) and $this->tripTemplate and $tripTemplate->getDay
     ?>
 
                     function countSelectedParticipants() {
-                        document.getElementById("fieldNumParticipants").value = $('#selectedParticipants option:selected').length + " (of min. " +(minAllocation-1) + " and max. " +(maxAllocation-1) + ")";
+                        document.getElementById("fieldNumParticipants").value = $('#selectedParticipants option:selected').length + " (of min. " + (minAllocation - 1) + " and max. " + (maxAllocation - 1) + ")";
                         if ($('#selectedParticipants option:selected').length + 1 > maxAllocation || $('#selectedParticipants option:selected').length + 1 < minAllocation) {
                             document.getElementById('bookTrip').disabled = true;
                             document.getElementById('fieldNumParticipants').style.color = "red";
@@ -213,13 +225,16 @@ if (isset($this->tripTemplate) and $this->tripTemplate and $tripTemplate->getDay
                     insuranceDropdown.addEventListener('change', function () {
                         actualPriceCalculator();
                     })
+                    
                     participantsChoice.addEventListener('change', function () {
                         actualPriceCalculator();
                         document.getElementById("fieldNumParticipants").value = $('#selectedParticipants option:selected').length + " (of min. " +<?php echo ($tripTemplate->getMinAllocation() - 1); ?> + " and max. " +<?php echo ($tripTemplate->getMaxAllocation() - 1); ?> + ")";
                     })
+                    
+                    
                 });
             </script>
-<?php endif; ?>
+        <?php endif; ?>
     </div>
 
     <script src="assets/js/Sidebar-Menu.js"></script>
