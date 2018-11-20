@@ -8,31 +8,30 @@ use entities\Trip;
 use entities\TripTemplate;
 use entities\User;
 
-
 isset($this->trip) ? $trip = $this->trip : $trip = new Trip();
-if(isset($this->trip) and $trip){
+if (isset($this->trip) and $trip) {
     $tripTemplate = $trip->getTripTemplate();
-}else{
+} else {
     $tripTemplate = new TripTemplate();
 }
-if($tripTemplate->getDayprograms()){
+if ($tripTemplate->getDayprograms()) {
     $dayprograms = $tripTemplate->getDayprograms();
-}else{
+} else {
     $dayprograms = array();
 }
-if(isset($this->trip) and $trip){
+if (isset($this->trip) and $trip) {
     $participants = $trip->getParticipants();
-}else{
+} else {
     $participants = array();
 }
-if(isset($this->trip) and $trip){
+if (isset($this->trip) and $trip) {
     $user = $trip->getUser();
-}else{
+} else {
     $user = new User();
 }
-if(isset($this->trip) and $trip){
+if (isset($this->trip) and $trip) {
     $invoices = $trip->getInvoices();
-}else{
+} else {
     $invoices = array();
 }
 ?>
@@ -90,8 +89,10 @@ if(isset($this->trip) and $trip){
                     <div class="collapse" id="collapseParticipants">
                         <div>
                             <fieldset style="margin-bottom: 20px;margin-top: 10px;"><div><label style="color: darkorange;">Booked by</label></div>
-                                <div style="overflow-x: auto;" ><textarea name="userName" value="" readonly="" style="margin-left: 10px; text-align: center; min-width: 350px; width: 400px;margin-right: 0px;min-height: 130px;"><?php echo TemplateView::noHTML($user->getFirstName()." ".$user->getLastName()."\n"
-                                        . $user->getStreet()."\n".$user->getZipCode()." ".$user->getLocation()."\n".$user->getEmail()."\n".$user->getBirthDate()); ?></textarea></div></fieldset>
+                                <div style="overflow-x: auto;" ><textarea name="userName" value="" readonly="" style="margin-left: 10px; text-align: center; min-width: 350px; width: 400px;margin-right: 0px;min-height: 130px;"><?php
+                                        echo TemplateView::noHTML($user->getFirstName() . " " . $user->getLastName() . "\n"
+                                                . $user->getStreet() . "\n" . $user->getZipCode() . " " . $user->getLocation() . "\n" . $user->getEmail() . "\n" . $user->getBirthDate());
+                                        ?></textarea></div></fieldset>
                         </div>
                         <div class="text-left">
                             <!DOCTYPE html>
@@ -178,10 +179,22 @@ if(isset($this->trip) and $trip){
                                                         <td><img src="<?php echo TemplateView::noHTML($dayprogram->getPicturePath()); ?>" alt="Not available" border=3 width=150></td>
                                                         <td><?php echo TemplateView::noHTML($dayprogram->getName()); ?> </td>
                                                         <td><?php echo TemplateView::noHTML($dayprogram->getDescription()); ?> </td>
-                                                        <td><?php if($dayprogram->getHotel()){echo TemplateView::noHTML($dayprogram->getHotel()->getName());} ?> </td>
-                                                        <td><?php if($dayprogram->getHotel()): ?><img src="<?php echo TemplateView::noHTML($dayprogram->getHotel()->getPicturePath()); ?>" alt="Not available" border=3 width=150><?php endif; ?></td>
-                                                        <td><?php if($dayprogram->getHotel()){echo TemplateView::noHTML($dayprogram->getHotel()->getDescription());} ?> </td>
-                                                        <td><?php if($dayprogram->getHotel()){echo TemplateView::noHTML($dayprogram->getHotel()->getPricePerPerson());} ?> </td>
+                                                        <td><?php
+                                                            if ($dayprogram->getHotel()) {
+                                                                echo TemplateView::noHTML($dayprogram->getHotel()->getName());
+                                                            }
+                                                            ?> </td>
+                                                        <td><?php if ($dayprogram->getHotel()): ?><img src="<?php echo TemplateView::noHTML($dayprogram->getHotel()->getPicturePath()); ?>" alt="Not available" border=3 width=150><?php endif; ?></td>
+                                                        <td><?php
+                                                            if ($dayprogram->getHotel()) {
+                                                                echo TemplateView::noHTML($dayprogram->getHotel()->getDescription());
+                                                            }
+                                                            ?> </td>
+                                                        <td><?php
+                                                            if ($dayprogram->getHotel()) {
+                                                                echo TemplateView::noHTML($dayprogram->getHotel()->getPricePerPerson());
+                                                            }
+                                                            ?> </td>
                                                     </tr>
                                                 <?php endforeach; ?>
                                             </tbody>
@@ -199,43 +212,60 @@ if(isset($this->trip) and $trip){
                 <div class="card-header" role="tab">
                     <h5 class="mb-0"><a data-toggle="collapse" aria-expanded="false" aria-controls="accordionTripAdmin .item-1" href="div#accordionTripAdmin .item-1">Administration of trip invoices</a></h5>
                 </div>
-                <div class="collapse item-1" role="tabpanel" data-parent="#accordionTripAdmin">
-                    <div class="card-body">
-                        <div class="text-center border rounded border-info shadow d-flex d-sm-flex d-md-flex d-lg-flex justify-content-center justify-content-sm-center justify-content-md-center justify-content-lg-center">
-                            <form action="<?php echo $GLOBALS['ROOT_URL'] ?>/admin/bookedTrips/detail/<?php echo $trip->getId(); ?>" method="POST" class="d-md-flex justify-content-md-center" style="padding-top: 0px;padding-right: 0px;padding-bottom: 0px;padding-left: 0px;">
-                                <input type="hidden" name="_method" value="PUT"><div class="text-center" >
-                                    <p style="margin-bottom: 15px;margin-top: 15px;color: #000000;">Are there no more invoices to this trip?</p>
-                                    <button class="btn btn-info" type="submit" id="btnInvoicesComplete" style="margin-top: 0px;margin-bottom: 11px;">Prepare final invoice</button></div>
-                            </form></div>
-                        <?php if($trip->getInvoicesRegistered()): ?>
-                        <div class="text-center border rounded border-danger shadow d-flex d-sm-flex d-md-flex d-lg-flex justify-content-center justify-content-sm-center justify-content-md-center justify-content-lg-center">
-                            <form action="<?php echo $GLOBALS['ROOT_URL'] ?>/admin/bookedTrips/detail/<?php echo $trip->getId(); ?>/1" method="POST" class="d-md-flex justify-content-md-center" style="background-color: transparent; padding-top: 0px;padding-right: 0px;padding-bottom: 0px;padding-left: 0px;">
+                <div class="collapse item-1 card-body" role="tabpanel" data-parent="#accordionTripAdmin">
+
+                    <!-- Button to generate the final invoice -->
+                    <div class="text-center border rounded border-info shadow d-flex d-sm-flex d-md-flex d-lg-flex justify-content-center justify-content-sm-center justify-content-md-center justify-content-lg-center">
+                         <form action="<?php echo $GLOBALS['ROOT_URL'] ?>/admin/bookedTrips/detail/<?php echo $trip->getId(); ?>" method="POST" class="d-md-flex justify-content-md-center" style="background-color: transparent; margin: 10px; padding-top: 0px;padding-right: 0px;padding-bottom: 0px;padding-left: 0px;">
+                            <input type="hidden" name="_method" value="PUT">
+                            <div class="text-center" >
+                                <p style="margin-bottom: 15px;margin-top: 15px;color: #000000;">Are there no more invoices to this trip?</p>
+                                <button class="btn btn-info" type="submit" id="btnInvoicesComplete" style="margin-top: 0px;margin-bottom: 15px;">Prepare final invoice</button>
+                            </div>
+                        </form>
+                    </div>
+
+                    <!-- Button to view the customer invoice -->
+                    <div style="margin-top: 15px;"class="text-center border rounded border-warning shadow d-flex d-sm-flex d-md-flex d-lg-flex justify-content-center justify-content-sm-center justify-content-md-center justify-content-lg-center">
+                         <form action="<?php echo $GLOBALS['ROOT_URL'] ?>/admin/bookedTrips/detail/invoices/<?php echo $trip->getId(); ?>" method="POST" class="d-md-flex justify-content-md-center" style="background-color: transparent; margin: 10px; padding-top: 0px;padding-right: 0px;padding-bottom: 0px;padding-left: 0px;">
+                            <input type="hidden" name="_method" value="PUT"><div class="text-center" >
+                                <p style="margin-bottom: 15px;margin-top: 15px;color: #000000;">Would you like to view the customer invoice?</p>
+                                <button class="btn btn-warning" type="submit" id="btnViewCustomerInvoice" style="color: white; margin-top: 0px;margin-bottom: 11px;">Show customer invoice</button>
+                            </div> </form>
+                    </div>
+
+                    <!-- Button to add additional invoices after generating the final invoice -->
+                    <?php if ($trip->getInvoicesRegistered()): ?>
+                    <div style="margin-top: 15px;" class="text-center border rounded border-danger shadow d-flex d-sm-flex d-md-flex d-lg-flex justify-content-center justify-content-sm-center justify-content-md-center justify-content-lg-center">
+                             <form action="<?php echo $GLOBALS['ROOT_URL'] ?>/admin/bookedTrips/detail/<?php echo $trip->getId(); ?>/1" method="POST" class="d-md-flex justify-content-md-center" style="margin: 10px; background-color: transparent; padding-top: 0px;padding-right: 0px;padding-bottom: 0px;padding-left: 0px;">
                                 <input type="hidden" name="_method" value="PUT"><div class="text-center" >
                                     <p style="margin-bottom: 15px;margin-top: 15px;color: #000000;">Are there more invoices?</p>
                                     <button class="btn btn-danger" type="submit" id="btnInvoicesComplete" style="margin-top: 0px;margin-bottom: 11px;">Upload additional invoices</button></div>
-                            </form></div>
-                        <?php endif; ?>
-                        <div id="collapseInvoices" style="margin-bottom: 0px;padding-bottom: 0px;padding-top: 0px;"><a class="btn btn-secondary" data-toggle="collapse" aria-expanded="false" aria-controls="collapse-2" role="button" href="#collapse-2" style="margin-top: 30px;">Show/hide all uploaded invoices</a>
-                            <div class="collapse" id="collapse-2"
-                                 style="margin-top: 0px;">
-                                <div class="border rounded-0 border-dark" style="max-width: 800px;padding-left: 15px;padding-top: 0px;padding-bottom: 0px;padding-right: 15px;background-color: rgba(255,255,255,0.61);">
-                                    <h4 class="text-left" style="margin-bottom: 16px;margin-top: 18px;min-width: 500px;"><strong>Already uploaded invoices.</strong><br></h4>
-                                    <div class="table-responsive" id="tableUploadedInvoices">
-                                        <table class="table table-striped table-hover table-sm">
-                                            <thead>
-                                                <tr>
-                                                    <th>Invoice type</th>
-                                                    <th>Description</th>
-                                                    <th>Date</th>
-                                                    <th>Amount</th>
-                                                    <th>Download PDF</th>
-                                                    <?php if(!$trip->getInvoicesRegistered()): ?>
+                            </form>
+                        </div>
+                    
+                    <?php endif; ?>
+                    <div id="collapseInvoices" style="margin-bottom: 0px;padding-bottom: 0px;padding-top: 0px;"><a class="btn btn-secondary" data-toggle="collapse" aria-expanded="false" aria-controls="collapse-2" role="button" href="#collapse-2" style="margin-top: 30px;">Show/hide all uploaded invoices</a>
+                        <div class="collapse" id="collapse-2"
+                             style="margin-top: 0px;">
+                            <div class="border rounded-0 border-dark" style="max-width: 800px;padding-left: 15px;padding-top: 0px;padding-bottom: 0px;padding-right: 15px;background-color: rgba(255,255,255,0.61);">
+                                <h4 class="text-left" style="margin-bottom: 16px;margin-top: 18px;min-width: 500px;"><strong>Already uploaded invoices.</strong><br></h4>
+                                <div class="table-responsive" id="tableUploadedInvoices">
+                                    <table class="table table-striped table-hover table-sm">
+                                        <thead>
+                                            <tr>
+                                                <th>Invoice type</th>
+                                                <th>Description</th>
+                                                <th>Date</th>
+                                                <th>Amount</th>
+                                                <th>Download PDF</th>
+                                                <?php if (!$trip->getInvoicesRegistered()): ?>
                                                     <th>Delete</th>
-                                                    <?php endif; ?>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                <?php foreach($invoices as $invoice): ?>
+                                                <?php endif; ?>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <?php foreach ($invoices as $invoice): ?>
                                                 <tr>
                                                     <td><?php echo $invoice->getType(); ?></td>
                                                     <td><?php echo $invoice->getDescription(); ?></td>
@@ -244,19 +274,19 @@ if(isset($this->trip) and $trip){
                                                     <td><a href="<?php echo $invoice->getPdfPath(); ?>" download="<?php echo $invoice->getFileName(); ?>">
                                                             <img src="assets/img/paper-clip.png" alt="Download" width="25px" height="25px">
                                                         </a></td>
-                                                    <?php if(!$trip->getInvoicesRegistered()): ?>    
-                                                    <td><form style="background-color: transparent; padding: 0px; margin: 0px; min-width: 0px; max-width: 15px; min-height: 0px" id="deleteInvoice<?php echo $invoice->getId(); ?>" action="<?php echo $GLOBALS['ROOT_URL'] ?>/admin/bookedTrips/detail/<?php echo $invoice->getId()."/".$trip->getId(); ?>" method="post">
-                                                        <input type="hidden" name="_method" value="DELETE"><img src="assets/img/Recycle_Bin.png" alt="Remove"  border=3 height=20 width=20 onclick="deleteHandler(<?php echo $invoice->getId(); ?>)"></form></td>
+                                                    <?php if (!$trip->getInvoicesRegistered()): ?>    
+                                                        <td><form style="background-color: transparent; padding: 0px; margin: 0px; min-width: 0px; max-width: 15px; min-height: 0px" id="deleteInvoice<?php echo $invoice->getId(); ?>" action="<?php echo $GLOBALS['ROOT_URL'] ?>/admin/bookedTrips/detail/<?php echo $invoice->getId() . "/" . $trip->getId(); ?>" method="post">
+                                                                <input type="hidden" name="_method" value="DELETE"><img src="assets/img/Recycle_Bin.png" alt="Remove"  border=3 height=20 width=20 onclick="deleteHandler(<?php echo $invoice->getId(); ?>)"></form></td>
                                                     <?php endif; ?>
                                                 </tr>
-                                                <?php endforeach; ?>
-                                            </tbody>
-                                        </table>
-                                    </div>
+                                            <?php endforeach; ?>
+                                        </tbody>
+                                    </table>
                                 </div>
                             </div>
                         </div>
-                        <?php if(!$trip->getInvoicesRegistered()): ?>
+                    </div>
+                    <?php if (!$trip->getInvoicesRegistered()): ?>
                         <div class="border rounded-0 border-primary shadow form-container" style="max-width: 632px;margin-top: 30px;">
                             <h4 class="text-center" style="margin-bottom: 16px;margin-top: 18px;"><strong>Add a new invoice to the trip.</strong><br></h4>
                             <div style="overflow-x: auto; background-color: rgba(176,224,147,0.36); margin: 15px;">
@@ -267,27 +297,27 @@ if(isset($this->trip) and $trip){
                                         class="form-group" style="margin: 10px;margin-right: 50px;"><label class="labelsFormDayProgram">Description of invoice</label><textarea class="form-control" name="description" required="" minlength="3" id="description" style="width: 400px;margin-right: 0px;min-height: 80px;"></textarea></div>
                                     <div
                                         class="form-group" style="margin: 10px;"><label class="labelsFormDayProgram">Date of invoice</label><input class="form-control" type="date" name="date" required="" id="date"></div>
-                                    <div class="form-group" style="margin: 10px;"><label class="labelsFormDayProgram">Amount of invoice</label><input class="form-control" type="number" name="price" required="" min="0" id="price"></div>
+                                    <div class="form-group" style="margin: 10px;"><label class="labelsFormDayProgram">Amount of invoice</label><input class="form-control" type="number" name="price" required="" min="0" step="0.05" id="price"></div>
                                     <div class="form-group mt-auto" style="margin-right: 100px;padding: 10px;padding-right: 50px;margin-bottom: 20px;padding-bottom: 0px;"><label class="labelsFormDayProgram">PDF of invoice</label><input type="file" name="invoice" required="" id="pdfPath" style="width: 400px;font-family: Capriola, sans-serif;background-color: #ffffff;margin-right: 0;"></div>
                                     <button
                                         class="btn btn-primary btn-block" type="submit" style="width: 100px;margin: 10px;margin-top: 50px;margin-left: 10px;">Save</button>
                                 </form>
                             </div>
                         </div>
-                        <?php endif; ?>
-                    </div>
+                    <?php endif; ?>
                 </div>
             </div>
         </div>
     </div>
-    <script>
+</div>
+<script>
 
-        //Remove invoice
-         function deleteHandler(invoiceId){
-            var c = confirm("Do you want to delete this invoice?");
-            if(c){
-                $( "#deleteInvoice"+invoiceId).submit();
-            }
+    //Remove invoice
+    function deleteHandler(invoiceId) {
+        var c = confirm("Do you want to delete this invoice?");
+        if (c) {
+            $("#deleteInvoice" + invoiceId).submit();
         }
-    </script>
-    <script src="assets/js/Sidebar-Menu.js"></script>
+    }
+</script>
+<script src="assets/js/Sidebar-Menu.js"></script>
