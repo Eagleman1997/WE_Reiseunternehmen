@@ -24,37 +24,37 @@ class BusController {
      */
     public static function createBus(){
         if(!isset($_SESSION['role']) or (isset($_SESSION['role']) and $_SESSION['role'] != "admin")){
-            HTTPHeader::setStatusHeader(HTTPStatusCode::HTTP_204_NO_CONTENT);
             return false;
         }
         $bus = new Bus();
         
-        $bus->setName(\filter_input(\INPUT_POST, 'name', \FILTER_DEFAULT));
-        $bus->setDescription(\filter_input(\INPUT_POST, 'description', \FILTER_DEFAULT));
+        $bus->setName(\filter_input(\INPUT_POST, 'name', \FILTER_SANITIZE_STRING));
+        $bus->setDescription(\filter_input(\INPUT_POST, 'description', \FILTER_SANITIZE_STRING));
         $seats = Validation::positiveInt(\filter_input(\INPUT_POST, 'seats', \FILTER_VALIDATE_INT));
         if(!$seats){
-            HTTPHeader::setStatusHeader(HTTPStatusCode::HTTP_204_NO_CONTENT);
             return false;
         }
         $bus->setSeats($seats);
-        $pricePerDay = Validation::positivePrice(\filter_input(\INPUT_POST, 'pricePerDay', \FILTER_DEFAULT));
+        $pricePerDay = Validation::positivePrice(\filter_input(\INPUT_POST, 'pricePerDay', \FILTER_SANITIZE_STRING));
         if(!$pricePerDay){
-            HTTPHeader::setStatusHeader(HTTPStatusCode::HTTP_204_NO_CONTENT);
             return false;
         }
         $bus->setPricePerDay($pricePerDay);
         if($_FILES['img']){
-            $upload = $bus->setPicturePath(Upload::uploadImage());
+            $upload = Upload::uploadImage();
             if(!$upload){
-                HTTPHeader::setStatusHeader(HTTPStatusCode::HTTP_204_NO_CONTENT);
                 return false;
             }
+            $bus->setPicturePath($upload);
         }else{
-            HTTPHeader::setStatusHeader(HTTPStatusCode::HTTP_204_NO_CONTENT);
             return false;
         }
         
-        $bus->create();
+        $success = $bus->create();
+        if($success){
+            return $success;
+        }
+        return false;
     }
     
     /**
@@ -63,18 +63,20 @@ class BusController {
      */
     public static function deleteBus($busId){
         if(!isset($_SESSION['role']) or (isset($_SESSION['role']) and $_SESSION['role'] != "admin")){
-            HTTPHeader::setStatusHeader(HTTPStatusCode::HTTP_204_NO_CONTENT);
             return false;
         }
         $bus = new Bus();
         $id = Validation::positiveInt($busId);
         if(!$id){
-            HTTPHeader::setStatusHeader(HTTPStatusCode::HTTP_204_NO_CONTENT);
             return false;
         }
         $bus->setId($id);
         
-        $bus->delete();
+        $success = $bus->delete();
+        if($success){
+            return $success;
+        }
+        return false;
     }
     
     /**
@@ -83,7 +85,6 @@ class BusController {
      */
     public static function getAllBuses(){
         if(!isset($_SESSION['role']) or (isset($_SESSION['role']) and $_SESSION['role'] != "admin")){
-            HTTPHeader::setStatusHeader(HTTPStatusCode::HTTP_204_NO_CONTENT);
             return false;
         }
         $busDBC = new BusDBC();
@@ -91,6 +92,7 @@ class BusController {
         $busesView = new TemplateView("adminBuses.php");
         $busesView->buses = $busDBC->getAllBuses();
         LayoutRendering::basicLayout($busesView);
+        return true;
     }
     
     /**
@@ -102,12 +104,15 @@ class BusController {
         
         $id = Validation::positiveInt($id);
         if(!$id){
-            HTTPHeader::setStatusHeader(HTTPStatusCode::HTTP_204_NO_CONTENT);
             return false;
         }
         $bus->setId($id);
         
-        $bus = $bus->find();
+        $success = $bus->find();
+        if($success){
+            return $success;
+        }
+        return false;
         //not in use yet
     }
     

@@ -23,21 +23,23 @@ class InsuranceController {
      */
     public static function createInsurance(){
         if(!isset($_SESSION['role']) or (isset($_SESSION['role']) and $_SESSION['role'] != "admin")){
-            HTTPHeader::setStatusHeader(HTTPStatusCode::HTTP_204_NO_CONTENT);
             return false;
         }
         $insurance = new Insurance();
         
-        $insurance->setName(\filter_input(\INPUT_POST, 'name', \FILTER_DEFAULT));
-        $insurance->setDescription(\filter_input(\INPUT_POST, 'description', \FILTER_DEFAULT));
-        $pricePerPerson = Validation::positivePrice(\filter_input(\INPUT_POST, 'pricePerPerson', \FILTER_DEFAULT));
+        $insurance->setName(\filter_input(\INPUT_POST, 'name', \FILTER_SANITIZE_STRING));
+        $insurance->setDescription(\filter_input(\INPUT_POST, 'description', \FILTER_SANITIZE_STRING));
+        $pricePerPerson = Validation::positivePrice(\filter_input(\INPUT_POST, 'pricePerPerson', \FILTER_SANITIZE_STRING));
         if(!$pricePerPerson){
-            HTTPHeader::setStatusHeader(HTTPStatusCode::HTTP_204_NO_CONTENT);
             return false;
         }
         $insurance->setPricePerPerson($pricePerPerson);
         
-        $insurance->create();
+        $success = $insurance->create();
+        if($success){
+            return $success;
+        }
+        return false;
     }
     
     /**
@@ -46,19 +48,21 @@ class InsuranceController {
      */
     public static function deleteInsurance($id){
         if(!isset($_SESSION['role']) or (isset($_SESSION['role']) and $_SESSION['role'] != "admin")){
-            HTTPHeader::setStatusHeader(HTTPStatusCode::HTTP_204_NO_CONTENT);
             return false;
         }
         $insurance = new Insurance();
         
         $id = Validation::positiveInt($id);
         if(!$id){
-            HTTPHeader::setStatusHeader(HTTPStatusCode::HTTP_204_NO_CONTENT);
             return false;
         }
         $insurance->setId($id);
         
-        $insurance->delete();
+        $success = $insurance->delete();
+        if($success){
+            return $success;
+        }
+        return false;
     }
     
     /**
@@ -71,8 +75,9 @@ class InsuranceController {
             $insuranceView = new TemplateView("adminInsurances.php");
             $insuranceView->insurances = $insuranceDBC->getAllInsurances();
             LayoutRendering::basicLayout($insuranceView);
+            return true;
         }else{
-            HTTPHeader::setStatusHeader(HTTPStatusCode::HTTP_204_NO_CONTENT);
+            return false;
         }
     }
     

@@ -43,129 +43,190 @@ Router::route("POST", "/registration", function () {
             Router::redirect("/");
         }
     }else{
-        Router::redirect("/");
+        HTTPHeader::setStatusHeader(HTTPStatusCode::HTTP_204_NO_CONTENT);
     }
 });
 
 Router::route("POST", "/login", function () {
-    UserController::login();
-    Router::redirect("/");
+    if(UserController::login()){
+        Router::redirect("/");
+    }else{
+        HTTPHeader::setStatusHeader(HTTPStatusCode::HTTP_204_NO_CONTENT);
+    }
 });
 
 Router::route("GET", "/logout", function () {
     UserController::logout();
-    Router::redirect("/login");
+    Router::redirect("/");
 });
 
 Router::route_auth("GET", "/", $authFunction, function () {
-    UserController::getHomepage();
+    if(!UserController::getHomepage()){
+        HTTPHeader::setStatusHeader(HTTPStatusCode::HTTP_204_NO_CONTENT);
+    }
 });
 
 Router::route_auth("GET", "/admin", $authFunction, function () {
-    UserController::getHomepage();
+    if(!UserController::getHomepage()){
+        HTTPHeader::setStatusHeader(HTTPStatusCode::HTTP_204_NO_CONTENT);
+    }
 });
 
 Router::route_auth("GET", "/admin/users", $authFunction, function () {
-    UserController::getAllUsers();
+    if(!UserController::getAllUsers()){
+        HTTPHeader::setStatusHeader(HTTPStatusCode::HTTP_204_NO_CONTENT);
+    }
 });
 
 Router::route_auth("DELETE", "/admin/users/{id}", $authFunction, function ($id) {
-    UserController::deleteUser($id);
-    Router::redirect("/admin/users");
+    if(UserController::deleteUser($id)){
+        Router::redirect("/admin/users");
+    }else{
+        HTTPHeader::setStatusHeader(HTTPStatusCode::HTTP_204_NO_CONTENT);
+    }
 });
 
 //Not in use
 Router::route_auth("DELETE", "/profile", $authFunction, function () {
     if(UserController::deleteSelf()){
         Router::redirect("/logout");
+    }else{
+        HTTPHeader::setStatusHeader(HTTPStatusCode::HTTP_204_NO_CONTENT);
     }
 });
 
 Router::route_auth("PUT", "/admin/users/{id}", $authFunction, function ($id) {
     UserController::changeRole($id);
+    HTTPHeader::setStatusHeader(HTTPStatusCode::HTTP_204_NO_CONTENT);
 });
 
 Router::route_auth("GET", "/travelers", $authFunction, function () {
-    UserController::getParticipants();
+    if(!UserController::getParticipants()){
+        HTTPHeader::setStatusHeader(HTTPStatusCode::HTTP_204_NO_CONTENT);
+    }
 });
 
 Router::route_auth("POST", "/travelers", $authFunction, function () {
-    UserController::createParticipant();
-    Router::redirect("/travelers");
+    if(UserController::createParticipant()){
+        Router::redirect("/travelers");
+    }else{
+        HTTPHeader::setStatusHeader(HTTPStatusCode::HTTP_204_NO_CONTENT);
+    }
 });
 
 Router::route_auth("DELETE", "/travelers/{id}", $authFunction, function ($id) {
-    UserController::deleteParticipant($id);
-    Router::redirect("/travelers");
+    if(UserController::deleteParticipant($id)){
+        Router::redirect("/travelers");
+    }else{
+        HTTPHeader::setStatusHeader(HTTPStatusCode::HTTP_204_NO_CONTENT);
+    }
 });
 
 Router::route_auth("GET", "/admin/buses", $authFunction, function () {
-    BusController::getAllBuses();
+    if(!BusController::getAllBuses()){
+        HTTPHeader::setStatusHeader(HTTPStatusCode::HTTP_204_NO_CONTENT);
+    }
 });
 
 Router::route_auth("POST", "/admin/buses", $authFunction, function () {
-    BusController::createBus();
-    Router::redirect("/admin/buses");
+    if(BusController::createBus()){
+        Router::redirect("/admin/buses");
+    }else{
+        HTTPHeader::setStatusHeader(HTTPStatusCode::HTTP_204_NO_CONTENT);
+    }
 });
 
 Router::route_auth("DELETE", "/admin/buses/{id}", $authFunction, function ($id) {
-    BusController::deleteBus($id);
-    Router::redirect("/admin/buses");
+    if(BusController::deleteBus($id)){
+        Router::redirect("/admin/buses");
+    }else{
+        HTTPHeader::setStatusHeader(HTTPStatusCode::HTTP_204_NO_CONTENT);
+    }
 });
 
 Router::route_auth("GET", "/admin/hotels", $authFunction, function () {
-    HotelController::getAllHotels();
+    if(!HotelController::getAllHotels()){
+        HTTPHeader::setStatusHeader(HTTPStatusCode::HTTP_204_NO_CONTENT);
+    }
 });
 
 Router::route_auth("POST", "/admin/hotels", $authFunction, function () {
-    HotelController::createHotel();
-    Router::redirect("/admin/hotels");
+    if(HotelController::createHotel()){
+        Router::redirect("/admin/hotels");
+    }else{
+        HTTPHeader::setStatusHeader(HTTPStatusCode::HTTP_204_NO_CONTENT);
+    }
 });
 
 Router::route_auth("DELETE", "/admin/hotels/{id}", $authFunction, function ($id) {
-    HotelController::deleteHotel($id);
-    Router::redirect("/admin/hotels");
+    if(HotelController::deleteHotel($id)){
+        Router::redirect("/admin/hotels");
+    }else{
+        HTTPHeader::setStatusHeader(HTTPStatusCode::HTTP_204_NO_CONTENT);
+    }
 });
 
 Router::route_auth("GET", "/admin/insurances", $authFunction, function () {
-    InsuranceController::getAllInsurances();
+    if(!InsuranceController::getAllInsurances()){
+        HTTPHeader::setStatusHeader(HTTPStatusCode::HTTP_204_NO_CONTENT);
+    }
 });
 
 Router::route_auth("POST", "/admin/insurances", $authFunction, function () {
-    InsuranceController::createInsurance();
-    Router::redirect("/admin/insurances");
+    if(InsuranceController::createInsurance()){
+        Router::redirect("/admin/insurances");
+    }else{
+        HTTPHeader::setStatusHeader(HTTPStatusCode::HTTP_204_NO_CONTENT);
+    }
 });
 
 Router::route_auth("DELETE", "/admin/insurances/{id}", $authFunction, function ($id) {
-    InsuranceController::deleteInsurance($id);
-    Router::redirect("/admin/insurances");
+    if(InsuranceController::deleteInsurance($id)){
+        Router::redirect("/admin/insurances");
+    }else{
+        HTTPHeader::setStatusHeader(HTTPStatusCode::HTTP_204_NO_CONTENT);
+    }
 });
 
 //no use of $authFunctin necessary to allow users without a loggin to see the packageOverview
 Router::route("GET", "/packageOverview", function () {
-    TripController::getAllTrips();
+    if(!TripController::getAllTrips()){
+        HTTPHeader::setStatusHeader(HTTPStatusCode::HTTP_204_NO_CONTENT);
+    }
 });
 
 Router::route_auth("GET", "admin/packageOverview", $authFunction, function () {
-        TripController::getAllTrips();
+        if(!TripController::getAllTrips()){
+            HTTPHeader::setStatusHeader(HTTPStatusCode::HTTP_204_NO_CONTENT);
+        }
 });
 
 Router::route_auth("GET", "admin/tripTemplates", $authFunction, function () {
-        TripController::getAllTripTemplates();
+        if(!TripController::getAllTripTemplates()){
+            HTTPHeader::setStatusHeader(HTTPStatusCode::HTTP_204_NO_CONTENT);
+        }
 });
 
 Router::route_auth("POST", "/admin/tripTemplates", $authFunction, function () {
-    TripController::createTripTemplate();
-    Router::redirect("/admin/tripTemplates");
+    if(TripController::createTripTemplate()){
+        Router::redirect("/admin/tripTemplates");
+    }else{
+        HTTPHeader::setStatusHeader(HTTPStatusCode::HTTP_204_NO_CONTENT);
+    }
 });
 
 Router::route_auth("DELETE", "/admin/tripTemplates/{id}", $authFunction, function ($id) {
-    TripController::deleteTripTemplate($id);
-    Router::redirect("/admin/tripTemplates");
+    if(TripController::deleteTripTemplate($id)){
+        Router::redirect("/admin/tripTemplates");
+    }else{
+        HTTPHeader::setStatusHeader(HTTPStatusCode::HTTP_204_NO_CONTENT);
+    }
 });
 
 Router::route("GET", "/packageOverview/package/{id}", function ($id) {
-    TripController::getTripTemplate($id);
+    if(!TripController::getTripTemplate($id)){
+        HTTPHeader::setStatusHeader(HTTPStatusCode::HTTP_204_NO_CONTENT);
+    }
 });
 
 Router::route_auth("POST", "/packageOverview/package", $authFunction, function () {
@@ -177,35 +238,54 @@ Router::route_auth("POST", "/packageOverview/package", $authFunction, function (
 });
 
 Router::route_auth("GET", "/admin/tripTemplates/package/{id}", $authFunction, function ($id) {
-    TripController::getTripTemplate($id);
+    if(!TripController::getTripTemplate($id)){
+        HTTPHeader::setStatusHeader(HTTPStatusCode::HTTP_204_NO_CONTENT);
+    }
 });
 
 Router::route_auth("PUT", "/admin/tripTemplates/package/{id}", $authFunction, function ($id) {
-    TripController::changeBookableOfTripTemplate($id);
-    Router::redirect("/admin/packageOverview");
+    if(TripController::changeBookableOfTripTemplate($id)){
+        Router::redirect("/admin/packageOverview");
+    }else{
+        HTTPHeader::setStatusHeader(HTTPStatusCode::HTTP_204_NO_CONTENT);
+    }
 });
 
 Router::route_auth("POST", "/admin/tripTemplates/package", $authFunction, function () {
     $id = TripController::createDayprogram();
-    Router::redirect("/admin/tripTemplates/package/".$id);
+    if($id){
+        Router::redirect("/admin/tripTemplates/package/".$id);
+    }else{
+        HTTPHeader::setStatusHeader(HTTPStatusCode::HTTP_204_NO_CONTENT);
+    }
 });
 
 Router::route_auth("DELETE", "/admin/tripTemplates/package/{id}/{id}", $authFunction, function ($dayprogramId, $tripTemplateId) {
-    TripController::deleteDayprogram($dayprogramId);
-    Router::redirect("/admin/tripTemplates/package/".$tripTemplateId);
+    if(TripController::deleteDayprogram($dayprogramId)){
+        Router::redirect("/admin/tripTemplates/package/".$tripTemplateId);
+    }else{
+        HTTPHeader::setStatusHeader(HTTPStatusCode::HTTP_204_NO_CONTENT);
+    }
 });
 
 Router::route_auth("DELETE", "/admin/bookedTrips/{id}", $authFunction, function ($id) {
-    TripController::cancelTrip($id);
-    Router::redirect("/admin/packageOverview");
+    if(TripController::cancelTrip($id)){
+        Router::redirect("/admin/packageOverview");
+    }else{
+        HTTPHeader::setStatusHeader(HTTPStatusCode::HTTP_204_NO_CONTENT);
+    }
 });
 
 Router::route_auth("GET", "/bookedTrips/detail/{id}", $authFunction, function ($id) {
-    TripController::getBookedTrip($id);
+    if(!TripController::getBookedTrip($id)){
+        HTTPHeader::setStatusHeader(HTTPStatusCode::HTTP_204_NO_CONTENT);
+    }
 });
 
 Router::route_auth("GET", "/admin/bookedTrips/detail/{id}", $authFunction, function ($id) {
-    TripController::getBookedTrip($id);
+    if(!TripController::getBookedTrip($id)){
+        HTTPHeader::setStatusHeader(HTTPStatusCode::HTTP_204_NO_CONTENT);
+    }
 });
 
 Router::route_auth("POST", "/admin/bookedTrips/detail", $authFunction, function () {
@@ -218,30 +298,45 @@ Router::route_auth("POST", "/admin/bookedTrips/detail", $authFunction, function 
 });
 
 Router::route_auth("DELETE", "/admin/bookedTrips/detail/{id}/{id}", $authFunction, function ($invoiceId, $tripId) {
-    InvoiceController::deleteInvoice($invoiceId);
-    Router::redirect("/admin/bookedTrips/detail/".$tripId);
+    if(InvoiceController::deleteInvoice($invoiceId)){
+        Router::redirect("/admin/bookedTrips/detail/".$tripId);
+    }else{
+        HTTPHeader::setStatusHeader(HTTPStatusCode::HTTP_204_NO_CONTENT);
+    }
 });
 
 Router::route_auth("PUT", "/admin/bookedTrips/detail/{id}", $authFunction, function ($id) {
-    TripController::lockInvoicesRegistered($id);
-    Router::redirect("/admin/bookedTrips/detail/finalSettlement/".$id);
+    if(TripController::lockInvoicesRegistered($id)){
+        Router::redirect("/admin/bookedTrips/detail/finalSettlement/".$id);
+    }else{
+        HTTPHeader::setStatusHeader(HTTPStatusCode::HTTP_204_NO_CONTENT);
+    }
 });
 
 Router::route_auth("PUT", "/admin/bookedTrips/detail/{id}/{id}", $authFunction, function ($id, $routeInfo) {
-    TripController::unlockInvoicesRegistered($id);
-    Router::redirect("/admin/bookedTrips/detail/".$id);
+    if(TripController::unlockInvoicesRegistered($id)){
+        Router::redirect("/admin/bookedTrips/detail/".$id);
+    }else{
+        HTTPHeader::setStatusHeader(HTTPStatusCode::HTTP_204_NO_CONTENT);
+    }
 });
 
 Router::route_auth("GET", "/admin/bookedTrips/detail/invoices/{id}", $authFunction, function ($id) {
-    InvoiceController::getCustomersInvoice($id);
+    if(!InvoiceController::getCustomersInvoice($id)){
+        HTTPHeader::setStatusHeader(HTTPStatusCode::HTTP_204_NO_CONTENT);
+    }
 });
 
 Router::route_auth("GET", "/bookedTrips/detail/invoices/{id}", $authFunction, function ($id) {
-    InvoiceController::getCustomersInvoice($id);
+    if(!InvoiceController::getCustomersInvoice($id)){
+        HTTPHeader::setStatusHeader(HTTPStatusCode::HTTP_204_NO_CONTENT);
+    }
 });
 
 Router::route_auth("GET", "admin/bookedTrips/detail/finalSettlement/{id}", $authFunction, function ($id) {
-    InvoiceController::getFinalSettlement($id);
+    if(!InvoiceController::getFinalSettlement($id)){
+        HTTPHeader::setStatusHeader(HTTPStatusCode::HTTP_204_NO_CONTENT);
+    }
 });
 
 

@@ -148,7 +148,7 @@ if(isset($this->tripTemplate) and $this->tripTemplate and $tripTemplate->getDayp
                                         class="form-group mt-auto" style="margin-right: 100px;padding: 10px;padding-right: 50px;margin-bottom: 20px;padding-bottom: 0px;"><label class="labelsFormDayProgram">Picture of day program</label><input type="file" name="img" required="" id="image" style="width: 400px;font-family: Capriola, sans-serif;background-color: #ffffff;margin-right: 0;"></div>
                                     <div
                                         class="form-group" style="margin: 10px;width: 200px;margin-right: 50px;"><label class="labelsFormDayProgram">Hotel (if applicable)</label>
-                                        <select class="form-control" name="hotelDropdown" id="hotelDropdown" style="min-width: 400px;"><optgroup label="Add a hotel">
+                                        <select class="form-control" name="hotelId" id="hotelDropdown" style="min-width: 400px;"><optgroup label="Add a hotel">
                                                 <?php foreach ($hotels as $hotel) :  ?>
                                                 <option value="<?php echo $hotel->getId();  ?>" selected=""><?php echo TemplateView::noHTML($hotel->getName())." (price per person: ".TemplateView::noHTML($hotel->getPricePerPerson()).")"; ?></option>
                                                 <?php endforeach;  ?>

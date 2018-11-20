@@ -24,30 +24,31 @@ class HotelController {
      */
     public static function createHotel(){
         if(!isset($_SESSION['role']) or (isset($_SESSION['role']) and $_SESSION['role'] != "admin")){
-            HTTPHeader::setStatusHeader(HTTPStatusCode::HTTP_204_NO_CONTENT);
             return false;
         }
         $hotel = new Hotel();
         
-        $hotel->setName(\filter_input(\INPUT_POST, 'name', \FILTER_DEFAULT));
-        $hotel->setDescription(\filter_input(\INPUT_POST, 'description', \FILTER_DEFAULT));
-        $hotelPrice = Validation::positivePrice(\filter_input(\INPUT_POST, 'pricePerPerson', \FILTER_DEFAULT));
+        $hotel->setName(\filter_input(\INPUT_POST, 'name', \FILTER_SANITIZE_STRING));
+        $hotel->setDescription(\filter_input(\INPUT_POST, 'description', \FILTER_SANITIZE_STRING));
+        $hotelPrice = Validation::positivePrice(\filter_input(\INPUT_POST, 'pricePerPerson', \FILTER_SANITIZE_STRING));
         if(!$hotelPrice){
-            HTTPHeader::setStatusHeader(HTTPStatusCode::HTTP_204_NO_CONTENT);
             return false;
         }
         $hotel->setPricePerPerson($hotelPrice);
         if(isset($_FILES['img'])){
-            $upload = $hotel->setPicturePath(Upload::uploadImage());
+            $upload = Upload::uploadImage();
             if(!$upload){
-                HTTPHeader::setStatusHeader(HTTPStatusCode::HTTP_204_NO_CONTENT);
                 return false;
             }
+            $hotel->setPicturePath($upload);
         }else{
-            HTTPHeader::setStatusHeader(HTTPStatusCode::HTTP_204_NO_CONTENT);
             return false;
         }
-        $hotel->create();
+        $success = $hotel->create();
+        if($success){
+            return $success;
+        }
+        return false;
     }
     
     /**
@@ -56,19 +57,21 @@ class HotelController {
      */
     public static function deleteHotel($id){
         if(!isset($_SESSION['role']) or (isset($_SESSION['role']) and $_SESSION['role'] != "admin")){
-            HTTPHeader::setStatusHeader(HTTPStatusCode::HTTP_204_NO_CONTENT);
             return false;
         }
         $hotel = new Hotel();
         
         $id = Validation::positiveInt($id);
         if(!$id){
-            HTTPHeader::setStatusHeader(HTTPStatusCode::HTTP_204_NO_CONTENT);
             return false;
         }
         $hotel->setId($id);
         
-        $hotel->delete();
+        $success = $hotel->delete();
+        if($success){
+            return $success;
+        }
+        return false;
     }
     
     /**
@@ -82,8 +85,9 @@ class HotelController {
             $hotelView = new TemplateView("adminHotels.php");
             $hotelView->hotels = $hotelDBC->findAllHotels();
             LayoutRendering::basicLayout($hotelView);
+            return true;
         }else{
-            HTTPHeader::setStatusHeader(HTTPStatusCode::HTTP_204_NO_CONTENT);
+            return false;
         }
     }
 }

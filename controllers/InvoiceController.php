@@ -26,54 +26,50 @@ class InvoiceController{
      */
     public static function createInvoice(){
         if(!isset($_SESSION['role']) or (isset($_SESSION['role']) and $_SESSION['role'] != "admin")){
-            HTTPHeader::setStatusHeader(HTTPStatusCode::HTTP_204_NO_CONTENT);
             return false;
         }
         $invoice = new Invoice();
         $fk_trip_id = Validation::positiveInt(\filter_input(\INPUT_POST, 'tripId', \FILTER_VALIDATE_INT));
         if(!$fk_trip_id){
-            HTTPHeader::setStatusHeader(HTTPStatusCode::HTTP_204_NO_CONTENT);
             return false;
         }
         $invoice->setFkTripId($fk_trip_id);
-        $invoice->setDescription(\filter_input(\INPUT_POST, 'description', \FILTER_DEFAULT));
-        $price = Validation::positivePrice(\filter_input(\INPUT_POST, 'price', \FILTER_DEFAULT));
+        $invoice->setDescription(\filter_input(\INPUT_POST, 'description', \FILTER_SANITIZE_STRING));
+        $price = Validation::positivePrice(\filter_input(\INPUT_POST, 'price', \FILTER_SANITIZE_STRING));
         if(!$price){
-            HTTPHeader::setStatusHeader(HTTPStatusCode::HTTP_204_NO_CONTENT);
             return false;
         }
         $invoice->setPrice($price);
-        $date = Validation::date(\filter_input(\INPUT_POST, 'date', \FILTER_DEFAULT));
+        $date = Validation::date(\filter_input(\INPUT_POST, 'date', \FILTER_SANITIZE_STRING));
         if(!$date){
-            HTTPHeader::setStatusHeader(HTTPStatusCode::HTTP_204_NO_CONTENT);
             return false;
         }
         $invoice->setDate($date);
-        $type = Validation::invoiceType(\filter_input(\INPUT_POST, 'type', \FILTER_DEFAULT));
+        $type = Validation::invoiceType(\filter_input(\INPUT_POST, 'type', \FILTER_SANITIZE_STRING));
         if(!$type){
-            HTTPHeader::setStatusHeader(HTTPStatusCode::HTTP_204_NO_CONTENT);
             return false;
         }
         $invoice->setType($type);
         if(isset($_FILES['invoice'])){
             $upload = $invoice->setPdfPath(Upload::uploadPdf());
             if(!$upload){
-                HTTPHeader::setStatusHeader(HTTPStatusCode::HTTP_204_NO_CONTENT);
                 return false;
             }
         }else{
-            HTTPHeader::setStatusHeader(HTTPStatusCode::HTTP_204_NO_CONTENT);
             return false;
         }
         $fk_trip_id = Validation::positiveInt(\filter_input(\INPUT_POST, 'tripId', \FILTER_VALIDATE_INT));
         if(!$fk_trip_id){
-            HTTPHeader::setStatusHeader(HTTPStatusCode::HTTP_204_NO_CONTENT);
             return false;
         }
         $invoice->setFkTripId($fk_trip_id);
         
-        $invoice->create();
-        return $fk_trip_id;
+        $success = $invoice->create();
+        if($success){
+            return $fk_trip_id;
+        }
+        return false;
+        
     }
     
     /**
@@ -81,28 +77,25 @@ class InvoiceController{
      */
     public static function getFinalSettlement($tripId){
         if(!isset($_SESSION['role']) or (isset($_SESSION['role']) and $_SESSION['role'] != "admin")){
-            HTTPHeader::setStatusHeader(HTTPStatusCode::HTTP_204_NO_CONTENT);
             return false;
         }
         $id = Validation::positiveInt($tripId);
         if(!$id){
-            HTTPHeader::setStatusHeader(HTTPStatusCode::HTTP_204_NO_CONTENT);
             return false;
         }
         $trip = new Trip();
         $trip->setId($tripId);
         $tripObj = $trip->find();
         if(!$tripObj){
-            HTTPHeader::setStatusHeader(HTTPStatusCode::HTTP_204_NO_CONTENT);
             return false;
         }
         if(!$tripObj->getInvoicesRegistered()){
-            HTTPHeader::setStatusHeader(HTTPStatusCode::HTTP_204_NO_CONTENT);
             return false;
         }
         $customerInvoice = new TemplateView("pdf/finalSettlement.php");
         $customerInvoice->trip = $tripObj;
         $customerInvoice->render();
+        return true;
     }
     
     /**
@@ -111,27 +104,24 @@ class InvoiceController{
      */
     public static function getCustomersInvoice($tripId){
         if(!isset($_SESSION['role'])){
-            HTTPHeader::setStatusHeader(HTTPStatusCode::HTTP_204_NO_CONTENT);
             return false;
         }
         $id = Validation::positiveInt($tripId);
         if(!$id){
-            HTTPHeader::setStatusHeader(HTTPStatusCode::HTTP_204_NO_CONTENT);
             return false;
         }
         $tripDBC = new TripDBC();
         $trip = $tripDBC->findTripById($id);
         if(!$trip){
-            HTTPHeader::setStatusHeader(HTTPStatusCode::HTTP_204_NO_CONTENT);
             return false;
         }
         if(($trip->getUser()->getId() != $_SESSION['userId']) and ($_SESSION['role'] != "admin")){
-            HTTPHeader::setStatusHeader(HTTPStatusCode::HTTP_204_NO_CONTENT);
             return false;
         }
         $customerInvoice = new TemplateView("pdf/customerInvoice.php");
         $customerInvoice->trip = $trip;
         $customerInvoice->render();
+        return true;
     }
     
     /**
@@ -140,18 +130,20 @@ class InvoiceController{
      */
     public static function deleteInvoice($invoiceId){
         if(!isset($_SESSION['role']) or (isset($_SESSION['role']) and $_SESSION['role'] != "admin")){
-            HTTPHeader::setStatusHeader(HTTPStatusCode::HTTP_204_NO_CONTENT);
             return false;
         }
         $invoice = new Invoice();
         $id = Validation::positiveInt($invoiceId);
         if(!$id){
-            HTTPHeader::setStatusHeader(HTTPStatusCode::HTTP_204_NO_CONTENT);
             return false;
         }
         $invoice->setId($id);
         
-        $invoice->delete();
+        $success = $invoice->delete();
+        if($success){
+            return $success;
+        }
+        return false;
     }
     
 }
