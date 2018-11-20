@@ -150,6 +150,9 @@ class UserDBC extends DBConnector {
      * @return type
      */
     public function deleteUser($user){
+        if(!($this->checkLastAdmin($user))){
+            return false;
+        }
         $stmt = $this->mysqliInstance->prepare("UPDATE user SET deleted = ? WHERE id = ?");
         if(!$stmt){
             return false;
@@ -158,6 +161,35 @@ class UserDBC extends DBConnector {
         $deleted = intval(true);
         $id = $user->getId();
         return $this->executeDelete($stmt);
+    }
+    
+    /**
+     * Checks for the permission to delete or change the role for the last admin
+     * @param type $user
+     * @return boolean
+     */
+    public function checkLastAdmin($user){
+        $user = $this->findUserById($user->getId());
+        if(!$user){
+            return false;
+        }
+        //Checks whether it is the last admin to delete, then it rejects the delete process
+        if($user->getRole() == "admin"){
+            $users = $this->getAllUsers();
+            if(!$users){
+                return false;
+            }
+            $count = 0;
+            foreach($users as $u){
+                if($u->getRole() == "admin"){
+                    $count++;
+                }
+            }
+            if($count <= 1){
+                return false;
+            }
+        }
+        return true;
     }
     
     /** (tested)

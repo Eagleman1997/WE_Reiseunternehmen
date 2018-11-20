@@ -137,6 +137,9 @@ class User {
         if($user->getRole() == "user"){
             $this->setRole("admin");
         }else if($user->getRole() == "admin"){
+            if(!($this->userDBC->checkLastAdmin($user))){
+                return false;
+            }
             $this->setRole("user");
         }
         $result = $this->userDBC->updateRole($this);
