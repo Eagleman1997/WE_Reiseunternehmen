@@ -38,13 +38,13 @@ class Upload {
                     move_uploaded_file($fileTmpName, $fileDestination);
                     return $fileNameNew;
                 }else{
-                    return "fileSizeError";
+                    return false;
                 }
             }else{
-                return "uploadError";
+                return false;
             }
         }else{
-            return "formatError";
+            return false;
         }
         
     }
@@ -76,13 +76,13 @@ class Upload {
                     move_uploaded_file($fileTmpName, $fileDestination);
                     return $fileNameNew;
                 }else{
-                    return "fileSizeError";
+                    return false;
                 }
             }else{
-                return "uploadError";
+                return false;
             }
         }else{
-            return "formatError";
+            return false;
         }
         
     }

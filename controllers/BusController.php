@@ -8,6 +8,8 @@ use helpers\Upload;
 use database\BusDBC;
 use views\LayoutRendering;
 use views\TemplateView;
+use http\HTTPHeader;
+use http\HTTPStatusCode;
 
 /**
  * Description of BusController
@@ -22,6 +24,7 @@ class BusController {
      */
     public static function createBus(){
         if(!isset($_SESSION['role']) or (isset($_SESSION['role']) and $_SESSION['role'] != "admin")){
+            HTTPHeader::setStatusHeader(HTTPStatusCode::HTTP_204_NO_CONTENT);
             return false;
         }
         $bus = new Bus();
@@ -30,18 +33,25 @@ class BusController {
         $bus->setDescription(\filter_input(\INPUT_POST, 'description', \FILTER_DEFAULT));
         $seats = Validation::positiveInt(\filter_input(\INPUT_POST, 'seats', \FILTER_VALIDATE_INT));
         if(!$seats){
+            HTTPHeader::setStatusHeader(HTTPStatusCode::HTTP_204_NO_CONTENT);
             return false;
         }
         $bus->setSeats($seats);
         $pricePerDay = Validation::positivePrice(\filter_input(\INPUT_POST, 'pricePerDay', \FILTER_DEFAULT));
         if(!$pricePerDay){
+            HTTPHeader::setStatusHeader(HTTPStatusCode::HTTP_204_NO_CONTENT);
             return false;
         }
         $bus->setPricePerDay($pricePerDay);
         if($_FILES['img']){
-            $bus->setPicturePath(Upload::uploadImage());
+            $upload = $bus->setPicturePath(Upload::uploadImage());
+            if(!$upload){
+                HTTPHeader::setStatusHeader(HTTPStatusCode::HTTP_204_NO_CONTENT);
+                return false;
+            }
         }else{
-            $bus->setPicturePath("views/assets/img/defaultBus.jpg");
+            HTTPHeader::setStatusHeader(HTTPStatusCode::HTTP_204_NO_CONTENT);
+            return false;
         }
         
         $bus->create();
@@ -53,11 +63,13 @@ class BusController {
      */
     public static function deleteBus($busId){
         if(!isset($_SESSION['role']) or (isset($_SESSION['role']) and $_SESSION['role'] != "admin")){
+            HTTPHeader::setStatusHeader(HTTPStatusCode::HTTP_204_NO_CONTENT);
             return false;
         }
         $bus = new Bus();
         $id = Validation::positiveInt($busId);
         if(!$id){
+            HTTPHeader::setStatusHeader(HTTPStatusCode::HTTP_204_NO_CONTENT);
             return false;
         }
         $bus->setId($id);
@@ -71,6 +83,7 @@ class BusController {
      */
     public static function getAllBuses(){
         if(!isset($_SESSION['role']) or (isset($_SESSION['role']) and $_SESSION['role'] != "admin")){
+            HTTPHeader::setStatusHeader(HTTPStatusCode::HTTP_204_NO_CONTENT);
             return false;
         }
         $busDBC = new BusDBC();
@@ -89,6 +102,7 @@ class BusController {
         
         $id = Validation::positiveInt($id);
         if(!$id){
+            HTTPHeader::setStatusHeader(HTTPStatusCode::HTTP_204_NO_CONTENT);
             return false;
         }
         $bus->setId($id);

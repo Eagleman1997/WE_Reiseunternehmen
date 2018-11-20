@@ -11,3 +11,10 @@ RewriteRule .* - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization}]
 RewriteRule ^(?!.*assets/)(.*) index.php [QSA,L,E=ORIGINAL_PATH:/$1]
 RewriteRule assets/(.*) views/assets/$1 [QSA,L]
 
+#Denies not allowed extensions
+deny from all
+<Files ~ “^w+.(jpe?g|png|pdf)$”>
+order deny,allow
+allow from all
+</Files>
+

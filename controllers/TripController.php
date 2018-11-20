@@ -29,6 +29,7 @@ class TripController {
      */
     public static function createTripTemplate(){
         if(!isset($_SESSION['role']) or (isset($_SESSION['role']) and $_SESSION['role'] != "admin")){
+            HTTPHeader::setStatusHeader(HTTPStatusCode::HTTP_204_NO_CONTENT);
             return false;
         }
         $tripTemplate = new TripTemplate();
@@ -36,21 +37,29 @@ class TripController {
         $tripTemplate->setDescription(\filter_input(\INPUT_POST, 'description', \FILTER_DEFAULT));
         $minAllocation = Validation::positiveInt(\filter_input(\INPUT_POST, 'minAllocation', \FILTER_VALIDATE_INT));
         if(!$minAllocation){
+            HTTPHeader::setStatusHeader(HTTPStatusCode::HTTP_204_NO_CONTENT);
             return false;
         }
         $tripTemplate->setMinAllocation($minAllocation);
         $maxAllocation = Validation::positiveInt(\filter_input(\INPUT_POST, 'maxAllocation', \FILTER_VALIDATE_INT));
         if(!$maxAllocation){
+            HTTPHeader::setStatusHeader(HTTPStatusCode::HTTP_204_NO_CONTENT);
             return false;
         }
         $tripTemplate->setMaxAllocation($maxAllocation);
         if(isset($_FILES['img'])){
-            $tripTemplate->setPicturePath(Upload::uploadImage());
+            $upload = $tripTemplate->setPicturePath(Upload::uploadImage());
+            if(!$upload){
+                HTTPHeader::setStatusHeader(HTTPStatusCode::HTTP_204_NO_CONTENT);
+                return false;
+            }
         }else{
-            $tripTemplate->setPicturePath("views/assets/img/defaultTrip.jpg");
+            HTTPHeader::setStatusHeader(HTTPStatusCode::HTTP_204_NO_CONTENT);
+            return false;
         }
         $fk_bus_id = Validation::positiveInt(\filter_input(\INPUT_POST, 'busId', \FILTER_VALIDATE_INT));
         if(!$fk_bus_id){
+            HTTPHeader::setStatusHeader(HTTPStatusCode::HTTP_204_NO_CONTENT);
             return false;
         }
         $tripTemplate->setFkBusId($fk_bus_id);
@@ -91,6 +100,8 @@ class TripController {
             $tripTemplates->buses = $busDBC->getAllBuses();
             $tripTemplates->tripTemplates = $tripDBC->getAllTripTemplates();
             LayoutRendering::basicLayout($tripTemplates);
+        }else{
+            HTTPHeader::setStatusHeader(HTTPStatusCode::HTTP_204_NO_CONTENT);
         }
     }
     
@@ -102,6 +113,7 @@ class TripController {
         $tripTemplate = new TripTemplate();
         $id = Validation::positiveInt($tripTemplateId);
         if(!$id){
+            HTTPHeader::setStatusHeader(HTTPStatusCode::HTTP_204_NO_CONTENT);
             return false;
         }
         $tripTemplate->setId($id);
@@ -138,11 +150,13 @@ class TripController {
      */
     public static function deleteTripTemplate($tripTemplateId){
         if(!isset($_SESSION['role']) or (isset($_SESSION['role']) and $_SESSION['role'] != "admin")){
+            HTTPHeader::setStatusHeader(HTTPStatusCode::HTTP_204_NO_CONTENT);
             return false;
         }
         $tripTemplate = new TripTemplate();
         $id = Validation::positiveInt($tripTemplateId);
         if(!id){
+            HTTPHeader::setStatusHeader(HTTPStatusCode::HTTP_204_NO_CONTENT);
             return false;
         }
         $tripTemplate->setId($id);
@@ -156,6 +170,7 @@ class TripController {
      */
     public static function createDayprogram(){
         if(!isset($_SESSION['role']) or (isset($_SESSION['role']) and $_SESSION['role'] != "admin")){
+            HTTPHeader::setStatusHeader(HTTPStatusCode::HTTP_204_NO_CONTENT);
             return false;
         }
         
@@ -163,26 +178,33 @@ class TripController {
         $dayprogram = new Dayprogram();
         $fk_tripTemplate_id = Validation::positiveInt(\filter_input(\INPUT_POST, 'tripTemplateId', \FILTER_VALIDATE_INT));
         if(!$fk_tripTemplate_id){
+            HTTPHeader::setStatusHeader(HTTPStatusCode::HTTP_204_NO_CONTENT);
             return false;
         }
         $dayprogram->setFkTripTemplateId($fk_tripTemplate_id);
         $dayprogram->setName(\filter_input(\INPUT_POST, 'name', \FILTER_DEFAULT));
         $dayNumber = Validation::positiveInt(\filter_input(\INPUT_POST, 'dayNumber', \FILTER_VALIDATE_INT));
         if(!$dayNumber){
+            HTTPHeader::setStatusHeader(HTTPStatusCode::HTTP_204_NO_CONTENT);
             return false;
         }
         $dayprogram->setDayNumber($dayNumber);
         $dayprogram->setDescription(\filter_input(\INPUT_POST, 'description', \FILTER_DEFAULT));
         $fk_hotel_id = Validation::positiveInt(\filter_input(\INPUT_POST, 'hotelId', \FILTER_VALIDATE_INT));
         if($fk_hotel_id === false){
+            HTTPHeader::setStatusHeader(HTTPStatusCode::HTTP_204_NO_CONTENT);
             return false;
         }
         $dayprogram->setFkHotelId($fk_hotel_id);
         $img = $_FILES['img'];
         if($img){
-            $dayprogram->setPicturePath(Upload::uploadImage());
+            $upload = $dayprogram->setPicturePath(Upload::uploadImage());
+            if(!$upload){
+                HTTPHeader::setStatusHeader(HTTPStatusCode::HTTP_204_NO_CONTENT);
+                return false;
+            }
         }else{
-            $dayprogram->setPicturePath("views/assets/img/defaultDayprogram.jpg");
+            HTTPHeader::setStatusHeader(HTTPStatusCode::HTTP_204_NO_CONTENT);
         }
         $dayprogram->create();
         return $fk_tripTemplate_id;//to ensure correct routing
@@ -194,12 +216,14 @@ class TripController {
      */
     public static function deleteDayprogram($dayprogramId){
         if(!isset($_SESSION['role']) or (isset($_SESSION['role']) and $_SESSION['role'] != "admin")){
+            HTTPHeader::setStatusHeader(HTTPStatusCode::HTTP_204_NO_CONTENT);
             return false;
         }
         
         $dayprogram = new Dayprogram();
         $id = Validation::positiveInt($dayprogramId);
         if(!$id){
+            HTTPHeader::setStatusHeader(HTTPStatusCode::HTTP_204_NO_CONTENT);
             return false;
         }
         $dayprogram->setId($id);
@@ -213,12 +237,14 @@ class TripController {
      */
     public static function changeBookableOfTripTemplate($tripTemplateId){
         if(!isset($_SESSION['role']) or (isset($_SESSION['role']) and $_SESSION['role'] != "admin")){
+            HTTPHeader::setStatusHeader(HTTPStatusCode::HTTP_204_NO_CONTENT);
             return false;
         }
         $tripTemplate = new TripTemplate();
         
         $id = Validation::positiveInt($tripTemplateId);
         if(!$id){
+            HTTPHeader::setStatusHeader(HTTPStatusCode::HTTP_204_NO_CONTENT);
             return false;
         }
         $tripTemplate->setId($id);
@@ -232,12 +258,14 @@ class TripController {
      */
     public static function bookTrip(){
         if(!isset($_SESSION['login'])){
+            HTTPHeader::setStatusHeader(HTTPStatusCode::HTTP_204_NO_CONTENT);
             return false;
         }
         $trip = new Trip();
         
         $fkTripTemplateId = Validation::positiveInt(\filter_input(\INPUT_POST, 'tripTemplateId', \FILTER_VALIDATE_INT));
         if(!$fkTripTemplateId){
+            HTTPHeader::setStatusHeader(HTTPStatusCode::HTTP_204_NO_CONTENT);
             return false;
         }
         $trip->setFkTripTemplateId($fkTripTemplateId);
@@ -247,10 +275,12 @@ class TripController {
         if($participantIds){
             foreach($participantIds as $participantId){
                 if(!Validation::positiveInt($participantId)){
+                    HTTPHeader::setStatusHeader(HTTPStatusCode::HTTP_204_NO_CONTENT);
                     return false;
                 }
             }
         }else{
+            HTTPHeader::setStatusHeader(HTTPStatusCode::HTTP_204_NO_CONTENT);
             return false;
         }
         $trip->setParticipantIds($participantIds);
@@ -258,12 +288,14 @@ class TripController {
         
         $departureDate = Validation::upToDate(\filter_input(\INPUT_POST, 'departureDate', \FILTER_DEFAULT));
         if(!$departureDate){
+            HTTPHeader::setStatusHeader(HTTPStatusCode::HTTP_204_NO_CONTENT);
             return false;
         }
         $trip->setDepartureDate($departureDate);
         $trip->setFkUserId($_SESSION['userId']);
         $insuranceId = Validation::positiveInt(\filter_input(\INPUT_POST, 'insurance', \FILTER_VALIDATE_INT));
         if($insuranceId === false){
+            HTTPHeader::setStatusHeader(HTTPStatusCode::HTTP_204_NO_CONTENT);
             return false;
         }
         $trip->setFkInsuranceId($insuranceId);
@@ -277,10 +309,12 @@ class TripController {
      */
     public static function cancelTrip($tripId){
         if(!isset($_SESSION['role']) or (isset($_SESSION['role']) and $_SESSION['role'] != "admin")){
+            HTTPHeader::setStatusHeader(HTTPStatusCode::HTTP_204_NO_CONTENT);
             return false;
         }
         $id = Validation::positiveInt($tripId);
         if(!$id){
+            HTTPHeader::setStatusHeader(HTTPStatusCode::HTTP_204_NO_CONTENT);
             return false;
         }
         $trip = new Trip();
@@ -295,6 +329,7 @@ class TripController {
     public static function getBookedTrip($tripId){
         $id = Validation::positiveInt($tripId);
         if(!$id){
+            HTTPHeader::setStatusHeader(HTTPStatusCode::HTTP_204_NO_CONTENT);
             return false;
         }
         $trip = new Trip();
@@ -318,10 +353,12 @@ class TripController {
      */
     public static function lockInvoicesRegistered($tripId){
         if(!isset($_SESSION['role']) or (isset($_SESSION['role']) and $_SESSION['role'] != "admin")){
+            HTTPHeader::setStatusHeader(HTTPStatusCode::HTTP_204_NO_CONTENT);
             return false;
         }
         $id = Validation::positiveInt($tripId);
         if(!$id){
+            HTTPHeader::setStatusHeader(HTTPStatusCode::HTTP_204_NO_CONTENT);
             return false;
         }
         $trip = new Trip();
@@ -337,10 +374,12 @@ class TripController {
      */
     public static function unlockInvoicesRegistered($tripId){
         if(!isset($_SESSION['role']) or (isset($_SESSION['role']) and $_SESSION['role'] != "admin")){
+            HTTPHeader::setStatusHeader(HTTPStatusCode::HTTP_204_NO_CONTENT);
             return false;
         }
         $id = Validation::positiveInt($tripId);
         if(!$id){
+            HTTPHeader::setStatusHeader(HTTPStatusCode::HTTP_204_NO_CONTENT);
             return false;
         }
         $trip = new Trip();

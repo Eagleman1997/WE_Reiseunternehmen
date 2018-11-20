@@ -32,17 +32,20 @@ class UserController {
         $user->setStreet(\filter_input(\INPUT_POST, 'street', \FILTER_DEFAULT));
         $zipCode = Validation::zipCode(\filter_input(\INPUT_POST, 'zipCode', \FILTER_VALIDATE_INT));
         if(!$zipCode){
+            HTTPHeader::setStatusHeader(HTTPStatusCode::HTTP_204_NO_CONTENT);
             return false;
         }
         $user->setZipCode($zipCode);
         $user->setLocation(\filter_input(\INPUT_POST, 'location', \FILTER_DEFAULT));
         $email = filter_input(\INPUT_POST, 'email', \FILTER_VALIDATE_EMAIL);
         if(!$email){
+            HTTPHeader::setStatusHeader(HTTPStatusCode::HTTP_204_NO_CONTENT);
             return false;
         }
         $user->setEmail($email);
         $birthDate = Validation::date(\filter_input(\INPUT_POST, 'birthDate', \FILTER_DEFAULT));
         if(!$birthDate){
+            HTTPHeader::setStatusHeader(HTTPStatusCode::HTTP_204_NO_CONTENT);
             return false;
         }
         $user->setBirthDate($birthDate);
@@ -63,6 +66,7 @@ class UserController {
         $user = new User();
         $email = \filter_input(\INPUT_POST, 'email', \FILTER_VALIDATE_EMAIL);
         if(!$email){
+            HTTPHeader::setStatusHeader(HTTPStatusCode::HTTP_204_NO_CONTENT);
             return false;
         }
         $user->setEmail($email);
@@ -91,6 +95,8 @@ class UserController {
             $adminUsers = new TemplateView("adminUsers.php");
             $adminUsers->users = $users;
             LayoutRendering::basicLayout($adminUsers);
+        }else{
+            HTTPHeader::setStatusHeader(HTTPStatusCode::HTTP_204_NO_CONTENT);
         }
     }
     
@@ -103,10 +109,13 @@ class UserController {
             $user = new User();
             $id = Validation::positiveInt($userId);
             if(!$id){
+                HTTPHeader::setStatusHeader(HTTPStatusCode::HTTP_204_NO_CONTENT);
                 return false;
             }
             $user->setId($id);
             $user->delete();
+        }else{
+            HTTPHeader::setStatusHeader(HTTPStatusCode::HTTP_204_NO_CONTENT);
         }
     }
     
@@ -131,6 +140,7 @@ class UserController {
         $participant->setLastName(\filter_input(\INPUT_POST, 'lastName', \FILTER_DEFAULT));
         $birthDate = Validation::date(\filter_input(\INPUT_POST, 'birthDate', \FILTER_DEFAULT));
         if(!$birthDate){
+            HTTPHeader::setStatusHeader(HTTPStatusCode::HTTP_204_NO_CONTENT);
             return false;
         }
         $participant->setBirthDate($birthDate);
@@ -148,6 +158,7 @@ class UserController {
         
         $id = Validation::positiveInt($participantId);
         if(!$id){
+            HTTPHeader::setStatusHeader(HTTPStatusCode::HTTP_204_NO_CONTENT);
             return false;
         }
         $participant->setId($id);
@@ -160,6 +171,7 @@ class UserController {
      */
     public static function getParticipants(){
         if(!isset($_SESSION['role']) or (isset($_SESSION['role']) and $_SESSION['role'] != "user")){
+            HTTPHeader::setStatusHeader(HTTPStatusCode::HTTP_204_NO_CONTENT);
             return false;
         }
         $user = new User();
@@ -177,11 +189,13 @@ class UserController {
      */
     public static function changeRole($userId){
         if(!isset($_SESSION['role']) or (isset($_SESSION['role']) and $_SESSION['role'] != "admin")){
+            HTTPHeader::setStatusHeader(HTTPStatusCode::HTTP_204_NO_CONTENT);
             return false;
         }
         $user = new User();
         $id = Validation::positiveInt($userId);
         if(!$id){
+            HTTPHeader::setStatusHeader(HTTPStatusCode::HTTP_204_NO_CONTENT);
             return false;
         }
         $user->setId($id);
@@ -197,10 +211,11 @@ class UserController {
         if(isset($_SESSION['role']) and $_SESSION['role'] == "admin"){
             $homepage = new TemplateView("adminMain.php");
             LayoutRendering::basicLayout($homepage);
-        }
-        if(isset($_SESSION['role']) and $_SESSION['role'] == "user"){
+        }else if(isset($_SESSION['role']) and $_SESSION['role'] == "user"){
             $homepage = new TemplateView("homepage.php");
             LayoutRendering::basicLayout($homepage, "headerUserLoggedIn");
+        }else{
+            HTTPHeader::setStatusHeader(HTTPStatusCode::HTTP_204_NO_CONTENT);
         }
     }
 }
