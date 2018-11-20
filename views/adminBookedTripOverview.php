@@ -219,7 +219,14 @@ if (isset($this->trip) and $trip) {
                          <form action="<?php echo $GLOBALS['ROOT_URL'] ?>/admin/bookedTrips/detail/<?php echo $trip->getId(); ?>" method="POST" class="d-md-flex justify-content-md-center" style="background-color: transparent; margin: 10px; padding-top: 0px;padding-right: 0px;padding-bottom: 0px;padding-left: 0px;">
                             <input type="hidden" name="_method" value="PUT">
                             <div class="text-center" >
-                                <p style="margin-bottom: 15px;margin-top: 15px;color: #000000;">Are there no more invoices to this trip?</p>
+                                <p style="margin-bottom: 15px;margin-top: 15px;color: #000000;">
+                                    <?php if ($trip->getInvoicesRegistered()): ?>
+                                    Would you like to generate the final invoice?</p>
+                                    <?php endif; ?>
+                                
+                                    <?php if (!$trip->getInvoicesRegistered()): ?>
+                                    Are there no more invoices to this trip?</p>
+                                    <?php endif; ?>
                                 <button class="btn btn-info" type="submit" id="btnInvoicesComplete" style="margin-top: 0px;margin-bottom: 15px;">Prepare final invoice</button>
                             </div>
                         </form>
