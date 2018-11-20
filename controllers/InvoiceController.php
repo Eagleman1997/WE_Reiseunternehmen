@@ -51,19 +51,14 @@ class InvoiceController{
         }
         $invoice->setType($type);
         if(isset($_FILES['invoice'])){
-            $upload = $invoice->setPdfPath(Upload::uploadPdf());
+            $upload = Upload::uploadPdf();
             if(!$upload){
                 return false;
             }
+            $invoice->setPdfPath($upload);
         }else{
             return false;
         }
-        $fk_trip_id = Validation::positiveInt(\filter_input(\INPUT_POST, 'tripId', \FILTER_VALIDATE_INT));
-        if(!$fk_trip_id){
-            return false;
-        }
-        $invoice->setFkTripId($fk_trip_id);
-        
         $success = $invoice->create();
         if($success){
             return $fk_trip_id;
