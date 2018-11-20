@@ -227,8 +227,8 @@ if (isset($this->trip) and $trip) {
 
                     <!-- Button to view the customer invoice -->
                     <div style="margin-top: 15px;"class="text-center border rounded border-warning shadow d-flex d-sm-flex d-md-flex d-lg-flex justify-content-center justify-content-sm-center justify-content-md-center justify-content-lg-center">
-                         <form action="<?php echo $GLOBALS['ROOT_URL'] ?>/admin/bookedTrips/detail/invoices/<?php echo $trip->getId(); ?>" method="POST" class="d-md-flex justify-content-md-center" style="background-color: transparent; margin: 10px; padding-top: 0px;padding-right: 0px;padding-bottom: 0px;padding-left: 0px;">
-                            <input type="hidden" name="_method" value="PUT"><div class="text-center" >
+                         <form action="<?php echo $GLOBALS['ROOT_URL'] ?>/admin/bookedTrips/detail/invoices/<?php echo $trip->getId(); ?>" method="GET" class="d-md-flex justify-content-md-center" style="background-color: transparent; margin: 10px; padding-top: 0px;padding-right: 0px;padding-bottom: 0px;padding-left: 0px;">
+                           <div class="text-center">
                                 <p style="margin-bottom: 15px;margin-top: 15px;color: #000000;">Would you like to view the customer invoice?</p>
                                 <button class="btn btn-warning" type="submit" id="btnViewCustomerInvoice" style="color: white; margin-top: 0px;margin-bottom: 11px;">Show customer invoice</button>
                             </div> </form>
