@@ -144,7 +144,7 @@ if (isset($this->tripTemplate) and $this->tripTemplate and $tripTemplate->getDay
                                     <?php endforeach; ?>
                                 </optgroup></select>
 
-                            <label style="margin-top: 15px; margin-left: 35px; color: #222222;">Number of selected participants</label><input style="margin-bottom: 15px; margin-left: 35px;" class="form-control" value="" style="grey" type="text" readonly="" id="fieldNumParticipants">
+                            <label style="margin-top: 15px; margin-left: 35px; color: #222222;">Number of selected participants</label><input style="margin-bottom: 15px; margin-left: 35px; max-width: 465px;" class="form-control" value="" style="grey" type="text" readonly="" id="fieldNumParticipants">
 
                             <div class="form-group"><label style="margin-top: 15px;color: #222222;"><strong>Insurance (optional)</strong></label>
                                 <select class="form-control" name="insurance" required="" id="insuranceDropdown" style="min-width: 500px;"><optgroup label="Select insurance">
@@ -153,7 +153,7 @@ if (isset($this->tripTemplate) and $this->tripTemplate and $tripTemplate->getDay
                                         <?php endforeach; ?><option name="insuranceId" value="0" selected="">No insurance</option>
                                     </optgroup></select>
 
-                                <textarea name="insuranceDescription" id="txtAreaInsuranceDescription" readonly="" style="padding: 10px; margin-top: 5px; min-width: 500px; min-height: 130px;"></textarea></div>
+                                <textarea name="insuranceDescription" id="txtAreaInsuranceDescription" readonly="" style="padding: 10px; min-width: 500px; min-height: 130px;"></textarea></div>
 
 
                             <div><label style="margin-left: 0px;margin-top: 15px;color: #222222;" for="tripPrice"><strong>Price</strong></label><input class="form-control" value="<?php

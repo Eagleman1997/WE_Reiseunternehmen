@@ -95,7 +95,7 @@ isset($this->trips) ? $trips = $this->trips : $trips = array();
                                     }
                                     ?>"><?php echo TemplateView::noHTML($trip->getTripTemplate()->getName()); ?></a></h6>
                                     <p class="text-muted card-text"><?php echo TemplateView::noHTML($trip->getTripTemplate()->getDescription()); ?></p>
-                                    <p style="padding-bottom: 0px; margin-bottom: 0px;"class="d-lg-flex justify-content-lg-end align-items-lg-end priceTag">User: &nbsp<?php echo TemplateView::noHTML($trip->getUser()->getFirstName()." ".$trip->getUser()->getLastName()); ?></p>
+                                    <p style="padding-bottom: 0px; margin-bottom: 0px;"class="d-lg-flex justify-content-lg-end align-items-lg-end priceTag">Booked by: &nbsp<?php echo TemplateView::noHTML($trip->getUser()->getFirstName()." ".$trip->getUser()->getLastName()); ?></p>
                                     <p style="padding-bottom: 0px; margin-bottom: 20px;" class="d-lg-flex justify-content-lg-end align-items-lg-end priceTag">Departure: &nbsp<?php echo TemplateView::noHTML($trip->getDepartureDate()); ?></p>
                                     <strong style="border-radius: 5px; padding: 5px; background-color: royalblue; color: white; border: 1px solid white;" class="priceTag">CHF &nbsp<?php echo TemplateView::noHTML($trip->getPrice()); ?></strong>
                                 </div>
