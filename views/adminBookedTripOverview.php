@@ -296,23 +296,33 @@ if (isset($this->trip) and $trip) {
                         </div>
                     </div>
                     <?php if (!$trip->getInvoicesRegistered()): ?>
-                        <div class="border rounded-0 border-primary shadow form-container" style="max-width: 632px;margin-top: 30px;">
+                    <div style="overflow-x: auto;">    
+                    <div class="border rounded-0 border-primary shadow form-container" style="margin-top: 30px; max-width: 500px;">
                             <h4 class="text-center" style="margin-bottom: 16px;margin-top: 18px;"><strong>Add a new invoice to the trip.</strong><br></h4>
-                            <div style="overflow-x: auto; background-color: rgba(176,224,147,0.36); margin: 15px;">
-                                <form class="form-inline" target="_bottom" action="<?php echo $GLOBALS['ROOT_URL']; ?>/admin/bookedTrips/detail" method="post" enctype="multipart/form-data" id="invoiceForm" style="background-color: transparent;font-family: Capriola, sans-serif;padding-right: 0px;padding-bottom: 30px;padding-top: 0px;padding-left: 30px;">
+                            
+                            <div style="margin: 15px; background-color: rgba(176,224,147,0.36); padding-right: 20px;">
+
+                                <form class="form-inline" target="_bottom" action="<?php echo $GLOBALS['ROOT_URL']; ?>/admin/bookedTrips/detail" method="post" enctype="multipart/form-data" id="invoiceForm" style="background-color: transparent; padding-right: 0px;padding-bottom: 30px;padding-top: 0px;padding-left: 30px;">
                                     <input type="hidden" name="tripId" value="<?php echo $trip->getId(); ?>">
-                                    <div class="form-group" style="margin: 10px;width: 200px;margin-right: 50px;"><label class="labelsFormDayProgram">Type of invoice</label><select class="form-control" name="type" required="" id="type"><optgroup label="Select an invoice type"><option value="hotel" selected="">Hotel</option><option value="insurance">Insurance</option><option value="bus">Bus</option><option value="other">Other</option></optgroup></select></div>
+                                    <div class="form-group" style=""><label class="labelsFormDayProgram" style="width: 300px; text-align: left; display:block;">Type of invoice</label><select class="form-control" name="type" required="" id="type" style="width: 400px;">
+                                            <optgroup label="Select an invoice type">
+                                                <option value="hotel" selected="">Hotel</option>
+                                                <option value="insurance">Insurance</option>
+                                                <option value="bus">Bus</option>
+                                                <option value="other">Other</option></optgroup></select></div>
                                     <div
-                                        class="form-group" style="margin: 10px;margin-right: 50px;"><label class="labelsFormDayProgram">Description of invoice</label><textarea class="form-control" name="description" required="" minlength="3" id="description" style="width: 400px;margin-right: 0px;min-height: 80px;"></textarea></div>
+                                        class="form-group"><label class="labelsFormDayProgram" style="width: 300px; text-align: left; display:block;">Description of invoice</label><textarea class="form-control" name="description" required="" minlength="3" id="description" style="height: 100px; width: 400px;"></textarea></div>
                                     <div
-                                        class="form-group" style="margin: 10px;"><label class="labelsFormDayProgram">Date of invoice</label><input class="form-control" type="date" name="date" required="" id="date"></div>
-                                    <div class="form-group" style="margin: 10px;"><label class="labelsFormDayProgram">Amount of invoice</label><input class="form-control" type="number" name="price" required="" min="0" step="0.05" id="price"></div>
-                                    <div class="form-group mt-auto" style="margin-right: 100px;padding: 10px;padding-right: 50px;margin-bottom: 20px;padding-bottom: 0px;"><label class="labelsFormDayProgram">PDF of invoice</label><input type="file" name="invoice" required="" id="pdfPath" style="width: 400px;font-family: Capriola, sans-serif;background-color: #ffffff;margin-right: 0;"></div>
+                                        class="form-group"><label class="labelsFormDayProgram" style="width: 300px; text-align: left; display:block;">Date of invoice</label><input class="form-control" type="date" name="date" required="" id="date" style="width: 400px;"></div>
+                                        <div class="form-group"><label class="labelsFormDayProgram" style="width: 300px; text-align: left; display:block;">Amount of invoice</label><input class="form-control" type="number" name="price" required="" min="0" step="0.05" id="price" style="width: 400px;"></div>
+                                    <div class="form-group mt-auto"><label class="labelsFormDayProgram" style="width: 300px; text-align: left; display:block;">PDF of invoice</label><input type="file" name="invoice" required="" id="pdfPath" style="background: transparent; width: 400px;"></div>
                                     <button
-                                        class="btn btn-primary btn-block" type="submit" style="width: 100px;margin: 10px;margin-top: 50px;margin-left: 10px;">Save</button>
+                                        class="btn btn-primary btn-block" type="submit">Save</button>
                                 </form>
+                           
                             </div>
                         </div>
+                    </div>
                     <?php endif; ?>
                 </div>
             </div>

@@ -129,9 +129,10 @@ if (isset($this->tripTemplate) and $this->tripTemplate and $tripTemplate->getDay
             </div>
         </div>
         <?php if (isset($_SESSION['login'])): ?>
+        <div style="overflow-x: auto;">  
         <div class="border rounded-0 border-primary shadow form-container" id="divBookingForm" style="max-width: 650px;">
                 <h2 class="text-center" style="margin-bottom: 16px;margin-top: 18px;"><strong>Book your trip.</strong><br></h2>
-                <div style="overflow-x: auto; margin-bottom: 15px; margin-right: 15px; margin-left: 15px; padding-right: 25px;padding-left: 25px;background-image: url(&quot;assets/img/spanish%20beach.png&quot;);background-position: center;background-size: cover;background-repeat: no-repeat;">
+                <div style="margin-bottom: 15px; margin-right: 15px; margin-left: 15px; padding-right: 25px;padding-left: 25px;background-image: url(&quot;assets/img/spanish%20beach.png&quot;);background-position: center;background-size: cover;background-repeat: no-repeat;">
                     <form class="border-dark" action="<?php echo $GLOBALS['ROOT_URL'] ?>/packageOverview/package" method="post" id="tripBookingForm" style="background-color: transparent;padding-right: 25px;padding-left: 25px;">
                         <input type="hidden" name="tripTemplateId" value="<?php echo $tripTemplate->getId(); ?>">
                         <div class="form-group"><label style="color: #222222;"><strong>Departure date</strong></label><input style="margin-bottom: 15px;" class="form-control" type="date" name="departureDate" required=""></div>
@@ -163,6 +164,7 @@ if (isset($this->tripTemplate) and $this->tripTemplate and $tripTemplate->getDay
                         </div><button id="bookTrip" disabled class="btn btn-primary" type="submit" style="margin-top: 21px;">Book your trip now</button></form>
                 </div>
             </div>
+        </div>
             <script>
                 $(document).ready(function () {
     <?php
