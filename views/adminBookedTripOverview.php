@@ -41,7 +41,10 @@ if (isset($this->trip) and $trip) {
     <div class="border rounded-0 register-photo" style="font-family: Capriola, sans-serif;background-size: auto;min-height: 900px;padding-top: 0px;">
         <div style="padding-bottom: 52px;">
             <div class="container-fluid" style="margin-top: 81px;">
-                <h2 class="text-center" style="margin-bottom: 16px;"><strong>Administer the selected trip.</strong></h2>
+                <h2 class="text-center" style="margin-bottom: 16px;"><strong>
+                        <?php echo TemplateView::noHTML($user->getFirstName() . " " . $user->getLastName());?>
+                        booked this trip.
+                    </strong></h2>
                 <div class="scrollableDiv"><!DOCTYPE html>
                     <html lang="en">
                         <head>
