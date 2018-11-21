@@ -6,3 +6,7 @@ dist/
 nbdist/
 .nb-gradle/
 *.env
+*.jpg
+*.jpeg
+*.png
+*.pdf
