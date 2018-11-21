@@ -42,8 +42,7 @@ if (isset($this->trip) and $trip) {
         <div style="padding-bottom: 52px;">
             <div class="container-fluid" style="margin-top: 81px;">
                 <h2 class="text-center" style="margin-bottom: 16px;"><strong>
-                        <?php echo TemplateView::noHTML($user->getFirstName() . " " . $user->getLastName());?>
-                        booked this trip.
+                        <?php echo TemplateView::noHTML($user->getFirstName() . " " . $user->getLastName(). " booked " . $tripTemplate->getName() . ".");?>
                     </strong></h2>
                 <div class="scrollableDiv"><!DOCTYPE html>
                     <html lang="en">
