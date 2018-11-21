@@ -176,7 +176,7 @@ if(isset($this->tripTemplate) and $this->tripTemplate and $tripTemplate->getDayp
         
         //Remove dayprogram
         function deleteHandler(dayprogramId){
-            var c = confirm("Do you want to delete this dayprogram?");
+            var c = confirm("Do you want to delete this day program?\n\nThe price of the trip will automatically be recalculated.");
             if(c){
                 $( "#deleteDayprogram"+dayprogramId).submit();
             }

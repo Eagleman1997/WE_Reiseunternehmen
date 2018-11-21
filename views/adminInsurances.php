@@ -28,10 +28,10 @@ isset($this->insurances) ? $insurances = $this->insurances : $insurances = array
                     <h2 class="text-center" style="font-family: Capriola, sans-serif;color: #000000;"><strong>Add a new insurance.</strong></h2>
                     <div style="overflow-x: auto;">
                     <form class="form-inline pulse animated" action="<?php echo $GLOBALS['ROOT_URL'] ?>/admin/insurances" method="post" id="insuranceForm" style="background-color: rgba(255,255,255,0.77);margin: 20px;padding: 20px;font-family: Capriola, sans-serif;">
-                        <div class="form-group" style="width: 400px;margin: 10px;margin-right: 10px;"><label class="labelsFormTripTemplates">Insurance name</label><textarea class="form-control" name="name" required="" minlength="3" style="width: 400px;"></textarea></div>
-                        <div class="form-group" style="margin: 10px;"><label class="labelsFormTripTemplates">Description</label><textarea class="form-control" name="description" required="" minlength="3" style="width: 400px;margin-right: 0px;"></textarea></div>
-                        <div class="form-group" style="margin: 10px;width: 200px;margin-right: 50px;"><label class="labelsFormTripTemplates">Price per person</label><input class="form-control" type="number" step="0.05" name="pricePerPerson" required="" min="1"></div>
-                        <div class="form-group mt-auto" style="margin-top: 0px;padding-top: 20px;"><button class="btn btn-primary btn-block" type="submit" style="width: 100px;margin: 10px;margin-top: 10px;margin-left: 10px;">Save</button></div>
+                        <div class="form-group" style="margin: 10px;width: 400px;"><label class="labelsFormTripTemplates">Insurance name</label><textarea class="form-control" name="name" required="" minlength="3" style="width: 400px;"></textarea></div>
+                        <div class="form-group" style="margin: 10px;width: 400px;"><label class="labelsFormTripTemplates">Description</label><textarea class="form-control" name="description" required="" minlength="3" style="width: 400px;"></textarea></div>
+                        <div class="form-group" style="margin: 10px;width: 400px;margin-right: 2000px;"><label class="labelsFormTripTemplates" style="width: 400px; text-align: left; display:block;">Price per person</label><input class="form-control" type="number" step="0.05" name="pricePerPerson" required="" min="1"></div>
+                        <div class="form-group mt-auto" style="margin: 10px;width: 400px;"><button class="btn btn-primary btn-block" type="submit" style="width: 100px; margin-top: 20px;">Save</button></div>
                     </form>
                     </div>
                     <div style="font-family: Capriola, sans-serif;margin-bottom: 40px;padding-bottom: 20px;margin-top: 65px;background-color: rgba(255,255,255,0.77);margin-right: 0px;">
@@ -76,7 +76,7 @@ isset($this->insurances) ? $insurances = $this->insurances : $insurances = array
 
                                     //Remove insurance
                                     function deleteHandler(insuranceId) {
-                                        var c = confirm("Do you want to delete this insurance?");
+                                        var c = confirm("Do you want to delete this insurance?\n\nIf you delete this insurance, trips containing it will no longer be displayed correctly.");
                                         if (c) {
                                             $("#deleteInsurance" + insuranceId).submit();
                                         }

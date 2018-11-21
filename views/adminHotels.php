@@ -29,12 +29,13 @@ isset($this->hotels) ? $hotels = $this->hotels : $hotels = array();
                     <h2 class="text-center" style="font-family: Capriola, sans-serif;color: #000000;"><strong>Add a new hotel.</strong></h2>
                     <div style="overflow-x: auto;">
                     <form class="form-inline pulse animated" action="<?php echo $GLOBALS['ROOT_URL'] ?>/admin/hotels" method="post" enctype="multipart/form-data" id="hotelForm" style="background-color: rgba(255,255,255,0.6);margin: 20px;padding: 20px;font-family: Capriola, sans-serif;">
-                        <div class="form-group" style="width: 400px;margin: 10px;margin-right: 10px;"><label class="labelsFormTripTemplates">Hotel name</label><textarea class="form-control" name="name" required="" minlength="3" style="width: 400px;"></textarea></div>
-                        <div class="form-group" style="margin: 10px;"><label class="labelsFormTripTemplates">Description</label><textarea class="form-control" name="description" required="" minlength="3" style="width: 400px;margin-right: 0px;"></textarea></div>
-                        <div class="form-group" style="margin: 10px;width: 200px;margin-right: 50px;"><label class="labelsFormTripTemplates">Price per person</label><input class="form-control" type="number" step="0.05" name="pricePerPerson" required="" min="1"></div>
-                        <div class="form-group mt-auto" style="margin-right: 100px;padding: 10px;padding-right: 50px;margin-bottom: 20px;padding-bottom: 0px;"><label class="labelsFormTripTemplates" style="padding: 0;">Picture</label><input type="file" name="img" required="" style="width: 400px;font-family: Capriola, sans-serif;background-color: #ffffff;margin-right: 0;"></div>
+                        
+                        <div class="form-group" style="margin: 10px;width: 400px;"><label class="labelsFormTripTemplates">Hotel name</label><textarea class="form-control" name="name" required="" minlength="3" style="width: 400px;"></textarea></div>
+                        <div class="form-group" style="margin: 10px;width: 400px;"><label class="labelsFormTripTemplates">Description</label><textarea class="form-control" name="description" required="" minlength="3" style="width: 400px;margin-right: 0px;"></textarea></div>
+                        <div class="form-group" style="margin: 10px;width: 400px;"><label class="labelsFormTripTemplates" style="width: 400px; text-align: left; display:block;">Price per person</label><input class="form-control" type="number" step="0.05" name="pricePerPerson" required="" min="1"></div>
+                        <div class="form-group mt-auto" style="margin: 10px;width: 400px;margin-right: 2000px;"><label class="labelsFormTripTemplates" style="width: 400px; text-align: left; display:block;">Picture</label><input type="file" name="img" required="" style="width: 400px;background-color: transparent;"></div>
                         <div
-                            class="form-group mt-auto" style="margin-top: 0px;padding-top: 20px;"><button class="btn btn-primary btn-block" type="submit" style="width: 100px;margin: 10px;margin-top: 10px;margin-left: 10px;">Save</button></div>
+                            class="form-group mt-auto" style="margin: 10px;width: 400px;"><button class="btn btn-primary btn-block" type="submit" style="width: 100px; margin-top: 20px;">Save</button></div>
                     </form>
                     </div>
                     <div style="font-family: Capriola, sans-serif;margin-bottom: 40px;padding-bottom: 20px;margin-top: 65px;background-color: rgba(255,255,255,0.72);margin-right: 0px;">
@@ -82,7 +83,7 @@ isset($this->hotels) ? $hotels = $this->hotels : $hotels = array();
 
                                 //Remove hotel
                                 function deleteHandler(hotelId){
-                                    var c = confirm("Do you want to delete this hotel?");
+                                    var c = confirm("Do you want to delete this hotel?\n\nIf you delete this hotel, trips containing it will no longer be displayed correctly.");
                                     if(c){
                                         $( "#deleteHotel"+hotelId).submit();
                                     }

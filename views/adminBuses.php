@@ -29,14 +29,14 @@ isset($this->buses) ? $buses = $this->buses : $buses = array();
                     <h2 class="text-center" style="font-family: Capriola, sans-serif;color: #000000;"><strong>Add a new bus.</strong></h2>
                     <div style="overflow-x: auto;">
                     <form class="form-inline pulse animated" action="<?php echo $GLOBALS['ROOT_URL'] ?>/admin/buses" method="post" enctype="multipart/form-data" id="busForm" style="background-color: rgba(255,255,255,0.72);margin: 20px;padding: 20px;font-family: Capriola, sans-serif;">
-                        <div class="form-group" style="width: 400px;margin: 10px;margin-right: 10px;"><label class="labelsFormTripTemplates">Bus name</label><textarea class="form-control" name="name" required="" minlength="3" style="width: 400px;"></textarea></div>
-                        <div class="form-group" style="margin: 10px;"><label class="labelsFormTripTemplates">Description</label><textarea class="form-control" name="description" required="" minlength="3" style="margin-right: 0px;width: 400px;"></textarea></div>
-                        <div class="form-group" style="margin: 10px;width: 150px;"><label class="labelsFormTripTemplates" style="padding: 0x;">Number of seats</label><input class="form-control" type="number" name="seats" value="12" required="" min="12" step="1" style="width: 100px;margin-right: 0px;"></div>
+                        <div class="form-group" style="margin: 10px;width: 400px;"><label class="labelsFormTripTemplates">Bus name</label><textarea class="form-control" name="name" required="" minlength="3" style="width: 400px;"></textarea></div>
+                        <div class="form-group" style="margin: 10px;width: 400px;"><label class="labelsFormTripTemplates">Description</label><textarea class="form-control" name="description" required="" minlength="3" style="width: 400px;"></textarea></div>
+                        <div class="form-group" style="margin: 10px;width: 400px;"><label class="labelsFormTripTemplates" style="width: 400px; text-align: left; display:block;">Number of seats</label><input class="form-control" type="number" name="seats" value="12" required="" min="12" step="1" style="width: 100px;"></div>
                         <div
-                            class="form-group" style="margin: 10px;width: 200px;margin-right: 50px;"><label class="labelsFormTripTemplates">Price per day</label><input class="form-control" type="number" name="pricePerDay" step="0.05" required="" min="1"></div>
-                        <div class="form-group mt-auto" style="margin-right: 100px;padding: 10px;padding-right: 50px;margin-bottom: 20px;padding-bottom: 0px;"><label class="labelsFormTripTemplates" style="padding: 0;">Picture</label><input type="file" name="img" required="" style="font-family: Capriola, sans-serif;background-color: #ffffff;margin-right: 0;width: 400px;"></div>
+                            class="form-group" style="margin: 10px;width: 400px;"><label class="labelsFormTripTemplates" style="width: 400px; text-align: left; display:block;">Price per day</label><input class="form-control" type="number" name="pricePerDay" step="0.05" required="" min="1"></div>
+                        <div class="form-group mt-auto" style="margin: 10px;width: 400px;margin-right: 2000px;"><label class="labelsFormTripTemplates" style="width: 400px; text-align: left; display:block;">Picture</label><input type="file" name="img" required="" style="background-color: transparent;"></div>
                         <div class="form-group mt-auto"
-                             style="margin-top: 0px;padding-top: 20px;"><button class="btn btn-primary btn-block" type="submit" style="width: 100px;margin: 10px;margin-top: 10px;margin-left: 10px;">Save</button></div>
+                             style="margin: 10px;width: 400px;"><button class="btn btn-primary btn-block" type="submit" style="width: 100px; margin-top: 20px;">Save</button></div>
                     </form>
                     </div>
                     <div style="font-family: Capriola, sans-serif;margin-bottom: 40px;padding-bottom: 20px;margin-top: 65px;background-color: rgba(255,255,255,0.72);">
@@ -85,7 +85,7 @@ isset($this->buses) ? $buses = $this->buses : $buses = array();
 
                                     //Remove bus
                                     function deleteHandler(busId){
-                                        var c = confirm("Do you want to delete this bus?");
+                                        var c = confirm("Do you want to delete this bus?\n\nIf you delete this bus, trips containing it will no longer be displayed correctly.");
                                         if(c){
                                             $( "#deleteBus"+busId).submit();
                                         }

@@ -79,7 +79,7 @@ isset($this->users) ? $users = $this->users : $users = array();
                                 
                                 // remove user
                                 function deleteHandler(userId){
-                                    var c = confirm("Do you want to delete this user?");
+                                    var c = confirm("Do you want to delete this user?\n\nThe user will no longer be able to log in after deletion.\n\nPlease note that it is not possible to delete the last remaining administrator.");
                                     if(c){
                                         $( "#deleteUser"+userId).submit();
                                     }
@@ -91,14 +91,14 @@ isset($this->users) ? $users = $this->users : $users = array();
                                     var id = "userRole"+userId;
                                     if (!document.getElementById(id).checked) { // if the user was already admin and therefore now unchecked the checkbox
                                         document.getElementById(id).checked = true; // temporarily recheck the checkbox
-                                        var c = confirm("Do you want to remove admin rights from this user?");
+                                        var c = confirm("Do you want to remove admin rights from this user?\n\nNormal user rights will be assigned to the admin.\n\nPlease note that it is not possible to remove the admin role from the last remaining administrator.");
                                         if (c) {
                                             document.getElementById(id).checked = false;
                                             $( "#changeRole"+userId ).submit();
                                         }
                                     } else { // if the user wasn't admin yet and therefore just checked the checkbox
                                         document.getElementById(id).checked = false; // temoporarily uncheck the checkbox again
-                                        var c = confirm("Do you want to assign admin rights to this user?");
+                                        var c = confirm("Do you want to assign admin rights to this user?\n\nThe user will be able to administer trip templates, trips, users, insurances, buses and hotels.");
                                         if (c) {
                                             document.getElementById(id).checked = true;
                                             $( "#changeRole"+userId ).submit();
