@@ -86,7 +86,7 @@ if (isset($this->trip) and $trip) {
                 </div>
 
                 <!-- Button to cancel a trip booking -->
-                <div class="border rounded shadow d-flex d-sm-flex d-md-flex d-lg-flex justify-content-center justify-content-sm-center justify-content-md-center justify-content-lg-center" style="margin-top: 30px; margin-left: 20%; margin-right: 20%;">
+                <div class="border rounded shadow d-flex d-sm-flex d-md-flex d-lg-flex justify-content-center justify-content-sm-center justify-content-md-center justify-content-lg-center" style="margin-top: 30px; margin-left: 15%; margin-right: 15%;">
                     <form action="<?php echo $GLOBALS['ROOT_URL'] ?>/admin/bookedTrips/cancelTrip/<?php echo $trip->getId(); ?>/1" method="POST" class="d-md-flex justify-content-md-center" style="background-color: transparent; padding: 0px;">
                         <input type="hidden" name="_method" value="PUT"><div class="text-center" >
                             <p style="margin-bottom: 20px;margin-top: 15px;color: crimson;">Do you want to cancel the customer's booking?</p>
@@ -227,7 +227,7 @@ if (isset($this->trip) and $trip) {
                 <div class="collapse item-1 card-body" role="tabpanel" data-parent="#accordionTripAdmin">
 
                     <!-- Button to generate the final invoice -->
-                    <div style="margin-left: 0%; margin-right: 50%"class="text-center border rounded shadow d-flex d-sm-flex d-md-flex d-lg-flex justify-content-center justify-content-sm-center justify-content-md-center justify-content-lg-center">
+                    <div style="margin-left: 0%; margin-right: 40%"class="text-center border rounded shadow d-flex d-sm-flex d-md-flex d-lg-flex justify-content-center justify-content-sm-center justify-content-md-center justify-content-lg-center">
                         <form action="<?php echo $GLOBALS['ROOT_URL'] ?>/admin/bookedTrips/detail/<?php echo $trip->getId(); ?>" method="POST" class="d-md-flex justify-content-md-center" style="background-color: transparent; margin: 10px; padding-top: 0px;padding-right: 0px;padding-bottom: 0px;padding-left: 0px;">
                             <input type="hidden" name="_method" value="PUT">
                             <div class="text-center" >
@@ -245,7 +245,7 @@ if (isset($this->trip) and $trip) {
                     </div>
 
                     <!-- Button to view the customer invoice -->
-                    <div style="margin-top: 15px; margin-left: 25%; margin-right: 25%"class="text-center border rounded shadow d-flex d-sm-flex d-md-flex d-lg-flex justify-content-center justify-content-sm-center justify-content-md-center justify-content-lg-center">
+                    <div style="margin-top: 15px; margin-left: 20%; margin-right: 20%"class="text-center border rounded shadow d-flex d-sm-flex d-md-flex d-lg-flex justify-content-center justify-content-sm-center justify-content-md-center justify-content-lg-center">
                         <form action="<?php echo $GLOBALS['ROOT_URL'] ?>/admin/bookedTrips/detail/invoices/<?php echo $trip->getId(); ?>" method="GET" class="d-md-flex justify-content-md-center" style="background-color: transparent; margin: 10px; padding-top: 0px;padding-right: 0px;padding-bottom: 0px;padding-left: 0px;">
                             <div class="text-center">
                                 <p style="margin-bottom: 15px;margin-top: 15px;color: #000000;">Would you like to view the customer invoice?</p>
@@ -255,11 +255,11 @@ if (isset($this->trip) and $trip) {
 
                     <!-- Button to add additional invoices after generating the final invoice -->
                     <?php if ($trip->getInvoicesRegistered()): ?>
-                        <div style="margin-top: 15px; margin-left: 50%; margin-right: 0%" class="text-center border shadow d-flex d-sm-flex d-md-flex d-lg-flex justify-content-center justify-content-sm-center justify-content-md-center justify-content-lg-center">
+                        <div style="margin-top: 15px; margin-left: 40%; margin-right: 0%" class="text-center border shadow d-flex d-sm-flex d-md-flex d-lg-flex justify-content-center justify-content-sm-center justify-content-md-center justify-content-lg-center">
                             <form action="<?php echo $GLOBALS['ROOT_URL'] ?>/admin/bookedTrips/detail/<?php echo $trip->getId(); ?>/1" method="POST" class="d-md-flex justify-content-md-center" style="margin: 10px; background-color: transparent; padding-top: 0px;padding-right: 0px;padding-bottom: 0px;padding-left: 0px;">
                                 <input type="hidden" name="_method" value="PUT"><div class="text-center" >
                                     <p style="margin-bottom: 15px;margin-top: 15px;color: #000000;">Are there more invoices?</p>
-                                    <button class="btn btn-success" type="submit" id="btnInvoicesComplete" style="margin-top: 0px;margin-bottom: 11px;">Upload additional invoices</button></div>
+                                    <button class="btn btn-success" type="submit" id="btnInvoicesComplete" style="margin-top: 0px;margin-bottom: 11px;">Upload more invoices</button></div>
                             </form>
                         </div>
 
