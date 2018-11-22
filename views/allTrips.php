@@ -32,8 +32,12 @@ isset($this->trips) ? $trips = $this->trips : $trips = array();
                         <h2 style="margin-bottom: 19px;">All available trips.</h2>
                     </div>
                     <div class="row">
-                        <?php 
-                        foreach ($tripTemplates as $tripTemplate) : ?>
+                        <?php foreach ($tripTemplates as $tripTemplate) : ?>
+                        <?php if(!$tripTemplate->getBus()){continue;};//Ensures that just Trips with a Bus are shown
+                            if(!$tripTemplate->getDayprograms()){continue;};
+                            foreach($tripTemplate->getDayprograms() as $dayprgrm){
+                                if(!$dayprgrm->getHotel()){continue;};//Ensures that just Trips with a Hotel according to the Dayprograms are shown
+                            } ?>
                         <div class="col-md-6 col-lg-4">
                             <div class="card border-0"><a href="<?php
                                     if(isset($_SESSION['role']) and $_SESSION['role'] == "admin"){
