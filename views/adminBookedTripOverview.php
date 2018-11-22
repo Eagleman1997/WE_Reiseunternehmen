@@ -61,7 +61,7 @@ if (isset($this->trip) and $trip) {
                                             <th>Trip name</th>
                                             <th>Description</th>
                                             <th>Departure date</th>
-                                            <th>Insurance</th>
+                                            <?php if($trip->getInsurance()): ?><th>Insurance</th><?php endif; ?>
                                             <th>Bus</th>
                                             <th>Internal price from CHF</th>
                                             <th>Customer price from CHF</th>
@@ -73,7 +73,7 @@ if (isset($this->trip) and $trip) {
                                             <td><?php if($tripTemplate){echo TemplateView::noHTML($tripTemplate->getName());} ?></td>
                                             <td><?php if($tripTemplate){echo TemplateView::noHTML($tripTemplate->getDescription());} ?></td>
                                             <td><?php echo TemplateView::noHTML($trip->getDepartureDate()); ?></td>
-                                            <td><?php if($trip->getInsurance()){echo TemplateView::noHTML($trip->getInsurance()->getName());} ?></td>
+                                            <?php if($trip->getInsurance()): ?><td><?php echo TemplateView::noHTML($trip->getInsurance()->getName()); ?></td><?php endif; ?>
                                             <td><?php if($tripTemplate and $tripTemplate->getBus()){echo TemplateView::noHTML($tripTemplate->getBus()->getName()) . " (seats: " . TemplateView::noHTML($tripTemplate->getBus()->getSeats()) . ")";} ?></td>
                                             <td><?php echo TemplateView::noHTML($trip->getPrice()); ?></td>
                                             <td><?php echo TemplateView::noHTML($trip->getCustomerPrice()); ?></td>
