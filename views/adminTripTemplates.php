@@ -88,7 +88,7 @@ isset($this->tripTemplates) ? $tripTemplates = $this->tripTemplates : $tripTempl
                                                         <td><?php echo TemplateView::noHTML($tripTemplate->getMaxAllocation()); ?></td>
                                                         <td><?php echo TemplateView::noHTML($tripTemplate->getPrice()); ?></td>
                                                         <td><?php if ($tripTemplate->getBus()) {
-                                                    echo TemplateView::noHTML($tripTemplate->getBus()->getName()) . "</br>(seats: " . TemplateView::noHTML($tripTemplate->getBus()->getSeats()) . ")";
+                                                    echo TemplateView::noHTML($tripTemplate->getBus()->getName()) . " (seats: " . TemplateView::noHTML($tripTemplate->getBus()->getSeats()) . ")";
                                                 } ?></td>
                                                         <td><a href="<?php echo $GLOBALS['ROOT_URL'] ?>/admin/tripTemplates/package/<?php echo $tripTemplate->getId(); ?>"><img src="assets/img/edit.png" alt="Edit" border=3 height=20 width=20></a></td>
                                                         <td><form id="deleteTripTemplate<?php echo $tripTemplate->getId(); ?>" action="<?php echo $GLOBALS['ROOT_URL'] ?>/admin/tripTemplates/<?php echo $tripTemplate->getId(); ?>" method="post">
