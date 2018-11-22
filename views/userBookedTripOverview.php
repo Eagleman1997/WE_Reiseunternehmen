@@ -62,12 +62,12 @@ if(isset($this->trip) and $trip){
                                     </thead>
                                     <tbody id="tripTableBody">
                                         <tr>
-                                            <td><img src="<?php echo TemplateView::noHTML($tripTemplate->getPicturePath()); ?>" alt="Not available" border=3 width=150></td>
-                                            <td><?php echo TemplateView::noHTML($tripTemplate->getName()); ?></td>
-                                            <td><?php echo TemplateView::noHTML($tripTemplate->getDescription()); ?></td>
+                                            <td><img src="<?php if($tripTemplate){echo TemplateView::noHTML($tripTemplate->getPicturePath());} ?>" alt="Not available" border=3 width=150></td>
+                                            <td><?php if($tripTemplate){echo TemplateView::noHTML($tripTemplate->getName());} ?></td>
+                                            <td><?php if($tripTemplate){echo TemplateView::noHTML($tripTemplate->getDescription());} ?></td>
                                             <td><?php echo TemplateView::noHTML($trip->getDepartureDate()); ?></td>
                                             <?php if($trip->getInsurance()): ?><td><?php echo TemplateView::noHTML($trip->getInsurance()->getName()); ?></td><?php endif; ?>
-                                            <td><img src="<?php echo TemplateView::noHTML($tripTemplate->getBus()->getPicturePath()); ?>" alt="Not available" border=3 width=150></td>
+                                            <td><img src="<?php if($tripTemplate and $tripTemplate->getBus()){echo TemplateView::noHTML($tripTemplate->getBus()->getPicturePath());} ?>" alt="Not available" border=3 width=150></td>
                                             <td><?php echo TemplateView::noHTML($trip->getCustomerPrice()); ?></td>
                                         </tr>
                                     </tbody>

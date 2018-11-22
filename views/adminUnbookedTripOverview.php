@@ -50,7 +50,7 @@ if(isset($this->tripTemplate) and $this->tripTemplate and $tripTemplate->getDayp
                                             <td><?php echo TemplateView::noHTML($tripTemplate->getDescription()); ?></td>
                                             <td><?php echo TemplateView::noHTML($tripTemplate->getMinAllocation()); ?></td>
                                             <td><?php echo TemplateView::noHTML($tripTemplate->getMaxAllocation()); ?></td>
-                                            <td><?php echo TemplateView::noHTML($tripTemplate->getBus()->getName()) . "</br>(seats: " . TemplateView::noHTML($tripTemplate->getBus()->getSeats()) . ")"; ?></td>
+                                            <td><?php if($tripTemplate->getBus()){echo TemplateView::noHTML($tripTemplate->getBus()->getName()) . "</br>(seats: " . TemplateView::noHTML($tripTemplate->getBus()->getSeats()) . ")";} ?></td>
                                             <td><?php echo TemplateView::noHTML($tripTemplate->getPrice()); ?></td>
                                             <td><?php echo TemplateView::noHTML($tripTemplate->getCustomerPrice()); ?></td>
                                         </tr>

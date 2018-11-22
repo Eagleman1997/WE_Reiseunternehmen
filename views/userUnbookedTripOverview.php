@@ -57,13 +57,9 @@ if (isset($this->tripTemplate) and $this->tripTemplate and $tripTemplate->getDay
                                             <td><?php echo TemplateView::noHTML($tripTemplate->getDescription()); ?></td>
                                             <td><?php echo TemplateView::noHTML($tripTemplate->getMinAllocation()); ?></td>
                                             <td><?php echo TemplateView::noHTML($tripTemplate->getMaxAllocation()); ?></td>
-                                            <td><img src="<?php
-                                                if ($tripTemplate->getBus()) {
-                                                    echo TemplateView::noHTML($tripTemplate->getBus()->getPicturePath());
-                                                }
-                                                ?>" alt="Not available" border=3 width=200></td>
+                                            <td><img src="<?php if ($tripTemplate->getBus()){echo TemplateView::noHTML($tripTemplate->getBus()->getPicturePath());} ?>" alt="Not available" border=3 width=200></td>
                                             <td><?php echo TemplateView::noHTML($tripTemplate->getCustomerPrice()); ?></td>
-                                            <td><?php echo TemplateView::noHTML(round(($tripTemplate->getCustomerPrice() / $tripTemplate->getMinAllocation()) * 20, 0) / 20); ?></td>
+                                            <td><?php if($tripTemplate->getCustomerPrice()){echo TemplateView::noHTML(round(($tripTemplate->getCustomerPrice() / $tripTemplate->getMinAllocation()) * 20, 0) / 20);} ?></td>
                                         </tr>
                                     </tbody>
                                 </table>
@@ -105,17 +101,9 @@ if (isset($this->tripTemplate) and $this->tripTemplate and $tripTemplate->getDay
                                                         <td><img src="<?php echo TemplateView::noHTML($dayprogram->getPicturePath()); ?>" alt="Not available" border=3 width=150></td>
                                                         <td><?php echo TemplateView::noHTML($dayprogram->getName()); ?> </td>
                                                         <td><?php echo TemplateView::noHTML($dayprogram->getDescription()); ?> </td>
-                                                        <td><?php
-                                                            if ($dayprogram->getHotel()) {
-                                                                echo TemplateView::noHTML($dayprogram->getHotel()->getName());
-                                                            }
-                                                            ?> </td>
+                                                        <td><?php if ($dayprogram->getHotel()) {echo TemplateView::noHTML($dayprogram->getHotel()->getName());} ?> </td>
                                                         <td><?php if ($dayprogram->getHotel()): ?><img src="<?php echo TemplateView::noHTML($dayprogram->getHotel()->getPicturePath()); ?>" alt="Not available" border=3 width=150><?php endif; ?></td>
-                                                        <td><?php
-                                                            if ($dayprogram->getHotel()) {
-                                                                echo TemplateView::noHTML($dayprogram->getHotel()->getDescription());
-                                                            }
-                                                            ?> </td>
+                                                        <td><?php if ($dayprogram->getHotel()) {echo TemplateView::noHTML($dayprogram->getHotel()->getDescription());} ?> </td>
                                                     </tr>
                                                 <?php endforeach; ?>
                                             </tbody>
@@ -138,7 +126,7 @@ if (isset($this->tripTemplate) and $this->tripTemplate and $tripTemplate->getDay
                         <div class="form-group"><label style="color: #222222;"><strong>Departure date</strong></label><input style="margin-bottom: 15px;" class="form-control" type="date" name="departureDate" required=""></div>
 
                         <div
-                            class="form-group"><label style="margin-top: 15px;color: #222222;"><strong>Participants <?php echo "(min. " . ($tripTemplate->getMinAllocation() - 1) . ", max. " . ($tripTemplate->getMaxAllocation() - 1) . ")"; ?></strong></label><select class="form-control" name="participants[]" required="" multiple="" id="selectedParticipants" style="min-height: 400px; min-width: 500px;background-color: #f7f9fc;max-width: 500px;"><optgroup label="Unselect or select multiple with CTRL">
+                            class="form-group"><label style="margin-top: 15px;color: #222222;"><strong>Participants <?php if($tripTemplate->getMinAllocation()){echo "(min. " . ($tripTemplate->getMinAllocation() - 1) . ", max. " . ($tripTemplate->getMaxAllocation() - 1) . ")";} ?></strong></label><select class="form-control" name="participants[]" required="" multiple="" id="selectedParticipants" style="min-height: 400px; min-width: 500px;background-color: #f7f9fc;max-width: 500px;"><optgroup label="Unselect or select multiple with CTRL">
                                         <?php foreach ($participants as $participant) : ?>
                                         <option selected="" value="<?php echo $participant->getId(); ?>"><?php echo TemplateView::noHTML($participant->getFirstName() . " " . $participant->getLastName()); ?> </option>
                                     <?php endforeach; ?>
@@ -173,16 +161,25 @@ if (isset($this->tripTemplate) and $this->tripTemplate and $tripTemplate->getDay
     foreach ($insurances as $insurance) {
         array_push($insuranceCustomerPrices, $insurance->getCustomerPricePerPerson());
     }
+    
+// Get the correct variables
+    if($tripTemplate->getCustomerBusPrice()){
+        $customerBusPrice = $tripTemplate->getCustomerBusPrice();
+    }else{$customerBusPrice = 0;}
+    if($tripTemplate->getCustomerHotelPricePerPerson()){
+        $customerHotelPricePerPerson = $tripTemplate->getCustomerHotelPricePerPerson();
+    }else{$customerHotelPricePerPerson = 0;}
+    
 
 // Get insurance descriptions 
     $insuranceDescriptions = array();
     foreach ($insurances as $insurance) {
         array_push($insuranceDescriptions, $insurance->getDescription());
     }
-    $js_arrayCustomerPrices = json_encode($insuranceCustomerPrices);
-    echo "var insurancePrices = " . $js_arrayCustomerPrices . ";\n";
-    echo "var busPrice = " . $tripTemplate->getCustomerBusPrice() . ";\n";
-    echo "var hotelPricePerPerson = " . $tripTemplate->getCustomerHotelPricePerPerson() . ";\n";
+    $js_arrayInsuranceCustomerPrices = json_encode($insuranceCustomerPrices);
+    echo "var insurancePrices = " . $js_arrayInsuranceCustomerPrices . ";\n";
+    echo "var busPrice = " . $customerBusPrice . ";\n";
+    echo "var hotelPricePerPerson = " . $customerHotelPricePerPerson . ";\n";
     echo "var maxAllocation = " . $tripTemplate->getMaxAllocation() . ";\n";
     echo "var minAllocation = " . $tripTemplate->getMinAllocation() . ";\n";
 

@@ -268,7 +268,7 @@ Router::route_auth("DELETE", "/admin/tripTemplates/package/{id}/{id}", $authFunc
     }
 });
 
-Router::route_auth("DELETE", "/admin/bookedTrips/{id}", $authFunction, function ($id) {
+Router::route_auth("DELETE", "/admin/bookedTrips/detail/{id}", $authFunction, function ($id) {
     if(TripController::cancelTrip($id)){
         Router::redirect("/admin/packageOverview");
     }else{

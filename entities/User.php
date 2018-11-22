@@ -80,7 +80,7 @@ class User {
             $_SESSION['userId'] = $userObj->getId();
             $_SESSION['login'] = true;
             $_SESSION['role'] = $userObj->getRole();
-        return true;
+            return true;
         }else{
             //password is incorrect
             return false;
