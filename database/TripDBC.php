@@ -262,10 +262,8 @@ class TripDBC extends DBConnector {
         $fk_tripTemplate_id = $dayprogram->getFkTripTemplateId();
         $hotelId = $dayprogram->getFkHotelId();
         if($hotelId === 0){
-
             $fk_hotel_id = null;
         }else{
-
             $fk_hotel_id = $hotelId;
         }
         if(!$stmt->execute()){
@@ -525,7 +523,7 @@ class TripDBC extends DBConnector {
         $insurance = null;
         if($trip->getFkInsuranceId() > 0){
             $insuranceDBC = new InsuranceDBC();
-            $insurance = $insuranceDBC->findInsuranceById($trip->getFkInsuranceId(), false);
+            $insurance = $insuranceDBC->findInsuranceById($trip->getFkInsuranceId());
             if(!$insurance){
                 return false;
             }
@@ -674,9 +672,14 @@ class TripDBC extends DBConnector {
             return $trips;
         }
         
-        //Adds the TripTemplates to the Trips
+        
+        
+        //Adds the TripTemplates and the Insurance to the Trips
+        $insuranceDBC = new InsuranceDBC();
         foreach($trips as $trip){
             $trip->setTripTemplate($this->findTripTemplateById($trip->getFkTripTemplateId()));
+            $insurance = $insuranceDBC->findInsuranceById($trip->getFkInsuranceId());
+            $trip->setInsurance($insurance);
         }
         
         return $trips;
@@ -702,17 +705,24 @@ class TripDBC extends DBConnector {
             return false;
         }
         
-        //If it is just a shallow query, then it returns just a Part of the entity Trip some unnecessary deep objects
-        if($shallow){
-            $stmt->close();
-            return $tripObj;
-        }
-        
         //Adds the Insurance to the Trip
         $insuranceDBC = new InsuranceDBC();
         $insurance = $insuranceDBC->findInsuranceById($tripObj->getFkInsuranceId());
         $tripObj->setInsurance($insurance);
         
+        //Adds the TripTemplate, Bus, Dayprograms, Hotel to the Trip
+        $tripTemplate = $this->findTripTemplateById($tripObj->getFkTripTemplateId());
+        if($tripTemplate and !$shallow){
+            $tripTemplate->setDayprograms($this->getDayprogramsFromTemplate($tripTemplate));
+        }
+        $tripObj->setTripTemplate($tripTemplate);
+        
+        //If it is just a shallow query, then it returns just a Part of the entity Trip some unnecessary deep objects
+        if($shallow){
+            $stmt->close();
+            return $tripObj;
+        }
+
         //Adds the Participants to the Trip
         $userDBC = new UserDBC();
         $participants = $userDBC->findParticipantsToTrip($tripId);
@@ -726,14 +736,7 @@ class TripDBC extends DBConnector {
         $invoiceDBC = new InvoiceDBC();
         $invoices = $invoiceDBC->findTripInvoices($tripId);
         $tripObj->setInvoices($invoices);
-        
-        //Adds the TripTemplate, Bus, Dayprograms, Hotel to the Trip
-        $tripTemplate = $this->findTripTemplateById($tripObj->getFkTripTemplateId());
-        if($tripTemplate){
-            $tripTemplate->setDayprograms($this->getDayprogramsFromTemplate($tripTemplate));
-            $tripObj->setTripTemplate($tripTemplate);
-        }
-        
+
         return $tripObj;
         
     }

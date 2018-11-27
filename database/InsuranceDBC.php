@@ -70,7 +70,7 @@ class InsuranceDBC extends DBConnector {
      * @param type $close (false if closing of connection is NOT desired)
      * @return boolean\Insurance
      */
-    public function findInsuranceById($insuranceId, $close = true){
+    public function findInsuranceById($insuranceId){
         $stmt = $this->mysqliInstance->prepare("SELECT * FROM insurance where id = ?;");
         if(!$stmt){
             return false;
@@ -79,10 +79,6 @@ class InsuranceDBC extends DBConnector {
         $id = $insuranceId;
         $stmt->execute();
         $insuranceObj = $stmt->get_result()->fetch_object("entities\Insurance");
-        
-        if($close){
-            $stmt->close();
-        }
         
         //checks whether the Insurance exists
         if($insuranceObj){

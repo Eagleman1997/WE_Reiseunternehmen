@@ -142,7 +142,14 @@ class Trip {
     }
     
     public function getCustomerPrice(){
-        return Numbers::roundPrice(Margin::addTrip($this->price));
+        $customerPrice = 0;
+        if($this->tripTemplate){
+            $customerPrice += Margin::addTrip($this->tripTemplate->getPrice() / $this->tripTemplate->getMinAllocation() * $this->numOfParticipation);
+        }
+        if($this->insurance){
+            $customerPrice += Margin::addInsurance($this->insurance->getPricePerPerson() * $this->numOfParticipation);
+        }
+        return Numbers::roundPrice($customerPrice);
     }
     
     public function getInsurancePrice(){

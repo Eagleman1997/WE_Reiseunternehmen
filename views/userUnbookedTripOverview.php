@@ -187,7 +187,7 @@ if (isset($this->tripTemplate) and $this->tripTemplate and $tripTemplate->getDay
     echo "var insuranceDescriptions = " . $js_arrayInsuranceDescriptions;
     ?>
 
-                    function countSelectedParticipants() {
+                    function updateStyle() {
                         document.getElementById("fieldNumParticipants").value = $('#selectedParticipants option:selected').length + " (of min. " + (minAllocation - 1) + " and max. " + (maxAllocation - 1) + ")";
                         if ($('#selectedParticipants option:selected').length + 1 > maxAllocation || $('#selectedParticipants option:selected').length + 1 < minAllocation) {
                             document.getElementById('bookTrip').disabled = true;
@@ -197,7 +197,7 @@ if (isset($this->tripTemplate) and $this->tripTemplate and $tripTemplate->getDay
                             document.getElementById('fieldNumParticipants').style.color = "green";
                         }
                     }
-                    countSelectedParticipants();
+                    updateStyle();
 
                     var insuranceDropdown = document.getElementById('insuranceDropdown');
                     var participantsChoice = document.getElementById('selectedParticipants');
@@ -216,7 +216,7 @@ if (isset($this->tripTemplate) and $this->tripTemplate and $tripTemplate->getDay
                         actualPrice += hotelPricePerPerson * (count);
 
                         //Ensures that the trip booking is disabled until the minimum of travelers are selected
-                        countSelectedParticipants();
+                        updateStyle();
 
                         actualPrice = (Math.round(actualPrice / 0.05) * 0.05).toFixed(2);
 
