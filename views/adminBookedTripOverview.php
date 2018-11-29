@@ -259,7 +259,7 @@ if (isset($this->trip) and $trip) {
                             <div class="border rounded-0 border-dark" style="padding-left: 15px;padding-top: 0px;padding-bottom: 0px;padding-right: 15px;background-color: rgba(255,255,255,0.61);">
                                 <h4 class="text-left" style="margin-bottom: 16px;margin-top: 18px;min-width: 500px;"><strong>Already uploaded invoices.</strong><br></h4>
                                 <div class="table-responsive" id="tableUploadedInvoices">
-                                    <table class="table table-striped table-hover table-sm" style="min-width: 700px;">
+                                    <table class="table table-striped table-hover table-sm" style="min-width: 700px; max-width: 1100px;">
                                         <thead>
                                             <tr>
                                                 <th>Invoice type</th>
