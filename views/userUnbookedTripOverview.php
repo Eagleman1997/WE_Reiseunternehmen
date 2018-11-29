@@ -58,7 +58,7 @@ if (isset($this->tripTemplate) and $this->tripTemplate and $tripTemplate->getDay
                                             <td><?php echo TemplateView::noHTML($tripTemplate->getDescription()); ?></td>
                                             <td><?php echo TemplateView::noHTML($tripTemplate->getMinAllocation()); ?></td>
                                             <td><?php echo TemplateView::noHTML($tripTemplate->getMaxAllocation()); ?></td>
-                                            <td><img src="<?php if ($tripTemplate->getBus()){if(file_exists($tripTemplate->getBus()->getPicturePath())){echo TemplateView::noHTML($tripTemplate->getBus()->getPicturePath());}else{echo DefaultPath::getBus();}} ?>" alt="Not available" border=3 width=200></td>
+                                            <td><img src="<?php if ($tripTemplate->getBus()){if(file_exists($tripTemplate->getBus()->getPicturePath())){echo TemplateView::noHTML($tripTemplate->getBus()->getPicturePath());}else{echo DefaultPath::getBus();}} ?>" alt="Not available" border=3 width=150></td>
                                             <td><?php echo TemplateView::noHTML($tripTemplate->getCustomerPrice()); ?></td>
                                             <td><?php if($tripTemplate->getCustomerPrice()){echo TemplateView::noHTML(round(($tripTemplate->getCustomerPrice() / $tripTemplate->getMinAllocation()) * 20, 0) / 20);} ?></td>
                                         </tr>
