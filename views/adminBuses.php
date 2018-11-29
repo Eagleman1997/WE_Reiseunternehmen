@@ -68,7 +68,7 @@ isset($this->buses) ? $buses = $this->buses : $buses = array();
                                         <tbody id="busTableBody">
                                             <?php foreach ($this->buses as $bus): ?>
                                                 <tr>
-                                                    <td><img src="<?php if(file_exists($bus->getPicturePath())){echo TemplateView::noHTML($bus->getPicturePath());}else{echo DefaultPath::getBus();} ?>" alt="Not available" border=3 width=200></td>
+                                                    <td><img src="<?php if(file_exists($bus->getPicturePath())){echo TemplateView::noHTML($bus->getPicturePath());}else{echo DefaultPath::getBus();} ?>" alt="Not available" border=3 width=150></td>
                                                     <td><?php echo TemplateView::noHTML($bus->getName()); ?> </td>
                                                     <td><?php echo TemplateView::noHTML($bus->getDescription()); ?> </td>
                                                     <td><?php echo TemplateView::noHTML($bus->getSeats()); ?> </td>
