@@ -198,10 +198,11 @@ if (isset($this->tripTemplate) and $this->tripTemplate and $tripTemplate->getDay
                             document.getElementById('fieldNumParticipants').style.color = "green";
                         }
                     }
-                    updateStyle();
 
                     var insuranceDropdown = document.getElementById('insuranceDropdown');
                     var participantsChoice = document.getElementById('selectedParticipants');
+                    
+                    actualPriceCalculator();
 
                     function actualPriceCalculator() {
                         actualPrice = busPrice;
