@@ -6,6 +6,7 @@
 use views\TemplateView;
 use entities\User;
 use entities\TripTemplate;
+use helpers\DefaultPath;
 
 isset($this->tripTemplate) ? $tripTemplate = $this->tripTemplate : $tripTemplate = new TripTemplate();
 isset($this->insurances) ? $insurances = $this->insurances : $insurances = array();
@@ -52,12 +53,12 @@ if (isset($this->tripTemplate) and $this->tripTemplate and $tripTemplate->getDay
                                     </thead>
                                     <tbody id="tripTableBody">
                                         <tr>
-                                            <td><img src="<?php echo $tripTemplate->getPicturePath(); ?>" alt="Not available" border=3 width=150></td>
+                                            <td><img src="<?php if(file_exists($tripTemplate->getPicturePath())){echo TemplateView::noHTML($tripTemplate->getPicturePath());}else{echo DefaultPath::getTripTemplate();} ?>" alt="Not available" border=3 width=150></td>
                                             <td><?php echo TemplateView::noHTML($tripTemplate->getName()); ?></td>
                                             <td><?php echo TemplateView::noHTML($tripTemplate->getDescription()); ?></td>
                                             <td><?php echo TemplateView::noHTML($tripTemplate->getMinAllocation()); ?></td>
                                             <td><?php echo TemplateView::noHTML($tripTemplate->getMaxAllocation()); ?></td>
-                                            <td><img src="<?php if ($tripTemplate->getBus()){echo TemplateView::noHTML($tripTemplate->getBus()->getPicturePath());} ?>" alt="Not available" border=3 width=200></td>
+                                            <td><img src="<?php if ($tripTemplate->getBus()){if(file_exists($tripTemplate->getBus()->getPicturePath())){echo TemplateView::noHTML($tripTemplate->getBus()->getPicturePath());}else{echo DefaultPath::getBus();}} ?>" alt="Not available" border=3 width=200></td>
                                             <td><?php echo TemplateView::noHTML($tripTemplate->getCustomerPrice()); ?></td>
                                             <td><?php if($tripTemplate->getCustomerPrice()){echo TemplateView::noHTML(round(($tripTemplate->getCustomerPrice() / $tripTemplate->getMinAllocation()) * 20, 0) / 20);} ?></td>
                                         </tr>
@@ -98,11 +99,11 @@ if (isset($this->tripTemplate) and $this->tripTemplate and $tripTemplate->getDay
                                                 <?php foreach ($dayprograms as $dayprogram): ?>
                                                     <tr>
                                                         <td><?php echo TemplateView::noHTML($dayprogram->getDayNumber()); ?></td>
-                                                        <td><img src="<?php echo TemplateView::noHTML($dayprogram->getPicturePath()); ?>" alt="Not available" border=3 width=150></td>
+                                                        <td><img src="<?php if(file_exists($dayprogram->getPicturePath())){echo TemplateView::noHTML($dayprogram->getPicturePath());}else{echo DefaultPath::getDayprogram();} ?>" alt="Not available" border=3 width=150></td>
                                                         <td><?php echo TemplateView::noHTML($dayprogram->getName()); ?> </td>
                                                         <td><?php echo TemplateView::noHTML($dayprogram->getDescription()); ?> </td>
                                                         <td><?php if ($dayprogram->getHotel()) {echo TemplateView::noHTML($dayprogram->getHotel()->getName());} ?> </td>
-                                                        <td><?php if ($dayprogram->getHotel()): ?><img src="<?php echo TemplateView::noHTML($dayprogram->getHotel()->getPicturePath()); ?>" alt="Not available" border=3 width=150><?php endif; ?></td>
+                                                        <td><?php if ($dayprogram->getHotel()): ?><img src="<?php if(file_exists($dayprogram->getHotel()->getPicturePath())){echo TemplateView::noHTML($dayprogram->getHotel()->getPicturePath());}else{echo DefaultPath::getHotel();} ?>" alt="Not available" border=3 width=150><?php endif; ?></td>
                                                         <td><?php if ($dayprogram->getHotel()) {echo TemplateView::noHTML($dayprogram->getHotel()->getDescription());} ?> </td>
                                                     </tr>
                                                 <?php endforeach; ?>

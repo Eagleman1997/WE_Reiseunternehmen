@@ -3,6 +3,7 @@
  * @author Adrian Mathys
  */
 use views\TemplateView;
+use helpers\DefaultPath;
 use entities\TripTemplate;
 use entities\Trip;
 
@@ -43,7 +44,7 @@ isset($this->trips) ? $trips = $this->trips : $trips = array();
                                         $userTemplatePath = $GLOBALS['ROOT_URL']."/packageOverview/package/".$tripTemplate->getId();
                                         echo $userTemplatePath;
                                     }
-                                    ?>"><img src="<?php echo TemplateView::noHTML($tripTemplate->getPicturePath()); ?>" alt="Card Image" class="card-img-top scale-on-hover"></a>
+                                    ?>"><img src="<?php if(file_exists($tripTemplate->getPicturePath())){echo TemplateView::noHTML($tripTemplate->getPicturePath());}else{echo DefaultPath::getTripTemplate();} ?>" alt="Card Image" class="card-img-top scale-on-hover"></a>
                                 <div class="card-body">
                                     <h6><a href="<?php
                                     if(isset($_SESSION['role']) and $_SESSION['role'] == "admin"){
@@ -85,7 +86,7 @@ isset($this->trips) ? $trips = $this->trips : $trips = array();
                                         $userTripPath = $GLOBALS['ROOT_URL']."/bookedTrips/detail/".$trip->getId();
                                         echo $userTripPath;
                                     }
-                                    ?>"><img src="<?php echo TemplateView::noHTML($trip->getTripTemplate()->getPicturePath()); ?>" alt="Card Image" class="card-img-top scale-on-hover"></a>
+                                    ?>"><img src="<?php if(file_exists($trip->getTripTemplate()->getPicturePath())){echo TemplateView::noHTML($trip->getTripTemplate()->getPicturePath());}else{echo DefaultPath::getTrip();} ?>" alt="Card Image" class="card-img-top scale-on-hover"></a>
                                 <div class="card-body">
                                     <h6><a href="<?php
                                     if(isset($_SESSION['role']) and $_SESSION['role'] == "admin"){

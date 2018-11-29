@@ -4,6 +4,7 @@
  * @author Adrian Mathys
  */
 use views\TemplateView;
+use helpers\DefaultPath;
 
 isset($this->hotels) ? $hotels = $this->hotels : $hotels = array();
 
@@ -66,7 +67,7 @@ isset($this->hotels) ? $hotels = $this->hotels : $hotels = array();
                                         <tbody id="hotelTableBody">
                                             <?php foreach ($this->hotels as $hotel): ?>
                                                 <tr>
-                                                    <td><img src="<?php echo TemplateView::noHTML($hotel->getPicturePath()); ?>" alt="Not available" border=3 width=150></td>
+                                                    <td><img src="<?php if(file_exists($hotel->getPicturePath())){echo TemplateView::noHTML($hotel->getPicturePath());}else{echo DefaultPath::getHotel();} ?>" alt="Not available" border=3 width=150></td>
                                                     <td><?php echo TemplateView::noHTML($hotel->getName()); ?> </td>
                                                     <td><?php echo TemplateView::noHTML($hotel->getDescription()); ?> </td>
                                                     <td><?php echo TemplateView::noHTML($hotel->getPricePerPerson()); ?> </td>

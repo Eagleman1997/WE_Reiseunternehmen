@@ -7,6 +7,7 @@ use views\TemplateView;
 use entities\Trip;
 use entities\TripTemplate;
 use entities\User;
+use helpers\DefaultPath;
 
 isset($this->trip) ? $trip = $this->trip : $trip = new Trip();
 if (isset($this->trip) and $trip) {
@@ -69,7 +70,7 @@ if (isset($this->trip) and $trip) {
                                     </thead>
                                     <tbody id="tripTableBody">
                                         <tr>
-                                            <td><img src="<?php if($tripTemplate){echo $tripTemplate->getPicturePath();} ?>" alt="Not available" border=3 width=150></td>
+                                            <td><img src="<?php if($tripTemplate){if(file_exists($tripTemplate->getPicturePath())){echo TemplateView::noHTML($tripTemplate->getPicturePath());}else{echo DefaultPath::getTripTemplate();}} ?>" alt="Not available" border=3 width=150></td>
                                             <td><?php if($tripTemplate){echo TemplateView::noHTML($tripTemplate->getName());} ?></td>
                                             <td><?php if($tripTemplate){echo TemplateView::noHTML($tripTemplate->getDescription());} ?></td>
                                             <td><?php echo TemplateView::noHTML($trip->getDepartureDate()); ?></td>
@@ -188,11 +189,11 @@ if (isset($this->trip) and $trip) {
                                                 <?php foreach ($dayprograms as $dayprogram): ?>
                                                     <tr>
                                                         <td><?php echo TemplateView::noHTML($dayprogram->getDayNumber()); ?></td>
-                                                        <td><img src="<?php echo TemplateView::noHTML($dayprogram->getPicturePath()); ?>" alt="Not available" border=3 width=150></td>
+                                                        <td><img src="<?php if($dayprogram){if(file_exists($dayprogram->getPicturePath())){echo TemplateView::noHTML($dayprogram->getPicturePath());}else{echo DefaultPath::getDayprogram();}} ?>" alt="Not available" border=3 width=150></td>
                                                         <td><?php echo TemplateView::noHTML($dayprogram->getName()); ?></td>
                                                         <td><?php echo TemplateView::noHTML($dayprogram->getDescription()); ?></td>
                                                         <td><?php if ($dayprogram->getHotel()){echo TemplateView::noHTML($dayprogram->getHotel()->getName());} ?></td>
-                                                        <td><?php if ($dayprogram->getHotel()): ?><img src="<?php echo TemplateView::noHTML($dayprogram->getHotel()->getPicturePath()); ?>" alt="Not available" border=3 width=150><?php endif; ?></td>
+                                                        <td><?php if ($dayprogram->getHotel()): ?><img src="<?php if(file_exists($dayprogram->getHotel()->getPicturePath())){echo TemplateView::noHTML($dayprogram->getHotel()->getPicturePath());}else{echo DefaultPath::getHotel();} ?>" alt="Not available" border=3 width=150><?php endif; ?></td>
                                                         <td><?php if ($dayprogram->getHotel()){echo TemplateView::noHTML($dayprogram->getHotel()->getDescription());} ?></td>
                                                         <td><?php if ($dayprogram->getHotel()){echo TemplateView::noHTML($dayprogram->getHotel()->getPricePerPerson());} ?></td>
                                                     </tr>
@@ -278,7 +279,7 @@ if (isset($this->trip) and $trip) {
                                                     <td><?php echo $invoice->getDescription(); ?></td>
                                                     <td><?php echo $invoice->getDate(); ?></td>
                                                     <td><?php echo $invoice->getPrice(); ?></td>
-                                                    <td><a href="<?php echo $invoice->getPdfPath(); ?>" download="<?php echo $invoice->getFileName(); ?>">
+                                                    <td><a href="<?php if(file_exists($invoice->getPdfPath())){echo TemplateView::noHTML($invoice->getPdfPath());}else{echo DefaultPath::getInvoice();} ?>" download="<?php if(file_exists($invoice->getPdfPath())){echo TemplateView::noHTML($invoice->getFileName());}else{echo DefaultPath::getInvoiceFileName();} ?>">
                                                             <img src="assets/img/paper-clip.png" alt="Download" width="25px" height="25px">
                                                         </a></td>
                                                     <?php if (!$trip->getInvoicesRegistered()): ?>    

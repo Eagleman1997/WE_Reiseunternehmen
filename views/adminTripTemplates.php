@@ -4,6 +4,7 @@
  * @author Adrian Mathys
  */
 use views\TemplateView;
+use helpers\DefaultPath;
 
 isset($this->buses) ? $buses = $this->buses : $buses = array();
 isset($this->tripTemplates) ? $tripTemplates = $this->tripTemplates : $tripTemplates = array();
@@ -81,7 +82,7 @@ isset($this->tripTemplates) ? $tripTemplates = $this->tripTemplates : $tripTempl
                                             <tbody id="tripTemplateTableBody">
                                                 <?php foreach ($tripTemplates as $tripTemplate) : ?>
                                                     <tr>
-                                                        <td><img src="<?php echo TemplateView::noHTML($tripTemplate->getPicturePath()); ?>" alt="Not available" border=3 width=150></td>
+                                                        <td><img src="<?php if(file_exists($tripTemplate->getPicturePath())){echo TemplateView::noHTML($tripTemplate->getPicturePath());}else{echo DefaultPath::getTripTemplate();} ?>" alt="Not available" border=3 width=150></td>
                                                         <td><?php echo TemplateView::noHTML($tripTemplate->getName()); ?></td>
                                                         <td><?php echo TemplateView::noHTML($tripTemplate->getDescription()); ?></td>
                                                         <td><?php echo TemplateView::noHTML($tripTemplate->getMinAllocation()); ?></td>

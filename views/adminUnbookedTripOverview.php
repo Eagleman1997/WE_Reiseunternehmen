@@ -5,6 +5,7 @@
  */
 use views\TemplateView;
 use entities\TripTemplate;
+use helpers\DefaultPath;
 
 isset($this->tripTemplate) ? $tripTemplate = $this->tripTemplate : $tripTemplate = new TripTemplate();
 isset($this->hotels) ? $hotels = $this->hotels : $hotels = array();
@@ -45,7 +46,7 @@ if(isset($this->tripTemplate) and $this->tripTemplate and $tripTemplate->getDayp
                                     </thead>
                                     <tbody id="tripTableBody">
                                         <tr>
-                                            <td><img src="<?php echo TemplateView::noHTML($tripTemplate->getPicturePath()); ?>" alt="Not available" border=3 width=150></td>
+                                            <td><img src="<?php if(file_exists($tripTemplate->getPicturePath())){echo TemplateView::noHTML($tripTemplate->getPicturePath());}else{echo DefaultPath::getTripTemplate();} ?>" alt="Not available" border=3 width=150></td>
                                             <td><?php echo TemplateView::noHTML($tripTemplate->getName()); ?></td>
                                             <td><?php echo TemplateView::noHTML($tripTemplate->getDescription()); ?></td>
                                             <td><?php echo TemplateView::noHTML($tripTemplate->getMinAllocation()); ?></td>
@@ -95,11 +96,11 @@ if(isset($this->tripTemplate) and $this->tripTemplate and $tripTemplate->getDayp
                                                 <?php foreach ($dayprograms as $dayprogram): ?>
                                                     <tr>
                                                         <td><?php echo TemplateView::noHTML($dayprogram->getDayNumber()); ?></td>
-                                                        <td><img src="<?php echo TemplateView::noHTML($dayprogram->getPicturePath()); ?>" alt="Not available" border=3 width=150></td>
+                                                        <td><img src="<?php if(file_exists($dayprogram->getPicturePath())){echo TemplateView::noHTML($dayprogram->getPicturePath());}else{echo DefaultPath::getDayprogram();} ?>" alt="Not available" border=3 width=150></td>
                                                         <td><?php echo TemplateView::noHTML($dayprogram->getName()); ?> </td>
                                                         <td><?php echo TemplateView::noHTML($dayprogram->getDescription()); ?> </td>
                                                         <td><?php if($dayprogram->getHotel()){echo TemplateView::noHTML($dayprogram->getHotel()->getName());} ?> </td>
-                                                        <td><?php if($dayprogram->getHotel()): ?><img src="<?php echo TemplateView::noHTML($dayprogram->getHotel()->getPicturePath()); ?>" alt="Not available" border=3 width=150><?php endif; ?></td>
+                                                        <td><?php if($dayprogram->getHotel()): ?><img src="<?php if(file_exists($dayprogram->getHotel()->getPicturePath())){echo TemplateView::noHTML($dayprogram->getHotel()->getPicturePath());}else{echo DefaultPath::getHotel();} ?>" alt="Not available" border=3 width=150><?php endif; ?></td>
                                                         <td><?php if($dayprogram->getHotel()){echo TemplateView::noHTML($dayprogram->getHotel()->getDescription());} ?> </td>
                                                         <td><?php if($dayprogram->getHotel()){echo TemplateView::noHTML($dayprogram->getHotel()->getPricePerPerson());} ?> </td>
                                                         <?php if(!$tripTemplate->getBookable()): ?>
