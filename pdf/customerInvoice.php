@@ -262,6 +262,7 @@ if($trip->getInsurance() == NULL) {
 $pdf->AliasNbPages();
 $pdf->AddPage();
 $pdf->CreateTable();
+$pdf->SetTitle('Customer invoice');
 
 
 
