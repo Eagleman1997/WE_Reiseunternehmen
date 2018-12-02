@@ -218,7 +218,7 @@ function getGender($gender) {
         return "Mrs.";
     }
 }
-// gender helper
+// due date calculator 
 function getDueDate($date) {
 $date = date('Y-m-d',strtotime("+30days",strtotime($date)));
 return $date;
@@ -240,21 +240,23 @@ $pdf->dueDate = getDueDate($trip->getBookingDate());;
 $pdf->tripName = $trip->getTripTemplate()->getName();
 $pdf->tripDescription = "Trip";
 $pdf->numberOfPersons = $trip->getNumOfParticipation();
-$pdf->tripCostPerPerson = number_format(round($trip->getCustomerPrice()/$trip->getNumOfParticipation(),2),2);
-$pdf->tripSubtotal = number_format($trip->getCustomerPrice(),2);
+$pdf->VAT = number_format(round((($trip->getCustomerPrice())/100*7.7),2),2);
+$pdf->totalCost  = number_format(round($trip->getCustomerPrice(),2),2);
 
 if($trip->getInsurance() == NULL) {
+    $pdf->tripCostPerPerson = number_format(round(($trip->getCustomerPrice())/$trip->getNumOfParticipation(),2),2);
+    $pdf->tripSubtotal = number_format(($trip->getCustomerPrice()),2);
     $pdf->insuranceDescription = "No insurance";
     $pdf->insuranceSubtotal = "-";
     $pdf->insuranceCostPerPerson  = "-";
-    $pdf->VAT = number_format(round((($trip->getCustomerPrice())/100*7.7),2),2);
-    $pdf->totalCost  = number_format(round($trip->getCustomerPrice(),2),2);
+
 } else {
+    $pdf->tripCostPerPerson = number_format(round(($trip->getCustomerPrice() - $trip->getInsuranceCustomerPrice())/$trip->getNumOfParticipation(),2),2);
+    $pdf->tripSubtotal = number_format(($trip->getCustomerPrice() - $trip->getInsuranceCustomerPrice()),2);
     $pdf->insuranceDescription = "Insurance";
     $pdf->insuranceSubtotal = $trip->getInsuranceCustomerPrice();
     $pdf->insuranceCostPerPerson  = round($trip->getInsuranceCustomerPrice()/$trip->getNumOfParticipation(),2);
-    $pdf->VAT = number_format(round((($trip->getCustomerPrice()+$trip->getInsuranceCustomerPrice())/100*7.7),2),2);
-    $pdf->totalCost  = number_format(round($trip->getCustomerPrice()+$trip->getInsuranceCustomerPrice(),2),2);
+
 }
 
 $pdf->AliasNbPages();
