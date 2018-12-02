@@ -60,7 +60,7 @@ isset($this->hotels) ? $hotels = $this->hotels : $hotels = array();
                                                 <th>Image</th>
                                                 <th>Hotel name</th>
                                                 <th>Description</th>
-                                                <th>Price per person</th>
+                                                <th>Price per person in CHF</th>
                                                 <th>Delete</th>
                                             </tr>
                                         </thead>
