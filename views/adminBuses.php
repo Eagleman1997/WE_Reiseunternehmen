@@ -26,7 +26,7 @@ isset($this->buses) ? $buses = $this->buses : $buses = array();
                 </ul>
             </div>
             <div class="page-content-wrapper">
-                <div class="container-fluid" style="background-image: url(&quot;assets/img/rome.jpg&quot;);background-position: center;background-size: cover;background-repeat: no-repeat;min-height: 900px;margin-bottom: 0px;padding-bottom: 40px;"><a class="btn btn-link bg-light" role="button" href="#menu-toggle" id="menu-toggle"><i class="fa fa-bars"></i></a>
+                <div class="container-fluid" style="background-image: url(&quot;assets/img/rome.jpg&quot;);background-position: center;background-size: cover;background-repeat: no-repeat;min-height: 100vh;margin-bottom: 0px;padding-bottom: 40px;"><a class="btn btn-link bg-light" role="button" href="#menu-toggle" id="menu-toggle"><i class="fa fa-bars"></i></a>
                     <h2 class="text-center" style="font-family: Capriola, sans-serif;color: #000000;"><strong>Add a new bus.</strong></h2>
                     <div style="overflow-x: auto;">
                     <form class="form-inline pulse animated" action="<?php echo $GLOBALS['ROOT_URL'] ?>/admin/buses" method="post" enctype="multipart/form-data" id="busForm" style="background-color: rgba(255,255,255,0.72);margin: 20px;padding: 20px;font-family: Capriola, sans-serif;">
