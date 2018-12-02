@@ -76,8 +76,8 @@ if (isset($this->trip) and $trip) {
                                             <td><?php echo TemplateView::noHTML($trip->getDepartureDate()); ?></td>
                                             <?php if($trip->getInsurance()): ?><td><?php echo TemplateView::noHTML($trip->getInsurance()->getName()); ?></td><?php endif; ?>
                                             <td><?php if($tripTemplate and $tripTemplate->getBus()){echo TemplateView::noHTML($tripTemplate->getBus()->getName()) . " (seats: " . TemplateView::noHTML($tripTemplate->getBus()->getSeats()) . ")";} ?></td>
-                                            <td><?php echo TemplateView::noHTML($trip->getPrice()); ?></td>
-                                            <td><?php echo TemplateView::noHTML($trip->getCustomerPrice()); ?></td>
+                                            <td><?php echo TemplateView::noHTML(number_format($trip->getPrice(),2)); ?></td>
+                                            <td><?php echo TemplateView::noHTML(number_format($trip->getCustomerPrice(),2)); ?></td>
                                         </tr>
                                     </tbody>
                                 </table>
@@ -195,7 +195,7 @@ if (isset($this->trip) and $trip) {
                                                         <td><?php if ($dayprogram->getHotel()){echo TemplateView::noHTML($dayprogram->getHotel()->getName());} ?></td>
                                                         <td><?php if ($dayprogram->getHotel()): ?><img src="<?php if(file_exists($dayprogram->getHotel()->getPicturePath())){echo TemplateView::noHTML($dayprogram->getHotel()->getPicturePath());}else{echo DefaultPath::getHotel();} ?>" alt="Not available" border=3 width=150><?php endif; ?></td>
                                                         <td><?php if ($dayprogram->getHotel()){echo TemplateView::noHTML($dayprogram->getHotel()->getDescription());} ?></td>
-                                                        <td><?php if ($dayprogram->getHotel()){echo TemplateView::noHTML($dayprogram->getHotel()->getPricePerPerson());} ?></td>
+                                                        <td><?php if ($dayprogram->getHotel()){echo TemplateView::noHTML(number_format($dayprogram->getHotel()->getPricePerPerson(),2));} ?></td>
                                                     </tr>
                                                 <?php endforeach; ?>
                                             </tbody>
@@ -278,7 +278,7 @@ if (isset($this->trip) and $trip) {
                                                     <td><?php echo $invoice->getType(); ?></td>
                                                     <td><?php echo $invoice->getDescription(); ?></td>
                                                     <td><?php echo $invoice->getDate(); ?></td>
-                                                    <td><?php echo $invoice->getPrice(); ?></td>
+                                                    <td><?php echo (number_format($invoice->getPrice(),2)); ?></td>
                                                     <td><a href="<?php if(file_exists($invoice->getPdfPath())){echo TemplateView::noHTML($invoice->getPdfPath());}else{echo DefaultPath::getInvoice();} ?>" download="<?php if(file_exists($invoice->getPdfPath())){echo TemplateView::noHTML($invoice->getFileName());}else{echo DefaultPath::getInvoiceFileName();} ?>">
                                                             <img src="assets/img/paper-clip.png" alt="Download" width="25px" height="25px">
                                                         </a></td>
