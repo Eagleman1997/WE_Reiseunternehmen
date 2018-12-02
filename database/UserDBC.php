@@ -319,4 +319,22 @@ class UserDBC extends DBConnector {
         return $this->executeInsert($stmt);
     }
     
+        public function checkByEmail($email){
+        $stmt = $this->mysqliInstance->prepare("SELECT * FROM user where email = ? and deleted = ?");
+        if(!$stmt){
+            return false;
+        }
+        $stmt->bind_param('si', $email, $deleted);
+        $deleted = intval(false);
+        $stmt->execute();
+        $userObj = $stmt->get_result()->fetch_object("entities\User");
+        
+        //checks whether the given email from a User exists
+        $stmt->close();
+        if($userObj){
+            return true;
+        }else{
+            return false;
+        }
+    }
 }
