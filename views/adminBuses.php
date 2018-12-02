@@ -34,7 +34,7 @@ isset($this->buses) ? $buses = $this->buses : $buses = array();
                         <div class="form-group" style="margin: 10px;width: 400px;"><label class="labelsFormTripTemplates">Description</label><textarea class="form-control" name="description" required="" minlength="3" style="width: 400px;"></textarea></div>
                         <div class="form-group" style="margin: 10px;width: 400px;"><label class="labelsFormTripTemplates" style="width: 400px; text-align: left; display:block;">Number of seats</label><input class="form-control" type="number" name="seats" value="12" required="" min="12" step="1" style="width: 100px;"></div>
                         <div
-                            class="form-group" style="margin: 10px;width: 400px;"><label class="labelsFormTripTemplates" style="width: 400px; text-align: left; display:block;">Price per day</label><input class="form-control" type="number" name="pricePerDay" step="0.05" required="" min="1"></div>
+                            class="form-group" style="margin: 10px;width: 400px;"><label class="labelsFormTripTemplates" style="width: 400px; text-align: left; display:block;">Price per day in CHF</label><input class="form-control" type="number" name="pricePerDay" step="0.05" required="" min="1"></div>
                         <div class="form-group mt-auto" style="margin: 10px;width: 400px;margin-right: 2000px;"><label class="labelsFormTripTemplates" style="width: 400px; text-align: left; display:block;">Picture</label><input type="file" name="img" required="" style="background-color: transparent;"></div>
                         <div class="form-group mt-auto"
                              style="margin: 10px;width: 400px;"><button class="btn btn-primary btn-block" type="submit" style="width: 100px; margin-top: 20px;">Save</button></div>
@@ -61,7 +61,7 @@ isset($this->buses) ? $buses = $this->buses : $buses = array();
                                                 <th>Bus name</th>
                                                 <th>Description</th>
                                                 <th>Number of seats</th>
-                                                <th>Price per day</th>
+                                                <th>Price per day in CHF</th>
                                                 <th>Delete</th>
                                             </tr>
                                         </thead>
@@ -72,7 +72,7 @@ isset($this->buses) ? $buses = $this->buses : $buses = array();
                                                     <td><?php echo TemplateView::noHTML($bus->getName()); ?> </td>
                                                     <td><?php echo TemplateView::noHTML($bus->getDescription()); ?> </td>
                                                     <td><?php echo TemplateView::noHTML($bus->getSeats()); ?> </td>
-                                                    <td><?php echo TemplateView::noHTML($bus->getPricePerDay()); ?> </td>
+                                                    <td><?php echo TemplateView::noHTML(number_format($bus->getPricePerDay(),2)); ?> </td>
                                                     <td><form id="deleteBus<?php echo $bus->getId(); ?>" action="<?php echo $GLOBALS['ROOT_URL'] ?>/admin/buses/<?php echo $bus->getId(); ?>" method="post">
                                                         <input type="hidden" name="_method" value="DELETE"><img src="assets/img/Recycle_Bin.png" alt="Remove"  border=3 height=20 width=20 onclick="deleteHandler(<?php echo $bus->getId(); ?>)"></form></td>
                                                 </tr>

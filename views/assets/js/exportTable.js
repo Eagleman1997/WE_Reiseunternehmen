@@ -32,7 +32,11 @@ function export_table_to_csv(html, filename) {
         var row = [], cols = rows[i].querySelectorAll("td, th");
             
         for (var j = 0; j < cols.length-2; j++)
-            row.push(cols[j].innerText);
+            // Replace commas inside cells in order to prevent incorrect delimits
+            row.push(cols[j].innerText.replace(",", " "));    
+        
+            // Without replacing commas
+            // row.push(cols[j].innerText);
 
         csv.push(row.join(","));
     }

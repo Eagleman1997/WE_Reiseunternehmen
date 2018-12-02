@@ -37,7 +37,9 @@ if(isset($this->trip) and $trip){
     <div class="border rounded-0 register-photo" style="font-family: Capriola, sans-serif;background-size: auto;min-height: 100vh;padding-top: 0px;">
         <div style="padding-bottom: 52px;">
             <div class="container-fluid" style="margin-top: 81px;">
-                <h2 class="text-center" style="margin-bottom: 16px;"><strong>Overview of your booked trip.</strong><br></h2>
+                <h2 class="text-center" style="margin-bottom: 16px;"><strong>
+                    Overview of your booked trip "<?php echo TemplateView::noHTML($tripTemplate->getName() . "\"."); ?>
+                    </strong><br></h2>
                 <div class="scrollableDiv"><!DOCTYPE html>
                     <html lang="en">
                         <head>
@@ -68,7 +70,7 @@ if(isset($this->trip) and $trip){
                                             <td><?php echo TemplateView::noHTML($trip->getDepartureDate()); ?></td>
                                             <?php if($trip->getInsurance()): ?><td><?php echo TemplateView::noHTML($trip->getInsurance()->getName()); ?></td><?php endif; ?>
                                             <td><img src="<?php if($tripTemplate and $tripTemplate->getBus()){if(file_exists($tripTemplate->getBus()->getPicturePath())){echo TemplateView::noHTML($tripTemplate->getBus()->getPicturePath());}else{echo DefaultPath::getBus();}} ?>" alt="Not available" border=3 width=150></td>
-                                            <td><?php echo TemplateView::noHTML($trip->getCustomerPrice()); ?></td>
+                                            <td><?php echo TemplateView::noHTML(number_format($trip->getCustomerPrice(),2)); ?></td>
                                         </tr>
                                     </tbody>
                                 </table>
@@ -200,7 +202,7 @@ if(isset($this->trip) and $trip){
                                 <tr>
                                     <td>Final invoice for trip "<?php echo $trip->getTripTemplate()->getName(); ?>"</td>
                                     <td><?php echo $trip->getDepartureDate(); ?></td>
-                                    <td><?php echo $trip->getCustomerPrice()." CHF"; ?></td>
+                                    <td><?php echo (number_format($trip->getCustomerPrice(),2))." CHF"; ?></td>
                                     <td><!--<a href="assets/img/Beach.jpg" download="Name of file">--><a href="<?php echo $GLOBALS['ROOT_URL'] ?>/bookedTrips/detail/invoices/<?php echo $trip->getId(); ?>" >
                                             <img src="assets/img/paper-clip.png" alt="Download" width="25px" height="25px">
                                         </a>

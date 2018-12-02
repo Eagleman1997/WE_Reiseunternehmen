@@ -33,7 +33,7 @@ isset($this->hotels) ? $hotels = $this->hotels : $hotels = array();
                         
                         <div class="form-group" style="margin: 10px;width: 400px;"><label class="labelsFormTripTemplates">Hotel name</label><textarea class="form-control" name="name" required="" minlength="3" style="width: 400px;"></textarea></div>
                         <div class="form-group" style="margin: 10px;width: 400px;"><label class="labelsFormTripTemplates">Description</label><textarea class="form-control" name="description" required="" minlength="3" style="width: 400px;margin-right: 0px;"></textarea></div>
-                        <div class="form-group" style="margin: 10px;width: 400px;"><label class="labelsFormTripTemplates" style="width: 400px; text-align: left; display:block;">Price per person</label><input class="form-control" type="number" step="0.05" name="pricePerPerson" required="" min="1"></div>
+                        <div class="form-group" style="margin: 10px;width: 400px;"><label class="labelsFormTripTemplates" style="width: 400px; text-align: left; display:block;">Price per person in CHF</label><input class="form-control" type="number" step="0.05" name="pricePerPerson" required="" min="1"></div>
                         <div class="form-group mt-auto" style="margin: 10px;width: 400px;margin-right: 2000px;"><label class="labelsFormTripTemplates" style="width: 400px; text-align: left; display:block;">Picture</label><input type="file" name="img" required="" style="width: 400px;background-color: transparent;"></div>
                         <div
                             class="form-group mt-auto" style="margin: 10px;width: 400px;"><button class="btn btn-primary btn-block" type="submit" style="width: 100px; margin-top: 20px;">Save</button></div>
@@ -60,7 +60,7 @@ isset($this->hotels) ? $hotels = $this->hotels : $hotels = array();
                                                 <th>Image</th>
                                                 <th>Hotel name</th>
                                                 <th>Description</th>
-                                                <th>Price per person</th>
+                                                <th>Price per person in CHF</th>
                                                 <th>Delete</th>
                                             </tr>
                                         </thead>
@@ -70,7 +70,7 @@ isset($this->hotels) ? $hotels = $this->hotels : $hotels = array();
                                                     <td><img src="<?php if(file_exists($hotel->getPicturePath())){echo TemplateView::noHTML($hotel->getPicturePath());}else{echo DefaultPath::getHotel();} ?>" alt="Not available" border=3 width=150></td>
                                                     <td><?php echo TemplateView::noHTML($hotel->getName()); ?> </td>
                                                     <td><?php echo TemplateView::noHTML($hotel->getDescription()); ?> </td>
-                                                    <td><?php echo TemplateView::noHTML($hotel->getPricePerPerson()); ?> </td>
+                                                    <td><?php echo TemplateView::noHTML(number_format($hotel->getPricePerPerson(),2)); ?> </td>
                                                     <td><form id="deleteHotel<?php echo $hotel->getId(); ?>" action="<?php echo $GLOBALS['ROOT_URL'] ?>/admin/hotels/<?php echo $hotel->getId(); ?>" method="post">
                                                         <input type="hidden" name="_method" value="DELETE"><img src="assets/img/Recycle_Bin.png" alt="Remove"  border=3 height=20 width=20 onclick="deleteHandler(<?php echo $hotel->getId(); ?>)"></form></td>
                                                 </tr>

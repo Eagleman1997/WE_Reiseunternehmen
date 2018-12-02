@@ -43,7 +43,7 @@ if (isset($this->trip) and $trip) {
         <div style="padding-bottom: 52px;">
             <div class="container-fluid" style="margin-top: 81px;">
                 <h2 class="text-center" style="margin-bottom: 16px;"><strong>
-                        <?php echo TemplateView::noHTML($user->getFirstName() . " " . $user->getLastName() . " booked " . $tripTemplate->getName() . "."); ?>
+                        <?php echo TemplateView::noHTML($user->getFirstName() . " " . $user->getLastName() . " booked the trip \"" . $tripTemplate->getName() . "\"."); ?>
                     </strong></h2>
                 <div class="scrollableDiv"><!DOCTYPE html>
                     <html lang="en">
@@ -76,8 +76,8 @@ if (isset($this->trip) and $trip) {
                                             <td><?php echo TemplateView::noHTML($trip->getDepartureDate()); ?></td>
                                             <?php if($trip->getInsurance()): ?><td><?php echo TemplateView::noHTML($trip->getInsurance()->getName()); ?></td><?php endif; ?>
                                             <td><?php if($tripTemplate and $tripTemplate->getBus()){echo TemplateView::noHTML($tripTemplate->getBus()->getName()) . " (seats: " . TemplateView::noHTML($tripTemplate->getBus()->getSeats()) . ")";} ?></td>
-                                            <td><?php echo TemplateView::noHTML($trip->getPrice()); ?></td>
-                                            <td><?php echo TemplateView::noHTML($trip->getCustomerPrice()); ?></td>
+                                            <td><?php echo TemplateView::noHTML(number_format($trip->getPrice(),2)); ?></td>
+                                            <td><?php echo TemplateView::noHTML(number_format($trip->getCustomerPrice(),2)); ?></td>
                                         </tr>
                                     </tbody>
                                 </table>
@@ -195,7 +195,7 @@ if (isset($this->trip) and $trip) {
                                                         <td><?php if ($dayprogram->getHotel()){echo TemplateView::noHTML($dayprogram->getHotel()->getName());} ?></td>
                                                         <td><?php if ($dayprogram->getHotel()): ?><img src="<?php if(file_exists($dayprogram->getHotel()->getPicturePath())){echo TemplateView::noHTML($dayprogram->getHotel()->getPicturePath());}else{echo DefaultPath::getHotel();} ?>" alt="Not available" border=3 width=150><?php endif; ?></td>
                                                         <td><?php if ($dayprogram->getHotel()){echo TemplateView::noHTML($dayprogram->getHotel()->getDescription());} ?></td>
-                                                        <td><?php if ($dayprogram->getHotel()){echo TemplateView::noHTML($dayprogram->getHotel()->getPricePerPerson());} ?></td>
+                                                        <td><?php if ($dayprogram->getHotel()){echo TemplateView::noHTML(number_format($dayprogram->getHotel()->getPricePerPerson(),2));} ?></td>
                                                     </tr>
                                                 <?php endforeach; ?>
                                             </tbody>
@@ -265,7 +265,7 @@ if (isset($this->trip) and $trip) {
                                                 <th>Invoice type</th>
                                                 <th>Description</th>
                                                 <th>Date</th>
-                                                <th>Amount</th>
+                                                <th>Amount in CHF</th>
                                                 <th>Download PDF</th>
                                                 <?php if (!$trip->getInvoicesRegistered()): ?>
                                                     <th>Delete</th>
@@ -278,7 +278,7 @@ if (isset($this->trip) and $trip) {
                                                     <td><?php echo $invoice->getType(); ?></td>
                                                     <td><?php echo $invoice->getDescription(); ?></td>
                                                     <td><?php echo $invoice->getDate(); ?></td>
-                                                    <td><?php echo $invoice->getPrice(); ?></td>
+                                                    <td><?php echo (number_format($invoice->getPrice(),2)); ?></td>
                                                     <td><a href="<?php if(file_exists($invoice->getPdfPath())){echo TemplateView::noHTML($invoice->getPdfPath());}else{echo DefaultPath::getInvoice();} ?>" download="<?php if(file_exists($invoice->getPdfPath())){echo TemplateView::noHTML($invoice->getFileName());}else{echo DefaultPath::getInvoiceFileName();} ?>">
                                                             <img src="assets/img/paper-clip.png" alt="Download" width="25px" height="25px">
                                                         </a></td>
@@ -313,7 +313,7 @@ if (isset($this->trip) and $trip) {
                                             class="form-group"><label class="labelsFormDayProgram" style="width: 300px; text-align: left; display:block;">Description of invoice</label><textarea class="form-control" name="description" required="" minlength="3" id="description" style="height: 100px; width: 400px;"></textarea></div>
                                         <div
                                             class="form-group"><label class="labelsFormDayProgram" style="width: 300px; text-align: left; display:block;">Date of invoice</label><input class="form-control" type="date" name="date" required="" id="date" style="width: 400px;"></div>
-                                        <div class="form-group"><label class="labelsFormDayProgram" style="width: 300px; text-align: left; display:block;">Amount of invoice</label><input class="form-control" type="number" name="price" required="" min="0" step="0.05" id="price" style="width: 400px;"></div>
+                                        <div class="form-group"><label class="labelsFormDayProgram" style="width: 300px; text-align: left; display:block;">Amount of invoice in CHF</label><input class="form-control" type="number" name="price" required="" min="0" step="0.05" id="price" style="width: 400px;"></div>
                                         <div class="form-group mt-auto"><label class="labelsFormDayProgram" style="width: 300px; text-align: left; display:block;">PDF of invoice</label><input type="file" name="invoice" required="" id="pdfPath" style="background: transparent; width: 400px;"></div>
                                         <button
                                             class="btn btn-primary btn-block" type="submit">Save</button>
