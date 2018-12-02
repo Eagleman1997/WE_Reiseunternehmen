@@ -59,7 +59,7 @@ if (isset($this->tripTemplate) and $this->tripTemplate and $tripTemplate->getDay
                                             <td><?php echo TemplateView::noHTML($tripTemplate->getMinAllocation()); ?></td>
                                             <td><?php echo TemplateView::noHTML($tripTemplate->getMaxAllocation()); ?></td>
                                             <td><img src="<?php if ($tripTemplate->getBus()){if(file_exists($tripTemplate->getBus()->getPicturePath())){echo TemplateView::noHTML($tripTemplate->getBus()->getPicturePath());}else{echo DefaultPath::getBus();}} ?>" alt="Not available" border=3 width=150></td>
-                                            <td><?php echo TemplateView::noHTML($tripTemplate->getCustomerPrice()); ?></td>
+                                            <td><?php echo TemplateView::noHTML(number_format($tripTemplate->getCustomerPrice(),2)); ?></td>
                                             <td><?php if($tripTemplate->getCustomerPrice()){echo TemplateView::noHTML(round(($tripTemplate->getCustomerPrice() / $tripTemplate->getMinAllocation()) * 20, 0) / 20);} ?></td>
                                         </tr>
                                     </tbody>
@@ -223,7 +223,7 @@ if (isset($this->tripTemplate) and $this->tripTemplate and $tripTemplate->getDay
                         actualPrice = (Math.round(actualPrice / 0.05) * 0.05).toFixed(2);
 
                         // Add that data to the input
-                        document.getElementById("price").value = actualPrice;
+                        document.getElementById("price").value = number_format(actualPrice,2);
 
                     }
 
