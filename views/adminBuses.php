@@ -61,7 +61,7 @@ isset($this->buses) ? $buses = $this->buses : $buses = array();
                                                 <th>Bus name</th>
                                                 <th>Description</th>
                                                 <th>Number of seats</th>
-                                                <th>Price per day</th>
+                                                <th>Price per day in CHF</th>
                                                 <th>Delete</th>
                                             </tr>
                                         </thead>
