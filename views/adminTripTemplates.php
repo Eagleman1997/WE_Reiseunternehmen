@@ -26,7 +26,7 @@ isset($this->tripTemplates) ? $tripTemplates = $this->tripTemplates : $tripTempl
                 </ul>
             </div>
             <div class="page-content-wrapper">
-                <div class="container-fluid" style="background-image: url(&quot;assets/img/Mountains.jpg&quot;);background-position: center;background-size: cover;background-repeat: no-repeat;padding-bottom: 33px;height: 100vh;"><a class="btn btn-link bg-light" role="button" href="#menu-toggle" id="menu-toggle"><i class="fa fa-bars"></i></a>
+                <div class="container-fluid" style="background-image: url(&quot;assets/img/Mountains.jpg&quot;);background-position: center;background-size: cover;background-repeat: no-repeat;padding-bottom: 33px;min-height: 100vh;"><a class="btn btn-link bg-light" role="button" href="#menu-toggle" id="menu-toggle"><i class="fa fa-bars"></i></a>
                     <h2 class="text-center" style="font-family: Capriola, sans-serif;color: #000000;"><strong>Create a new trip template.</strong></h2>
                     <div style="overflow-x: auto;">
                         <form class="form-inline pulse animated" action="<?php echo $GLOBALS['ROOT_URL'] ?>/admin/tripTemplates" method="post" enctype="multipart/form-data" id="tripTemplateForm" style="background-color: rgba(255,255,255,0.6);margin: 20px;padding: 20px;font-family: Capriola, sans-serif;">
