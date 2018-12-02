@@ -313,7 +313,7 @@ if (isset($this->trip) and $trip) {
                                             class="form-group"><label class="labelsFormDayProgram" style="width: 300px; text-align: left; display:block;">Description of invoice</label><textarea class="form-control" name="description" required="" minlength="3" id="description" style="height: 100px; width: 400px;"></textarea></div>
                                         <div
                                             class="form-group"><label class="labelsFormDayProgram" style="width: 300px; text-align: left; display:block;">Date of invoice</label><input class="form-control" type="date" name="date" required="" id="date" style="width: 400px;"></div>
-                                        <div class="form-group"><label class="labelsFormDayProgram" style="width: 300px; text-align: left; display:block;">Amount of invoice</label><input class="form-control" type="number" name="price" required="" min="0" step="0.05" id="price" style="width: 400px;"></div>
+                                        <div class="form-group"><label class="labelsFormDayProgram" style="width: 300px; text-align: left; display:block;">Amount of invoice in CHF</label><input class="form-control" type="number" name="price" required="" min="0" step="0.05" id="price" style="width: 400px;"></div>
                                         <div class="form-group mt-auto"><label class="labelsFormDayProgram" style="width: 300px; text-align: left; display:block;">PDF of invoice</label><input type="file" name="invoice" required="" id="pdfPath" style="background: transparent; width: 400px;"></div>
                                         <button
                                             class="btn btn-primary btn-block" type="submit">Save</button>
