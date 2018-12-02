@@ -342,7 +342,7 @@ Router::route_auth("GET", "admin/bookedTrips/detail/finalSettlement/{id}", $auth
 });
 
 Router::route("POST", "ajax", function () {
-    if(!AjaxController::checkEmail($_POST['email'])){
+    if(!AjaxController::checkEmail()){
         HTTPHeader::setStatusHeader(HTTPStatusCode::HTTP_204_NO_CONTENT);
     }
 });
