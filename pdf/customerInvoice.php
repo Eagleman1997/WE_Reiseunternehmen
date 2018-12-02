@@ -10,7 +10,7 @@ $newTrip = $trip->find();
 
 */
 
-include("../fpdf/fpdf.php");
+include("fpdf/fpdf.php");
 
 // Calculate DueDate
     $date = new DateTime();
@@ -81,7 +81,7 @@ function Header()
     // A4 ist 210mm
         
     // Logo
-    $this->Image('logo.jpeg',90,6,30);
+    $this->Image('pdf/logo.jpeg',90,6,30);
     $this->Ln(30);
     
     // Line(float x1, float y1, float x2, float y2)
