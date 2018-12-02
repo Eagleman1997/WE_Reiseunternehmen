@@ -90,3 +90,4 @@ use views\TemplateView;
         <script src="https://cdnjs.cloudflare.com/ajax/libs/pikaday/1.6.1/pikaday.min.js"></script>
         <script src="https://unpkg.com/@bootstrapstudio/bootstrap-better-nav/dist/bootstrap-better-nav.min.js"></script>
         <script src="assets/js/Sidebar-Menu.js"></script>
+        <noscript>Yes, we remembered the noscript tag. Please activate JavaScript to use the full potential of this website. </noscript>
