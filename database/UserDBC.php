@@ -45,13 +45,20 @@ class UserDBC extends DBConnector {
      * @return String stored (hashed) password if query was successful
      *         boolean false if query failed (usually email is not stored in database)
      */
-    public function findUserByEmail($user){
+    public function findUserByEmail($search, $inputType = "object"){
         $stmt = $this->mysqliInstance->prepare("SELECT * FROM user where email = ? and deleted = ?");
         if(!$stmt){
             return false;
         }
         $stmt->bind_param('si', $email, $deleted);
-        $email = $user->getEmail();
+        if ($inputType == "object") {
+        $email = $search->getEmail();
+        } elseif ($inputType == "email") {
+            $email = $search;
+        } else {
+            exit;
+            
+        }
         $deleted = intval(false);
         $stmt->execute();
         $userObj = $stmt->get_result()->fetch_object("entities\User");
@@ -59,7 +66,11 @@ class UserDBC extends DBConnector {
         //checks whether the given email from a User exists
         $stmt->close();
         if($userObj){
-            return $userObj;
+            if ($inputType == "object") {
+                return $userObj;
+            } else {
+                return true;
+            }
         }else{
             return false;
         }
