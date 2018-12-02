@@ -56,7 +56,7 @@ isset($this->trips) ? $trips = $this->trips : $trips = array();
                                     <p class="text-muted card-text"><?php echo TemplateView::noHTML($tripTemplate->getDescription()); ?></p>
                                     
                                     <strong style="border-radius: 5px; padding: 5px; padding-left: 0px; color: black;"class="priceTag">from</strong>
-                                    <strong style="border-radius: 5px; padding: 5px; background-color: royalblue; color: white; border: 1px solid white;"class="priceTag">CHF &nbsp <?php echo TemplateView::noHTML($tripTemplate->getCustomerPrice()); ?></strong></div>
+                                    <strong style="border-radius: 5px; padding: 5px; background-color: royalblue; color: white; border: 1px solid white;"class="priceTag">CHF &nbsp <?php echo TemplateView::noHTML(number_format($tripTemplate->getCustomerPrice(),2)); ?></strong></div>
                             </div>
                         </div>
                         <?php endforeach; ?>
