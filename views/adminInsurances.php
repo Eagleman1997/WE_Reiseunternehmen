@@ -24,7 +24,7 @@ isset($this->insurances) ? $insurances = $this->insurances : $insurances = array
                 </ul>
             </div>
             <div class="page-content-wrapper">
-                <div class="container-fluid" style="background-image: url(&quot;assets/img/europe%20skyline%20uncut.png&quot;);background-position: center;background-size: cover;background-repeat: no-repeat;padding-bottom: 26px;min-height: 800px;"><a class="btn btn-link" role="button" href="#menu-toggle" id="menu-toggle"><i class="fa fa-bars"></i></a>
+                <div class="container-fluid" style="background-image: url(&quot;assets/img/europe%20skyline%20uncut.png&quot;);background-position: center;background-size: cover;background-repeat: no-repeat;padding-bottom: 26px;min-height: 100vh;"><a class="btn btn-link" role="button" href="#menu-toggle" id="menu-toggle"><i class="fa fa-bars"></i></a>
                     <h2 class="text-center" style="font-family: Capriola, sans-serif;color: #000000;"><strong>Add a new insurance.</strong></h2>
                     <div style="overflow-x: auto;">
                     <form class="form-inline pulse animated" action="<?php echo $GLOBALS['ROOT_URL'] ?>/admin/insurances" method="post" id="insuranceForm" style="background-color: rgba(255,255,255,0.77);margin: 20px;padding: 20px;font-family: Capriola, sans-serif;">
