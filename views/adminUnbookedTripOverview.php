@@ -21,7 +21,7 @@ if(isset($this->tripTemplate) and $this->tripTemplate and $tripTemplate->getDayp
         <div style="padding-bottom: 52px;">
             <div class="container-fluid" style="margin-top: 81px;">
                 <h2 class="text-center" style="margin-bottom: 16px;"><strong>
-                    Overview of the trip template \"<?php echo TemplateView::noHTML($tripTemplate->getName() . "\"."); ?>.
+                    Overview of the trip template "<?php echo TemplateView::noHTML($tripTemplate->getName() . "\"."); ?>
                     </strong></h2>
                 <div class="scrollableDiv"><!DOCTYPE html>
                     <html lang="en">
