@@ -265,7 +265,7 @@ if (isset($this->trip) and $trip) {
                                                 <th>Invoice type</th>
                                                 <th>Description</th>
                                                 <th>Date</th>
-                                                <th>Amount</th>
+                                                <th>Amount in CHF</th>
                                                 <th>Download PDF</th>
                                                 <?php if (!$trip->getInvoicesRegistered()): ?>
                                                     <th>Delete</th>
