@@ -8,10 +8,16 @@ use database\UserDBC;
 /**
  * Ajax helper
  *
+  * @author Vanessa Cajochen
  */
+
 class AjaxController {
     
-    public static function checkEmail($email){
+    public static function checkEmail(){
+        $email = filter_input(\INPUT_POST, 'email', \FILTER_VALIDATE_EMAIL);
+        if(!$email){
+            return false;
+        }
         $user = new UserDBC();
         header('Content-type: application/json');
         if($user->checkByEmail($email)){
