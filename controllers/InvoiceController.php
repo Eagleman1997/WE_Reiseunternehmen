@@ -87,7 +87,7 @@ class InvoiceController{
         if(!$tripObj->getInvoicesRegistered()){
             return false;
         }
-        $_SESSION['tripId'] = $tripId;
+        $_SESSION['tripId'] = $id;
         include 'pdf/finalSettlement.php';
         unset($_SESSION['tripId']);
         return true;
@@ -113,7 +113,7 @@ class InvoiceController{
         if(($trip->getUser()->getId() != $_SESSION['userId']) and ($_SESSION['role'] != "admin")){
             return false;
         }
-        $_SESSION['tripId'] = $tripId;
+        $_SESSION['tripId'] = $id;
         include 'pdf/customerInvoice.php';
         unset($_SESSION['tripId']);
         return true;
