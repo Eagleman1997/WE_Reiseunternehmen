@@ -5,6 +5,7 @@ use http\HTTPException;
 use http\HTTPHeader;
 use http\HTTPStatusCode;
 
+use controllers\AjaxController;
 use controllers\AuthController;
 use controllers\BusController;
 use controllers\HotelController;
@@ -286,6 +287,7 @@ Router::route_auth("GET", "/admin/bookedTrips/detail/{id}", $authFunction, funct
     if(!TripController::getBookedTrip($id)){
         HTTPHeader::setStatusHeader(HTTPStatusCode::HTTP_204_NO_CONTENT);
     }
+    
 });
 
 Router::route_auth("POST", "/admin/bookedTrips/detail", $authFunction, function () {
@@ -323,7 +325,7 @@ Router::route_auth("PUT", "/admin/bookedTrips/detail/{id}/{id}", $authFunction, 
 
 Router::route_auth("GET", "/admin/bookedTrips/detail/invoices/{id}", $authFunction, function ($id) {
     if(!InvoiceController::getCustomersInvoice($id)){
-        HTTPHeader::setStatusHeader(HTTPStatusCode::HTTP_204_NO_CONTENT);
+       HTTPHeader::setStatusHeader(HTTPStatusCode::HTTP_204_NO_CONTENT);
     }
 });
 
@@ -335,6 +337,12 @@ Router::route_auth("GET", "/bookedTrips/detail/invoices/{id}", $authFunction, fu
 
 Router::route_auth("GET", "admin/bookedTrips/detail/finalSettlement/{id}", $authFunction, function ($id) {
     if(!InvoiceController::getFinalSettlement($id)){
+        HTTPHeader::setStatusHeader(HTTPStatusCode::HTTP_204_NO_CONTENT);
+    }
+});
+
+Router::route("POST", "ajax", function () {
+    if(!AjaxController::checkEmail($_POST['email'])){
         HTTPHeader::setStatusHeader(HTTPStatusCode::HTTP_204_NO_CONTENT);
     }
 });
