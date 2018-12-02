@@ -350,6 +350,7 @@ $pdf->grossProfit = number_format($grossProfit,2);
 $pdf->AliasNbPages();
 $pdf->AddPage();
 $pdf->CreateTable();
+$pdf->SetTitle('Final Settlement');
 
 
 $pdf->Output();
