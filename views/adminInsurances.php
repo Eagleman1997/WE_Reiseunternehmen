@@ -62,7 +62,7 @@ isset($this->insurances) ? $insurances = $this->insurances : $insurances = array
                                                 <tr>
                                                     <td><?php echo TemplateView::noHTML($insurance->getName()); ?> </td>
                                                     <td><?php echo TemplateView::noHTML($insurance->getDescription()); ?> </td>
-                                                    <td><?php echo TemplateView::noHTML($insurance->getPricePerPerson()); ?> </td>
+                                                    <td><?php echo TemplateView::noHTML(number_format($insurance->getPricePerPerson(),2)); ?> </td>
                                                     <td><form id="deleteInsurance<?php echo $insurance->getId(); ?>" action="<?php echo $GLOBALS['ROOT_URL'] ?>/admin/insurances/<?php echo $insurance->getId(); ?>" method="post">
                                                             <input type="hidden" name="_method" value="DELETE"><img src="assets/img/Recycle_Bin.png" alt="Remove"  border=3 height=20 width=20 onclick="deleteHandler(<?php echo $insurance->getId(); ?>)"></form></td>
                                                 </tr>
