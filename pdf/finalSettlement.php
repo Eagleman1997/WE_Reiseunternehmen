@@ -293,10 +293,22 @@ $busCalcCost = ($trip->getTripTemplate()->getBusPrice());
 $busActualCost = ($trip->getTripTemplate()->getBusPrice());
 $busDelta = (($busActualCost - $busCalcCost)/($busCalcCost/100));  
 
+if($trip->getInsurance() == NULL) {
+$insuranceCalcCost = "-";
+$insuranceActualCost = "-";
+$insuranceDelta = "-";
+$pdf->insuranceCalcCost = ($insuranceCalcCost);
+$pdf->insuranceActualCost = ($insuranceActualCost);
+$pdf->insuranceDelta = ($insuranceDelta);
+} else {
 $insuranceCalcCost = ($trip->getInsurancePrice());;
 $insuranceActualCost = ($trip->getInsurancePrice());;
 $insuranceDelta = (($insuranceActualCost - $insuranceCalcCost)/($insuranceCalcCost/100));
-
+$pdf->insuranceCalcCost = number_format($insuranceCalcCost,2);
+$pdf->insuranceActualCost = number_format($insuranceActualCost,2);
+$pdf->insuranceDelta = number_format($insuranceDelta,1);
+    
+}
 $calcCostTotal = $hotelCalcCost + $busCalcCost + $insuranceCalcCost;
 $actualCostTotal = $hotelActualCost + $busActualCost + $insuranceActualCost;
 $totalDelta = (($actualCostTotal - $calcCostTotal)/($calcCostTotal/100));
@@ -320,10 +332,8 @@ $pdf->hotelDelta = number_format($hotelDelta,1);
 $pdf->busCalcCost = number_format($busCalcCost,2);
 $pdf->busActualCost = number_format($busActualCost,2);
 $pdf->busDelta = number_format($busDelta,1);
-        
-$pdf->insuranceCalcCost = number_format($insuranceCalcCost,2);
-$pdf->insuranceActualCost = number_format($insuranceActualCost,2);
-$pdf->insuranceDelta = number_format($insuranceDelta,1);
+
+
 
 $pdf->calcCostTotal = number_format($calcCostTotal,2);
 $pdf->actualCostTotal = number_format($actualCostTotal,2);
