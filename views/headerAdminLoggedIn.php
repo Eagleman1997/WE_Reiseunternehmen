@@ -82,7 +82,7 @@ use views\TemplateView;
         <script src="https://cdnjs.cloudflare.com/ajax/libs/pikaday/1.6.1/pikaday.min.js"></script>
         <script src="https://unpkg.com/@bootstrapstudio/bootstrap-better-nav/dist/bootstrap-better-nav.min.js"></script>
         <script src="assets/js/Sidebar-Menu.js"></script>
-        <noscript data-aos="fade-up" data-aos-duration="700" data-aos-once="true" style="background-color: red; color: white; margin:10px;">Turn on your damned JavaScript! What is this, 1999?</noscript>
+        <noscript style="background-color: red; color: white; margin:10px;">Turn on your damned JavaScript! What is this, 1999?</noscript>
     </body>
 
 </html>
