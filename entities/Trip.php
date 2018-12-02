@@ -65,6 +65,19 @@ class Trip {
     }
     
     /**
+     * Provides the search for a Trip over the $_SESSION['tripId'] if set
+     * @param type $id
+     * @return type
+     */
+    public static function findTrip(){
+        $tripDBC = new TripDBC();
+        if(isset($_SESSION['tripId'])){
+            return $tripDBC->findTripById($_SESSION['tripId']);
+        }
+        return false;
+    }
+    
+    /**
      * Locks the InvoicesRegistered
      * @return boolean
      */

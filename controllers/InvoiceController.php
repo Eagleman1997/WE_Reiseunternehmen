@@ -87,9 +87,9 @@ class InvoiceController{
         if(!$tripObj->getInvoicesRegistered()){
             return false;
         }
-        $customerInvoice = new TemplateView("pdf/finalSettlement.php");
-        $customerInvoice->trip = $tripObj;
-        $customerInvoice->render();
+        $_SESSION['tripId'] = $tripId;
+        include 'pdf/finalSettlement.php';
+        unset($_SESSION['tripId']);
         return true;
     }
     
@@ -113,9 +113,9 @@ class InvoiceController{
         if(($trip->getUser()->getId() != $_SESSION['userId']) and ($_SESSION['role'] != "admin")){
             return false;
         }
-        $customerInvoice = new TemplateView("pdf/customerInvoice.php");
-        $customerInvoice->trip = $trip;
-        $customerInvoice->render();
+        $_SESSION['tripId'] = $tripId;
+        include 'pdf/customerInvoice.php';
+        unset($_SESSION['tripId']);
         return true;
     }
     

@@ -1,6 +1,7 @@
 <?php
 
 //namespace pdf;
+use entities\Trip;
 
 /*
 require_once '../entities/Trip.php';
@@ -11,6 +12,12 @@ $newTrip = $trip->find();
 */
 
 include("fpdf/fpdf.php");
+
+$trip = Trip::findTrip();
+if(!$trip){
+    exit();
+}
+
 
 // Calculate DueDate
     $date = new DateTime();
@@ -339,6 +346,7 @@ function CreateTable()
 }
 
 // Instanciation of inherited class
+ob_start();
 $pdf = new PDF();
 $pdf->AliasNbPages();
 $pdf->AddPage();
@@ -346,3 +354,4 @@ $pdf->CreateTable();
 
 
 $pdf->Output();
+ob_end_flush();
