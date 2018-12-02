@@ -147,7 +147,7 @@ if (isset($this->tripTemplate) and $this->tripTemplate and $tripTemplate->getDay
                                 <textarea name="insuranceDescription" id="txtAreaInsuranceDescription" readonly="" style="padding: 10px; min-width: 500px; min-height: 130px;"></textarea></div>
 
 
-                            <div><label style="margin-left: 0px;margin-top: 15px;color: #222222;" for="tripPrice"><strong>Price</strong></label><input class="form-control" value="<?php
+                            <div><label style="margin-left: 0px;margin-top: 15px;color: #222222;" for="tripPrice"><strong>Price in CHF</strong></label><input class="form-control" value="<?php
                                 if ($tripTemplate->getCustomerHotelPricePerPerson() and $tripTemplate->getCustomerBusPrice()) {
                                     echo $tripTemplate->getCustomerHotelPricePerPerson() + $tripTemplate->getCustomerBusPrice();
                                 }
