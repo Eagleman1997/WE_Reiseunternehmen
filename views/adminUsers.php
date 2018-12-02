@@ -25,7 +25,7 @@ isset($this->users) ? $users = $this->users : $users = array();
                 </ul>
             </div>
             <div class="page-content-wrapper">
-                <div class="container-fluid" style="background-image: url(&quot;assets/img/spanish%20beach.png&quot;);background-position: center;background-size: cover;background-repeat: no-repeat;margin-bottom: 0px;padding-bottom: 40px;min-height: 800px;"><a class="btn btn-link bg-light" role="button" href="#menu-toggle" id="menu-toggle"><i class="fa fa-bars"></i></a>
+                <div class="container-fluid" style="background-image: url(&quot;assets/img/spanish%20beach.png&quot;);background-position: center;background-size: cover;background-repeat: no-repeat;margin-bottom: 0px;padding-bottom: 40px;min-height: 100vh;"><a class="btn btn-link bg-light" role="button" href="#menu-toggle" id="menu-toggle"><i class="fa fa-bars"></i></a>
                     <h2 class="text-center" style="font-family: Capriola, sans-serif;color: #000000;margin-bottom: 30px;"><strong>Overview of added users.</strong><br></h2><!DOCTYPE html>
                     <html lang="en">
                         <head>

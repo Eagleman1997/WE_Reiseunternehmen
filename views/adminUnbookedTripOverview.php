@@ -17,10 +17,10 @@ if(isset($this->tripTemplate) and $this->tripTemplate and $tripTemplate->getDayp
 ?>
 
 
-    <div class="border rounded-0 register-photo" style="font-family: Capriola, sans-serif;background-size: auto;min-height: 900px;padding-top: 0px;">
+    <div class="border rounded-0 register-photo" style="font-family: Capriola, sans-serif;background-size: auto;min-height: 100vh;padding-top: 0px;">
         <div style="padding-bottom: 52px;">
             <div class="container-fluid" style="margin-top: 81px;">
-                <h2 class="text-center" style="margin-bottom: 16px;"><strong>Administer the selected trip template.</strong></h2>
+                <h2 class="text-center" style="margin-bottom: 16px;"><strong>Overview of the selected trip template.</strong></h2>
                 <div class="scrollableDiv"><!DOCTYPE html>
                     <html lang="en">
                         <head>

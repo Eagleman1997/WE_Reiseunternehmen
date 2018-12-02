@@ -8,7 +8,7 @@ use views\TemplateView;
 
 
 
-<div class="register-photo" style="padding: 40px;font-family: Capriola, sans-serif;padding-bottom: 60px;">
+<div class="register-photo" style="padding: 40px;font-family: Capriola, sans-serif;padding-bottom: 60px;min-height: 100vh;">
     <div class="form-container">
         <div class="image-holder" style="background-image: url(&quot;assets/img/Hiking.jpg&quot;);"></div>
         <form name="registrationForm" action="<?php echo $GLOBALS['ROOT_URL'] . "/registration" ?>" method="post" style="font-family: Capriola, sans-serif;">

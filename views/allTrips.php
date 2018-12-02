@@ -13,7 +13,7 @@ isset($this->trips) ? $trips = $this->trips : $trips = array();
 
 
 <body style="background-color: rgb(241,247,252);font-family: Capriola, sans-serif;padding-bottom: 0px;">
-    <div style="min-height: 850px;">
+    <div style="min-height: 100vh;">
         <ul class="nav nav-tabs" style="margin-top: 15px;margin-bottom: 15px; font-family: Capriola">
             <li class="nav-item"><a class="nav-link active" role="tab" data-toggle="tab" href="#tab-1">
                 <?php if(isset($_SESSION['role']) and $_SESSION['role'] == "admin"){

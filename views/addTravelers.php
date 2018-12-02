@@ -9,7 +9,7 @@ isset($this->participants) ? $participants = $this->participants : $participants
 ?>
 
 <body>
-    <div class="register-photo" style="font-family: Capriola, sans-serif;background-size: auto;min-height: 800px;">
+    <div class="register-photo" style="font-family: Capriola, sans-serif;background-size: auto;min-height: 100vh;">
         <div class="form-container">
             <div class="image-holder" style="background-image: url(&quot;assets/img/travelGroup.jpg&quot;);background-position: center;background-size: cover;background-repeat: no-repeat;"></div>
             <form action="<?php echo $GLOBALS['ROOT_URL'] ?>/travelers" method="post">

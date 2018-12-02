@@ -34,7 +34,7 @@ if(isset($this->trip) and $trip){
 ?>
 
 <body>
-    <div class="border rounded-0 register-photo" style="font-family: Capriola, sans-serif;background-size: auto;min-height: 900px;padding-top: 0px;">
+    <div class="border rounded-0 register-photo" style="font-family: Capriola, sans-serif;background-size: auto;min-height: 100vh;padding-top: 0px;">
         <div style="padding-bottom: 52px;">
             <div class="container-fluid" style="margin-top: 81px;">
                 <h2 class="text-center" style="margin-bottom: 16px;"><strong>Overview of your booked trip.</strong><br></h2>
