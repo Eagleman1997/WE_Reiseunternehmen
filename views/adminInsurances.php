@@ -53,7 +53,7 @@ isset($this->insurances) ? $insurances = $this->insurances : $insurances = array
                                             <tr>
                                                 <th>Insurance name</th>
                                                 <th>Description</th>
-                                                <th>Price per person</th>
+                                                <th>Price per person in CHF</th>
                                                 <th>Delete</th>
                                             </tr>
                                         </thead>
