@@ -4,6 +4,7 @@
  * @author Adrian Mathys
  */
 use views\TemplateView;
+
 ?>
 
 
@@ -11,7 +12,7 @@ use views\TemplateView;
 <div class="register-photo" style="padding: 40px;font-family: Capriola, sans-serif;padding-bottom: 60px;min-height: 100vh;">
     <div class="form-container">
         <div class="image-holder" style="background-image: url(&quot;assets/img/Hiking.jpg&quot;);"></div>
-        <form name="registrationForm" action="<?php echo $GLOBALS['ROOT_URL'] . "/registration" ?>" method="post" style="font-family: Capriola, sans-serif;">
+        <form id="registrationForm" name="registrationForm" action="<?php echo $GLOBALS['ROOT_URL'] . "/registration" ?>" method="post" style="font-family: Capriola, sans-serif;">
             <h2 class="text-center"><strong>Create</strong> an account.</h2>
             <div class="form-group">
                 <label>Name</label>    
@@ -22,7 +23,7 @@ use views\TemplateView;
             <div class="form-group"><label>Address</label><input class="form-control" type="text" name="street" required placeholder="Street" maxlength="40" minlength="2" />
                 <input class="form-control" type="number" name="zipCode" required placeholder="ZIP code" min="0"
                        /><input class="form-control" type="text" name="location" required placeholder="City or village" maxlength="40" minlength="2" /></div>
-            <div class="form-group"><label>Email</label><input class="form-control" type="email" name="email" required placeholder="Email" /></div>
+            <div class="form-group"><label>Email</label><input class="form-control" type="email" id="email" name="email" required placeholder="Email" /></div>
             <div class="form-group"><label>Birth date</label><input class="form-control" type="date" id="birthDate" name="birthDate" required /></div>
             <div class="form-group"><label>Password</label>
                 <input class="form-control" type="password" id="userPassword" name="password" required placeholder="Password" maxlength="40" minlength="5" />
@@ -66,6 +67,33 @@ use views\TemplateView;
                         alert("The first password you entered will be stored in our database.");
                     }
                 })
+                
+                
+                $('#registrationForm').on('submit', function(event){
+                    
+                    event.preventDefault();
+                    var form = $("#registrationForm").serialize();
+                    $.ajax({
+                        type:'POST',
+                        url:'ajax',
+                        data: form,
+                        success:function(data){
+                            if(data.status == 'success'){
+                                $('#registrationForm').unbind().submit();
+                             }else if(data.status == 'error'){
+                                document.getElementById('btnSubmit').innerHTML = "Email already exists";
+                            }
+                        }
+                       });
+                       
+                   });
+                
+                
+                
+                
+                
+                
+                
             });
 
         </script></div>
