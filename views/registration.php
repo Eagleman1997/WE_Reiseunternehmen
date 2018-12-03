@@ -24,7 +24,7 @@ use views\TemplateView;
                 <input class="form-control" type="number" name="zipCode" required placeholder="ZIP code" min="0"
                        /><input class="form-control" type="text" name="location" required placeholder="City or village" maxlength="40" minlength="2" /></div>
             <div class="form-group"><label>Email</label><input class="form-control" type="email" id="email" name="email" required placeholder="Email" /></div>
-            <div class="form-group"><label>Birth date</label><input class="form-control" type="date" id="birthDate" name="birthDate" required /></div>
+            <div class="form-group"><label id="lblbirthdate">Birth date</label><input class="form-control" type="date" id="birthDate" name="birthDate" required /></div>
             <div class="form-group"><label>Password</label>
                 <input class="form-control" type="password" id="userPassword" name="password" required placeholder="Password" maxlength="40" minlength="5" />
                 <input type="password" id="repeatedPassword" name="password-repeat" required placeholder="Password (repeat)" class="form-control" /></div>
@@ -50,6 +50,20 @@ use views\TemplateView;
                         document.getElementById('btnSubmit').disabled = true;
                     }
                 }
+                
+                function checkBirthdate() {
+                    var birthdate = new Date(document.getElementById('birthDate').value);
+                    var minAge = new Date(new Date().setFullYear(new Date().getFullYear() - 16))
+                    
+                    
+                    if (birthdate>minAge){
+                        alert("Minimum age 16 years");
+                        document.getElementById('btnSubmit').disabled = true;
+                    } else if (birthdate<minAge) {
+                        document.getElementById('btnSubmit').disabled = false;
+                    }
+                    
+                }
 
                 document.getElementById('repeatedPassword').addEventListener('keyup', function () {
                     checkPasswords();
@@ -57,6 +71,10 @@ use views\TemplateView;
 
                 document.getElementById('userPassword').addEventListener('keyup', function () {
                     checkPasswords();
+                })
+                
+                document.getElementById('birthDate').addEventListener('blur', function () {
+                    checkBirthdate();
                 })
 
                 document.getElementById('btnSubmit').addEventListener('click', function () {
