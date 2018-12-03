@@ -167,17 +167,57 @@ class Trip {
     
     public function getInsurancePrice(){
         if(!$this->insurance){
-            return false;
+            return 0;
         }
         return $this->insurance->getPricePerPerson() * $this->numOfParticipation;
     }
     
     public function getInsuranceCustomerPrice(){
         if(!$this->insurance){
-            return false;
+            return 0;
         }
         $insuranceCustomerPrice = Margin::addInsurance($this->insurance->getPricePerPerson() * $this->numOfParticipation);
         return Numbers::roundPrice($insuranceCustomerPrice);
+    }
+    
+    public function getBusPrice(){
+        if((!$this->tripTemplate) or (!$this->tripTemplate->getBus())){
+            return 0;
+        }
+        return $this->tripTemplate->getBus()->getPricePerDay() * $this->numOfParticipation;
+    }
+    
+    public function getHotelPrice(){
+        if(!$this->tripTemplate){
+            return 0;
+        }
+        return $this->tripTemplate->getHotelPricePerPerson() * $this->numOfParticipation;
+    }
+    
+    public function getInvoicePrice($type = null){
+        $invoicePrice = 0;
+        //calculates the invoicePrice of all invoices if $type is not set
+        if($type == null){
+            if(!$this->invoices){
+                return $invoicePrice;
+            }
+            foreach($this->invoices as $invoice){
+                $invoicePrice += $invoice->getPrice();
+            }
+            return $invoicePrice;
+        }
+        
+        //calculates the invoice price of a specific type in case the $type is set
+        strtolower($type);
+        if((!$this->invoices) or $type != "hotel" or $type != "insurance" or $type != "bus" or $type != "other"){
+            return $invoicePrice;
+        }
+        foreach($this->invoices as $invoice){
+            if($invoice->getType() == $type){
+                $invoicePrice += $invoice->getPrice();
+            }
+        }
+        return $invoicePrice;
     }
     
     public function setId($id) {
