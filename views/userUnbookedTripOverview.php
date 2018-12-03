@@ -166,11 +166,11 @@ if (isset($this->tripTemplate) and $this->tripTemplate and $tripTemplate->getDay
     }
     
 // Get the correct variables
-    if($tripTemplate->getCustomerBusPrice()){
-        $customerBusPrice = $tripTemplate->getCustomerBusPrice();
+    if($tripTemplate->getCustomerBusPrice(false)){
+        $customerBusPrice = $tripTemplate->getCustomerBusPrice(false);
     }else{$customerBusPrice = 0;}
-    if($tripTemplate->getCustomerHotelPricePerPerson()){
-        $customerHotelPricePerPerson = $tripTemplate->getCustomerHotelPricePerPerson();
+    if($tripTemplate->getCustomerHotelPricePerPerson(false)){
+        $customerHotelPricePerPerson = $tripTemplate->getCustomerHotelPricePerPerson(false);
     }else{$customerHotelPricePerPerson = 0;}
     
 
