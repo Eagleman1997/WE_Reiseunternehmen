@@ -186,21 +186,12 @@ class TripTemplate {
     }
     
     public function getCustomerHotelPricePerPerson($round = true){
-        if($this->dayprograms){
-            $customerHotelPricePerPerson = 0;
-            foreach($this->dayprograms as $dayprogram){
-                if($dayprogram->getHotel()){
-                    $customerHotelPricePerPerson += $dayprogram->getHotel()->getPricePerPerson();
-                }
-            }
-            if($round){
-                return Numbers::roundPrice(Margin::addTrip($customerHotelPricePerPerson));
-            }else{
-                return Margin::addTrip($customerHotelPricePerPerson);
-            }
-            
+        $customerHotelPricePerPerson = $this->getHotelPricePerPerson();
+        if($round){
+            return Numbers::roundPrice(Margin::addTrip($customerHotelPricePerPerson));
+        }else{
+            return Margin::addTrip($customerHotelPricePerPerson);
         }
-        return 0;
     }
     
     public function setId($id) {
