@@ -62,7 +62,7 @@ if (isset($this->tripTemplate) and $this->tripTemplate and $tripTemplate->getDay
                                             <td><?php echo TemplateView::noHTML($tripTemplate->getMaxAllocation()); ?></td>
                                             <td><img src="<?php if ($tripTemplate->getBus()){if(file_exists($tripTemplate->getBus()->getPicturePath())){echo TemplateView::noHTML($tripTemplate->getBus()->getPicturePath());}else{echo DefaultPath::getBus();}} ?>" alt="Not available" border=3 width=150></td>
                                             <td><?php echo TemplateView::noHTML(number_format($tripTemplate->getCustomerPrice(),2)); ?></td>
-                                            <td><?php if($tripTemplate->getCustomerPrice()){echo TemplateView::noHTML($tripTemplate->getHotelPricePerPerson());} ?></td>
+                                            <td><?php if($tripTemplate->getCustomerPrice()){echo TemplateView::noHTML($tripTemplate->getCustomerHotelPricePerPerson());} ?></td>
                                         </tr>
                                     </tbody>
                                 </table>
