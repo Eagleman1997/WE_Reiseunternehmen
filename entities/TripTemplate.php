@@ -158,16 +158,20 @@ class TripTemplate {
     }
     
     public function getHotelPricePerPerson(){
+        $hotelPricePerPerson = 0;
+        if($this->bus){
+            $hotelPricePerPerson = ($this->price - $this->getBusPrice()) / $this->minAllocation;
+            return $hotelPricePerPerson;
+        }
+        
         if($this->dayprograms){
-            $hotelPricePerPerson = 0;
             foreach($this->dayprograms as $dayprogram){
                 if($dayprogram->getHotel()){
                     $hotelPricePerPerson += $dayprogram->getHotel()->getPricePerPerson();
                 }
             }
-            return $hotelPricePerPerson;
         }
-        return 0;
+        return $hotelPricePerPerson;
     }
     
     public function getCustomerBusPrice($round = true){

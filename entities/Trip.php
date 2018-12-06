@@ -209,7 +209,7 @@ class Trip {
         
         //calculates the invoice price of a specific type in case the $type is set
         strtolower($type);
-        if((!$this->invoices) or $type != "hotel" or $type != "insurance" or $type != "bus" or $type != "other"){
+        if((!$this->invoices) and $type != "hotel" and $type != "insurance" and $type != "bus" and $type != "other"){
             return $invoicePrice;
         }
         foreach($this->invoices as $invoice){
