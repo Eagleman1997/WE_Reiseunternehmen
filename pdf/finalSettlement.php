@@ -129,7 +129,7 @@ function Footer()
 }
 
 
-function CreateTable()
+function CreateTable($trip)
 {
     
     // customer variables
@@ -213,19 +213,21 @@ function CreateTable()
     $this->Line(10, 130, 110, 130);
     $this->Line(120, 130, 200, 130);
     
-    $this->Cell(22,5,'Insurance',0,0);
-    $this->Cell(30,5,'CHF '.$this->insuranceCalcCost,0,0,'R');
-    $this->Cell(30,5,'CHF '.$this->insuranceActualCost,0,0,'R');
-    if ($this->insuranceDelta > 0){
-        $this->SetTextColor(255, 0, 0);
-    } else if ($this->insuranceDelta < 0){
-        $this->SetTextColor(0, 153, 0);
+    if($trip->getInsurance()){
+        $this->Cell(22,5,'Insurance',0,0);
+        $this->Cell(30,5,'CHF '.$this->insuranceCalcCost,0,0,'R');
+        $this->Cell(30,5,'CHF '.$this->insuranceActualCost,0,0,'R');
+        if ($this->insuranceDelta > 0){
+            $this->SetTextColor(255, 0, 0);
+        } else if ($this->insuranceDelta < 0){
+            $this->SetTextColor(0, 153, 0);
+        }
+        $this->Cell(18,5,''.$this->insuranceDelta.'%',0,0,'R');
+        $this->SetTextColor(0,0,0);
+        $this->Cell(10);
+        $this->Cell(30,5,'Insurance',0,0);
+        $this->Cell(30,5,'CHF '.$this->insuranceRevenue,0,1,'R');
     }
-    $this->Cell(18,5,''.$this->insuranceDelta.'%',0,0,'R');
-    $this->SetTextColor(0,0,0);
-    $this->Cell(10);
-    $this->Cell(30,5,'Insurance',0,0);
-    $this->Cell(30,5,'CHF '.$this->insuranceRevenue,0,1,'R');
    
     $this->SetDrawColor(0, 0, 0);
     $this->Line(10, 135, 110, 135);
@@ -285,7 +287,7 @@ $pdf = new PDF();
 
 // vars
 
-$hotelCalcCost = ($trip->getTripTemplate()->getHotelPricePerPerson()) * ($trip->getNumOfParticipation());
+$hotelCalcCost = ($trip->getHotelPrice());
 $hotelActualCost = ($trip->getInvoicePrice("hotel"));
 $hotelDelta = (($hotelActualCost - $hotelCalcCost)/($hotelCalcCost/100));
 
@@ -293,22 +295,15 @@ $busCalcCost = ($trip->getTripTemplate()->getBusPrice());
 $busActualCost = ($trip->getInvoicePrice("bus"));
 $busDelta = (($busActualCost - $busCalcCost)/($busCalcCost/100));  
 
-if($trip->getInsurance() == NULL) {
-$insuranceCalcCost = "-";
-$insuranceActualCost = "-";
-$insuranceDelta = "-";
-$pdf->insuranceCalcCost = ($insuranceCalcCost);
-$pdf->insuranceActualCost = ($insuranceActualCost);
-$pdf->insuranceDelta = ($insuranceDelta);
-} else {
-$insuranceCalcCost = ($trip->getInsurancePrice());;
+$insuranceCalcCost = ($trip->getInsurancePrice());
 $insuranceActualCost = ($trip->getInvoicePrice("insurance"));
-$insuranceDelta = (($insuranceActualCost - $insuranceCalcCost)/($insuranceCalcCost/100));
-$pdf->insuranceCalcCost = number_format($insuranceCalcCost,2);
-$pdf->insuranceActualCost = number_format($insuranceActualCost,2);
-$pdf->insuranceDelta = number_format($insuranceDelta,1);
-    
+if($trip->getInsurance()){
+    $insuranceDelta = (($insuranceActualCost - $insuranceCalcCost)/($insuranceCalcCost/100));
+    $pdf->insuranceCalcCost = number_format($insuranceCalcCost,2);
+    $pdf->insuranceActualCost = number_format($insuranceActualCost,2);
+    $pdf->insuranceDelta = number_format($insuranceDelta,1);
 }
+
 $calcCostTotal = $hotelCalcCost + $busCalcCost + $insuranceCalcCost;
 $actualCostTotal = $hotelActualCost + $busActualCost + $insuranceActualCost;
 $totalDelta = (($actualCostTotal - $calcCostTotal)/($calcCostTotal/100));
@@ -349,7 +344,7 @@ $pdf->grossProfit = number_format($grossProfit,2);
 
 $pdf->AliasNbPages();
 $pdf->AddPage();
-$pdf->CreateTable();
+$pdf->CreateTable($trip);
 $pdf->SetTitle('Final settlement');
 
 
