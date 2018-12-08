@@ -243,7 +243,7 @@ $pdf->numberOfPersons = $trip->getNumOfParticipation();
 $pdf->VAT = number_format(round((($trip->getCustomerPrice())/100*7.7),2),2);
 $pdf->totalCost  = number_format(round($trip->getCustomerPrice(),2),2);
 
-if($trip->getInsurance() == NULL) {
+if($trip->getInsurance()) {
     $pdf->tripCostPerPerson = number_format(round(($trip->getCustomerPrice())/$trip->getNumOfParticipation(),2),2);
     $pdf->tripSubtotal = number_format(($trip->getCustomerPrice()),2);
     $pdf->insuranceDescription = "No insurance";
