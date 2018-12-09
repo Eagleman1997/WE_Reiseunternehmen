@@ -341,8 +341,14 @@ Router::route_auth("GET", "admin/bookedTrips/detail/finalSettlement/{id}", $auth
     }
 });
 
-Router::route("POST", "ajax", function () {
+Router::route("POST", "ajaxEmail", function () {
     if(!AjaxController::checkEmail()){
+        HTTPHeader::setStatusHeader(HTTPStatusCode::HTTP_204_NO_CONTENT);
+    }
+});
+
+Router::route("POST", "ajaxLogin", function () {
+    if(!AjaxController::checkLogin()){
         HTTPHeader::setStatusHeader(HTTPStatusCode::HTTP_204_NO_CONTENT);
     }
 });
