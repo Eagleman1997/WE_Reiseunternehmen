@@ -35,9 +35,7 @@ class AjaxController {
       
      
      // checks if the login data is correct
-     public static function checkLogin(){
-         
-        EmailServiceClient::sendEmail('vanessa.cajochen@hotmail.com', 'Man man man man', 'Lukas, mach keine Scheisse');
+     public static function checkLogin(){     
          
         $email = filter_input(\INPUT_POST, 'email', \FILTER_VALIDATE_EMAIL);
         if(!$email){
