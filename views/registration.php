@@ -88,12 +88,12 @@ use views\TemplateView;
                 
                 
                 $('#registrationForm').on('submit', function(event){
-                    
+                                       
                     event.preventDefault();
                     var form = $("#registrationForm").serialize();
                     $.ajax({
                         type:'POST',
-                        url:'ajax',
+                        url:'ajaxEmail',
                         data: form,
                         success:function(data){
                             if(data.status == 'success'){
