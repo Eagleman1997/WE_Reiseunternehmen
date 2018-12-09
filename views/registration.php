@@ -87,6 +87,10 @@ use views\TemplateView;
                 })
                 
                 
+                /**
+                 * When the submit button is pressed, the system first checks whether the email already exists without sending the entire form to the server.
+                * @author Vanessa Cajochen
+                */
                 $('#registrationForm').on('submit', function(event){
                                        
                     event.preventDefault();
