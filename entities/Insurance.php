@@ -7,8 +7,11 @@ use helpers\Margin;
 use helpers\Numbers;
 
 /**
- * Insurance Entity
- *
+ * Ensure easy access to {@link Insurance} related functionalities and data
+ * <ul>
+ * <li>{@link create()}</li>
+ * <li>{@link delete()}</li>
+ * </ul>
  * @author Lukas
  */
 class Insurance {
@@ -24,7 +27,8 @@ class Insurance {
     }
     
     /**
-     * Creates the Insurance in the database
+     * Creates the {@link Insurance}<br>
+     * Variables must be set
      * @return boolean|int
      */
     public function create(){
@@ -32,7 +36,8 @@ class Insurance {
     }
     
     /**
-     * Deletes the Insurance
+     * Deletes the {@link Bus}<br>
+     * id must be set
      * @return boolean
      */
     public function delete(){

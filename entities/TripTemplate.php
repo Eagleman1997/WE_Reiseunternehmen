@@ -8,8 +8,13 @@ use helpers\Margin;
 use helpers\Numbers;
 
 /**
- * Description of TripTemplate
- *
+ * Ensure easy access to {@link TripTemplate} related functionalities and data
+ * <ul>
+ * <li>{@link create()}</li>
+ * <li>{@link delete()}</li>
+ * <li>{@link find()}</li>
+ * <li>{@link changeBookable()}</li>
+ * </ul>
  * @author Lukas
  */
 class TripTemplate {
@@ -34,13 +39,14 @@ class TripTemplate {
         $this->busDBC = new BusDBC();
     }
     
-    /** (tested)
-     * Stores the TripTemplate into the database. The price is set by the busPricePerDay * durationInDays.
-     * Maxallocation is set if there is no definition clientside. 
-     * Otherwise, validation if seats and maxAllocation will be performed. 
-     * If maxAllocation is bigger than the number of seats according to the bus, maxAllocation will be set automatically to seatNumber of the given bus.
-     * If minAllocation is bigger than the number of seats according to the bus, minAllocation will be set automatically to seatNumber of the given bus.
-     * minAllocation is min 12. maxAllocatin is max 20;
+    /**
+     * Stores the {@link TripTemplate} into the database<br>
+     * The price is set: busPricePerDay * durationInDays<br>
+     * maxAllocation and minAllocation is set automatically if there is no or invalid definition clientside<br> 
+     * Controll if seats and maxAllocation are valid will be performed:<br> 
+     * If maxAllocation is bigger than the number of seats according to the {@link Bus}, maxAllocation will be set automatically to seatNumber of the given {@link Bus}<br>
+     * If minAllocation is bigger than the number of seats according to the {@link Bus}, minAllocation will be set automatically to seatNumber of the given {@link Bus}<br>
+     * minAllocation is min 12. maxAllocatin is max 20
      * @return boolean|int
      */
     public function create(){
@@ -72,7 +78,8 @@ class TripTemplate {
     }
     
     /**
-     * Deletes the TripTemplate from the database
+     * Deletes the {@link TripTemplate}<br>
+     * id must be set
      * @return boolean
      */
     public function delete(){
@@ -80,7 +87,8 @@ class TripTemplate {
     }
     
     /**
-     * Finds the TripTemplate by the given id
+     * Finds the {@link TripTemplate}<br>
+     * id must be set
      * @return boolean|TripTemplate
      */
     public function find(){
@@ -94,7 +102,7 @@ class TripTemplate {
     }
     
     /**
-     * Changes (locks or unlocks) the bookable of the TripTemplate
+     * Changes (locks or unlocks) the bookable of the {@link TripTemplate}
      * @return boolean
      */
     public function changeBookable(){
@@ -157,6 +165,11 @@ class TripTemplate {
         return 0;
     }
     
+    /**
+     * Computes and returns the hotel price per person<br>
+     * Tries to compute over the {@link Bus} price. If the {@link Bus} is not available, then try compute over the {@link Dayprogram}
+     * @return int|double
+     */
     public function getHotelPricePerPerson(){
         $hotelPricePerPerson = 0;
         if($this->bus){
@@ -174,6 +187,11 @@ class TripTemplate {
         return $hotelPricePerPerson;
     }
     
+    /**
+     * Computes and returns the customer bus price
+     * @param boolean $round if the price should be rounded to the next 0.05
+     * @return int|double
+     */
     public function getCustomerBusPrice($round = true){
         if($this->bus){
             if($round){
@@ -185,10 +203,19 @@ class TripTemplate {
         return 0;
     }
     
+    /**
+     * Computes and returns the min customer price of the {@link TripTemplate}
+     * @return int|double
+     */
     public function getCustomerPrice(){
         return Numbers::roundPrice(Margin::addTrip($this->price));
     }
     
+    /**
+     * Computes and returns the customer hotel price per person
+     * @param boolean $round if the price should be rounded to the next 0.05
+     * @return int|double
+     */
     public function getCustomerHotelPricePerPerson($round = true){
         $customerHotelPricePerPerson = $this->getHotelPricePerPerson();
         if($round){

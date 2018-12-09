@@ -5,8 +5,11 @@ namespace entities;
 use database\HotelDBC;
 
 /**
- * Description of Hotel
- *
+ * Ensure easy access to {@link Hotel} related functionalities and data
+ * <ul>
+ * <li>{@link create()}</li>
+ * <li>{@link delete()}</li>
+ * </ul>
  * @author Lukas
  */
 class Hotel {
@@ -22,10 +25,20 @@ class Hotel {
         $this->hotelDBC = new HotelDBC();
     }
     
+    /**
+     * Creates the {@link Hotel}<br>
+     * Variables must be set
+     * @return boolean|int
+     */
     public function create(){
         return $this->hotelDBC->createHotel($this);
     }
     
+    /**
+     * Deletes the {@link Hotel}<br>
+     * id must be set
+     * @return boolean
+     */
     public function delete(){
         return $this->hotelDBC->deleteHotel($this);
     }

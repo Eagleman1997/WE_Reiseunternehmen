@@ -7,6 +7,7 @@ use http\HTTPHeader;
 use http\HTTPStatusCode;
 
 /**
+ * Proviedes easy routing through the method and paths received over http from the client
  * @author Andreas Martin
  */
 class Router

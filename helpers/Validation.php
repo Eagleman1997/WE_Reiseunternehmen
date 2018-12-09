@@ -3,16 +3,23 @@
 namespace helpers;
 
 /**
- * Description of Validation
- *
+ * Provides validation to avoid programming with corrupt data:
+ * <ul>
+ * <li>{@link positiveInt($number)}</li>
+ * <li>{@link positivePrice($price)}</li>
+ * <li>{@link date($date)}</li>
+ * <li>{@link upToDate($date)}</li>
+ * <li>{@link invoiceType($type)}</li>
+ * <li>{@link zipCode($zipCode)}</li>
+ * </ul>
  * @author Lukas
  */
 class Validation {
     
-    /** (tested)
+    /**
      * Checks whether a given number is an integer and positive
-     * @param type $number
-     * @return boolean
+     * @param int $number
+     * @return boolean|int
      */
     public static function positiveInt($number){
         if(is_numeric($number)){
@@ -28,10 +35,10 @@ class Validation {
         }
     }
     
-    /** (tested)
+    /**
      * Checks whether a given price is a double and positive
-     * @param type $price
-     * @return boolean
+     * @param double $price
+     * @return boolean|double
      */
     public static function positivePrice($price){
         if(is_numeric($price)){
@@ -47,10 +54,10 @@ class Validation {
         }
     }
     
-    /** (tested)
+    /**
      * Checks whether a given date is in format YYYY-MM-DD
-     * @param type $date
-     * @return boolean|string
+     * @param String $date
+     * @return boolean|String
      */
     public static function date($date){
         $date = date_create($date);
@@ -62,10 +69,10 @@ class Validation {
         }
     }
     
-    /** (tested)
-     * Checks whether a given date is in format YYYY-MM-DD and lies in the future
-     * @param type $date
-     * @return boolean|string
+    /**
+     * Checks whether a given date is in format YYYY-MM-DD and lies in the future to prevent e.g. booking a {@link Trip} in the past
+     * @param String $date
+     * @return boolean|String
      */
     public static function upToDate($date){
         $date = self::date($date);
@@ -80,10 +87,14 @@ class Validation {
     }
     
     /**
-     * Checks if the type of the Invoice is valid
-     * Allowed: "hotel", "bus", "insurance"
-     * @param type $type
-     * @return boolean|string
+     * Checks if the type of the {@link Invoice} is valid
+     * @param String $type allowed types:
+     * <ul>
+     * <li>hotel</li>
+     * <li>bus</li>
+     * <li>insurance</li>
+     * </ul>
+     * @return boolean|String
      */
     public static function invoiceType($type){
         $allowed = array("hotel", "bus", "insurance", "other");
@@ -94,10 +105,10 @@ class Validation {
         }
     }
     
-    /** (tested)
-     * Checks whether a given $zipCode is in int format and between 0 and 100000
-     * @param type $zipCode
-     * @return boolean
+    /**
+     * Checks whether a given zipCode is in int format and between 0 and 100000
+     * @param int $zipCode
+     * @return boolean|int
      */
     public static function zipCode($zipCode){
         if(is_numeric($zipCode) and $zipCode > 0 and $zipCode < 100000){

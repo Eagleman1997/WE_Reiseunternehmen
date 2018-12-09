@@ -6,16 +6,32 @@ use entities\User;
 use entities\Participant;
 
 /**
- * Description of UserDBC
- *
+ * Provides secure access to the database of {@link User} releated queries
+ * <ul>
+ * <li>{@link createUser($user)}</li>
+ * <li>{@link findUserByEmail($search, $inputType)}</li>
+ * <li>{@link setTimeStamp()}</li>
+ * <li>{@link findUserById($userId)}</li>
+ * <li>{@link getAllUsers()}</li>
+ * <li>{@link updatePassword($user)}</li>
+ * <li>{@link deleteUser($user)}</li>
+ * <li>{@link checkLastAdmin($user)}</li>
+ * <li>{@link createParticipant($participant)}</li>
+ * <li>{@link findParticipants($user)}</li>
+ * <li>{@link findParticipantById($participantId)}</li>
+ * <li>{@link findParticipantsToTrip($tripId)}</li>
+ * <li>{@link deleteParticipant($participant)}</li>
+ * <li>{@link updateRole($user)}</li>
+ * <li>{@link checkByEmail($email)}</li>
+ * </ul>
  * @author Lukas
  */
 class UserDBC extends DBConnector {
     
-    /** (tested)
-     * Stores a new User into the database
-     * @param type $user
-     * @return boolean if registration was successful (usually email does already exist)
+    /**
+     * Stores the {@link User} into the database
+     * @param User $user
+     * @return boolean
      */
     public function createUser($user){
         $stmt = $this->mysqliInstance->prepare("INSERT INTO user VALUES (NULL, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, NULL)");
@@ -39,11 +55,11 @@ class UserDBC extends DBConnector {
     }
     
     
-    /** (tested)
-     * Finds User to the given email if available
-     * @param type $user
-     * @return String stored (hashed) password if query was successful
-     *         boolean false if query failed (usually email is not stored in database)
+    /**
+     * Finds  the {@link User} to the given email if available for login process
+     * @param User $user
+     * @param String $inputType describes the data object of $search
+     * @return boolean|User
      */
     public function findUserByEmail($search, $inputType = "object"){
         $stmt = $this->mysqliInstance->prepare("SELECT * FROM user where email = ? and deleted = ?");
@@ -77,7 +93,7 @@ class UserDBC extends DBConnector {
     }
     
     /**
-     * Sets the current timestamp for booking to avoid to fast booking
+     * Sets the current timestamp for booking to avoid to fast booking of a {@link Trip}
      * @return boolean
      */
     public function setTimeStamp(){
@@ -92,9 +108,9 @@ class UserDBC extends DBConnector {
         return $this->executeInsert($stmt);
     }
     
-    /** (tested)
-     * Finds User by the given id (teleted Users too)
-     * @param type $userId
+    /**
+     * Finds the {@link User} by the given id (teleted Users also)
+     * @param int $userId
      * @return boolean|User
      */
     public function findUserById($userId){
@@ -116,8 +132,8 @@ class UserDBC extends DBConnector {
         }
     }
     
-    /** (tested)
-     * Gets all Users registered ordered by firstName asc
+    /**
+     * Gets all {@link User} registered ordered by firstName asc
      * @return boolean|array
      */
     public function getAllUsers(){
@@ -138,9 +154,9 @@ class UserDBC extends DBConnector {
         return $users;
     }
     
-    /** (tested)
-     * Updates the Users password (new password must be stored in the object)
-     * @param type $user
+    /**
+     * Updates the {@link User} password (the new password must be stored in the {@link User})
+     * @param User $user
      * @return type
      */
     public function updatePassword($user){
@@ -155,10 +171,12 @@ class UserDBC extends DBConnector {
         return $this->executeInsert($stmt);
     }
     
-    /** (tested)
-     * Removes the User from access of several functions
-     * @param type $user
-     * @return type
+    /**
+     * Removes the {@link User} from access of several functions<br>
+     * This function doesn't provide a real deletion of a {@link User} 
+     * to not lose the {@link Trip} related and important data
+     * @param User $user
+     * @return boolean
      */
     public function deleteUser($user){
         if(!($this->checkLastAdmin($user))){
@@ -176,7 +194,7 @@ class UserDBC extends DBConnector {
     
     /**
      * Checks for the permission to delete or change the role for the last admin
-     * @param type $user
+     * @param User $user
      * @return boolean
      */
     public function checkLastAdmin($user){
@@ -203,10 +221,10 @@ class UserDBC extends DBConnector {
         return true;
     }
     
-    /** (tested)
-     * Stores a new Participant in relation to the User
-     * @param type $participant
-     * @return boolean
+    /**
+     * Stores the {@link Participant} in relation to the {@link User}
+     * @param Participant $participant
+     * @return boolean|int
      */
     public function createParticipant($participant){
         $stmt = $this->mysqliInstance->prepare("INSERT INTO participant VALUES (NULL, ?, ?, ?, ?, ?)");
@@ -222,9 +240,9 @@ class UserDBC extends DBConnector {
         return $this->executeInsert($stmt);
     }
     
-    /** (tested)
-     * Finds any number of Participants related to the given User
-     * @param type $user
+    /**
+     * Finds any number of {@link Participant} related to the given {@link User}
+     * @param User $user
      * @return boolean|array
      */
     public function findParticipants($user){
@@ -246,9 +264,9 @@ class UserDBC extends DBConnector {
         return $participants;
     }
     
-    /** (tested)
-     * Finds Participant by the given id (teleted Participants too)
-     * @param type $participantId
+    /**
+     * Finds the {@link Participant} by the given id (teleted Participants also)
+     * @param int $participantId
      * @return boolean|Participant
      */
     public function findParticipantById($participantId){
@@ -270,9 +288,9 @@ class UserDBC extends DBConnector {
         }
     }
     
-    /** (tested)
-     * Finds all Participants according to the Trip (deletion of Participants ignored)
-     * @param type $tripId
+    /**
+     * Finds all {@link Participant} according to the {@link Trip} (deletion of {@link Participant} is ignored)
+     * @param int $tripId
      * @return boolean|array
      */
     public function findParticipantsToTrip($tripId){
@@ -296,9 +314,11 @@ class UserDBC extends DBConnector {
         return $participants;
     }
     
-    /** (tested)
-     * Removes Participant from access of several functions
-     * @param type $participant
+    /**
+     * Removes {@link Participant} from access of several functions<br>
+     * This function doesn't provide real deletion of {@link Participant} 
+     * to ensure access to {@link Trip} related important data
+     * @param Participant $participant
      * @return boolean
      */
     public function deleteParticipant($participant){
@@ -313,9 +333,9 @@ class UserDBC extends DBConnector {
     }
 
     
-    /** (tested)
-     * Updates the role of the given User
-     * @param type $user
+    /**
+     * Updates the role of the given {@link User}
+     * @param User $user
      * @return boolean
      */
     public function updateRole($user){
@@ -330,7 +350,12 @@ class UserDBC extends DBConnector {
         return $this->executeInsert($stmt);
     }
     
-        public function checkByEmail($email){
+    /**
+     * Checks whether the email already exists in the database
+     * @param String $email
+     * @return boolean|User
+     */
+    public function checkByEmail($email){
         $stmt = $this->mysqliInstance->prepare("SELECT * FROM user where email = ? and deleted = ?");
         if(!$stmt){
             return false;

@@ -1,12 +1,14 @@
 <?php
 
 namespace entities;
-
 use database\TripDBC;
 
 /**
- * Dayprogram Entity
- *
+ * Ensure easy access to {@link Dayprogram} related functionalities and data
+ * <ul>
+ * <li>{@link create()}</li>
+ * <li>{@link delete()}</li>
+ * </ul>
  * @author Lukas
  */
 class Dayprogram {
@@ -25,10 +27,20 @@ class Dayprogram {
         $this->tripDBC = new tripDBC();
     }
     
+    /**
+     * Creates a new {@link Dayprogram}<br>
+     * Variables must be set
+     * @return boolean|int
+     */
     public function create(){
         return $this->tripDBC->createDayprogram($this);
     }
     
+    /**
+     * Deletes the {@link Dayprogram}<br>
+     * id must be set
+     * @return boolean
+     */
     public function delete(){
         return $this->tripDBC->deleteDayprogram($this);
     }

@@ -5,8 +5,12 @@ namespace entities;
 use database\BusDBC;
 
 /**
- * Description of Bus
- *
+ * Ensure easy access to {@link Bus} related functionalities and data
+ * <ul>
+ * <li>{@link create()}</li>
+ * <li>{@link find()}</li>
+ * <li>{@link delete()}</li>
+ * </ul>
  * @author Lukas
  */
 class Bus {
@@ -24,24 +28,27 @@ class Bus {
     }
     
     /**
-     * Stores the Bus into the database
-     * @return type
+     * Creates the {@link Bus}<br>
+     * Variables must be set
+     * @return boolean|int
      */
     public function create(){
         return $this->busDBC->createBus($this);
     }
     
     /**
-     * Gets the Bus from the database by the set id
-     * @return type boolean|Bus
+     * Finds the {@link Bus}<br>
+     * id must be set
+     * @return boolean|Bus
      */
     public function find(){
         return $this->busDBC->findBusById($this->id);
     }
     
     /**
-     * Deletes the Bus from the database
-     * @return type
+     * Deletes the {@link Bus}<br>
+     * id must be set
+     * @return boolean
      */
     public function delete(){
         return $this->busDBC->deleteBus($this);

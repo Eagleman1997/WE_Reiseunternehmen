@@ -7,8 +7,15 @@ use helpers\Margin;
 use helpers\Numbers;
 
 /**
- * Trip Entity
- *
+ * Ensure easy access to {@link Trip} related functionalities and data
+ * <ul>
+ * <li>{@link book()}</li>
+ * <li>{@link cancel()}</li>
+ * <li>{@link find()}</li>
+ * <li>{@link Trip::findTrip()}</li>
+ * <li>{@link lockInvoicesRegistered()}</li>
+ * <li>{@link unlockInvoicesRegistered()}</li>
+ * </ul>
  * @author Lukas
  */
 class Trip {
@@ -35,8 +42,10 @@ class Trip {
     }
     
     /**
-     * Stores the Trip into the database
-     * @return boolean
+     * Books the {@link Trip}<br>
+     * Variables must be set<br>
+     * Corrects wrong inputs if minAllocation is too small or maxAllocation is too big
+     * @return boolean|int
      */
     public function book(){
         if($this->numOfParticipation < Numbers::getMinAllocation()){
@@ -49,7 +58,8 @@ class Trip {
     }
     
     /**
-     * Deletes the Trip from the database
+     * Cancels the {@link Trip}<br>
+     * id must be set
      * @return boolean
      */
     public function cancel(){
@@ -57,7 +67,8 @@ class Trip {
     }
     
     /**
-     * Finds the Trip with the given id
+     * Finds the {@link Trip}<br>
+     * id must be set
      * @return boolean|Trip
      */
     public function find(){
@@ -65,9 +76,8 @@ class Trip {
     }
     
     /**
-     * Provides the search for a Trip over the $_SESSION['tripId'] if set
-     * @param type $id
-     * @return type
+     * Provides the search for a {@link Trip} over the $_SESSION['tripId'] if set
+     * @return boolean|Trip
      */
     public static function findTrip(){
         $tripDBC = new TripDBC();
@@ -78,7 +88,8 @@ class Trip {
     }
     
     /**
-     * Locks the InvoicesRegistered
+     * Locks the InvoicesRegistered of the {@link Trip}<br>
+     * id and invoicesRegistered must be set
      * @return boolean
      */
     public function lockInvoicesRegistered(){
@@ -86,7 +97,8 @@ class Trip {
     }
     
     /**
-     * Unlocks the InvoicesRegistered
+     * Unlocks the InvoicesRegistered of the {@link Trip}<br>
+     * id and must be set
      * @return boolean
      */
     public function unlockInvoicesRegistered(){
@@ -154,6 +166,10 @@ class Trip {
         return $this->insurance;
     }
     
+    /**
+     * Computes and returns the customer price of the {@link Trip}
+     * @return int|double
+     */
     public function getCustomerPrice(){
         $customerPrice = 0;
         if($this->tripTemplate){
@@ -165,6 +181,10 @@ class Trip {
         return Numbers::roundPrice($customerPrice);
     }
     
+    /**
+     * Computes and returns the insurance price of the {@link Trip}
+     * @return int|double
+     */
     public function getInsurancePrice(){
         if(!$this->insurance){
             return 0;
@@ -172,6 +192,10 @@ class Trip {
         return $this->insurance->getPricePerPerson() * $this->numOfParticipation;
     }
     
+    /**
+     * Computes and returns the insurance customer price of the {@link Trip}
+     * @return int|double
+     */
     public function getInsuranceCustomerPrice(){
         if(!$this->insurance){
             return 0;
@@ -180,6 +204,10 @@ class Trip {
         return Numbers::roundPrice($insuranceCustomerPrice);
     }
     
+    /**
+     * Computes and returns the bus price of the {@link Trip}
+     * @return int|double
+     */
     public function getBusPrice(){
         if((!$this->tripTemplate) or (!$this->tripTemplate->getBus())){
             return 0;
@@ -187,6 +215,10 @@ class Trip {
         return $this->tripTemplate->getBus()->getPricePerDay() * $this->numOfParticipation;
     }
     
+    /**
+     * Computes and returns the hotel price of the {@link Trip}
+     * @return int|double
+     */
     public function getHotelPrice(){
         if(!$this->tripTemplate){
             return 0;
@@ -194,6 +226,18 @@ class Trip {
         return $this->tripTemplate->getHotelPricePerPerson() * $this->numOfParticipation;
     }
     
+    /**
+     * Computes and returns the invoice price of the {@link Trip} depending on the param selected<br>
+     * $type is per default null, so the complete price of all {@link Invoice} related to the {@link Trip} will be computed
+     * @param String $type allowed types to become a specific computed invoice price are:
+     * <ul>
+     * <li>hotel</li>
+     * <li>insurance</li>
+     * <li>bus</li>
+     * <li>other</li>
+     * </ul>
+     * @return int|double
+     */
     public function getInvoicePrice($type = null){
         $invoicePrice = 0;
         //calculates the invoicePrice of all invoices if $type is not set

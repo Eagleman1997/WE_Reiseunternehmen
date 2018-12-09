@@ -1,8 +1,13 @@
 <?php
 
 namespace helpers;
+
 /**
- * Description of ImageUpload
+ * Provides upload of
+ * <ul>
+ * <li>images</li>
+ * <li>pdfs</li>
+ * </ul>
  *
  * @author Lukas
  */
@@ -11,10 +16,9 @@ class Upload {
     private static $imgPath = "views/assets/img/";
     private static $pdfPath = "views/assets/pdfs/";
     
-    /** (tested)
-     * Stores an jpg, jpeg or png into assets/pictures
-     * @param type $file
-     * @return string filePath if storage succeeded. Otherwise "fileSizeError", "uploadError", "formatError"
+    /**
+     * Checks and stores an jpg, jpeg or png
+     * @return boolean|String
      * 
      */
     public static function uploadImage(){
@@ -49,10 +53,9 @@ class Upload {
         
     }
     
-    /** (tested)
-     * Stores an pdf into assets/pdfs
-     * @param type $file
-     * @return string filePath if storage succeeded. Otherwise "fileSizeError", "uploadError", "formatError"
+    /**
+     * Checks and stores an pdf
+     * @return boolean|String
      * 
      */
     public static function uploadPdf(){

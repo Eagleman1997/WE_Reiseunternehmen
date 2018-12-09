@@ -5,8 +5,11 @@ namespace entities;
 use database\UserDBC;
 
 /**
- * Description of Participant
- *
+ * Ensure easy access to {@link Participant} related functionalities and data
+ * <ul>
+ * <li>{@link create()}</li>
+ * <li>{@link delete()}</li>
+ * </ul>
  * @author Lukas
  */
 class Participant {
@@ -22,14 +25,20 @@ class Participant {
         $this->userDBC = new UserDBC();
     }
     
-    /** (tested)
-     * Creates a new Participant
-     * @return type
+    /**
+     * Creates the {@link Participant}<br>
+     * Variables must be set
+     * @return boolean|int
      */
     public function create(){
         return $this->userDBC->createParticipant($this);
     }
     
+    /**
+     * Deletes the {@link Participant}<br>
+     * id must be set
+     * @return boolean
+     */
     public function delete(){
         return $this->userDBC->deleteParticipant($this);
     }

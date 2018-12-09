@@ -3,7 +3,16 @@
 namespace helpers;
 
 /**
- * Provides the default paths for the images and pdfs
+ * Provides the default paths for the images and pdfs to provide single point of truth:
+ * <ul>
+ * <li>{@link DefaultPath::getBus()}</li>
+ * <li>{@link DefaultPath::getTripTemplate()}</li>
+ * <li>{@link DefaultPath::getTrip()}</li>
+ * <li>{@link DefaultPath::getDayprogram()}</li>
+ * <li>{@link DefaultPath::getHotel()}</li>
+ * <li>{@link DefaultPath::getInvoice}</li>
+ * <li>{@link DefaultPath::getInvoiceFileName()}</li>
+ * </ul>
  *
  * @author Lukas
  */
