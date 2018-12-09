@@ -330,6 +330,17 @@ class TripController {
 
         $success = $trip->book();
         if($success){
+                $trip->getId();
+                $_SESSION['pdfOutput'] = 'F';
+                $_SESSION['tripId'] = $success;
+                include 'pdf/customerInvoice.php';     
+                include 'mail/sendMail.php'; 
+                unset($_SESSION['tripId']);
+                unset($_SESSION['pdfOutput']);
+                if(file_exists('pdf/tempInvoices/'.$success.'.pdf')){
+                    unlink('pdf/tempInvoices/'.$success.'.pdf');
+                }
+            
             return $success;
         }
         return false;
