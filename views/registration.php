@@ -51,6 +51,12 @@ use views\TemplateView;
                     }
                 }
                 
+                
+                /**
+                 * When the date field is left, it is checked whether the user is at least 16 years old.
+                * 
+                * @author Vanessa Cajochen
+                */
                 function checkBirthdate() {
                     var birthdate = new Date(document.getElementById('birthDate').value);
                     var minAge = new Date(new Date().setFullYear(new Date().getFullYear() - 16))
