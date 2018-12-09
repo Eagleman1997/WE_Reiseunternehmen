@@ -602,6 +602,7 @@ class TripDBC extends DBConnector {
         
         //Updates the timestamp on the User
         if($success){
+            $success = $tripId;
             $userDBC->setTimeStamp();
         }
         return $success;
