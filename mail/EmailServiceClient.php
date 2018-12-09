@@ -40,8 +40,8 @@ class EmailServiceClient
             }
           ],
           "from": {
-            "email": "noreply@fhnw.ch",
-            "name": "WE-CRM"
+            "email": "noreply@dreamtrips.ch",
+            "name": "Dream Trips"
           },
           "subject": "subject",
           "content": [
