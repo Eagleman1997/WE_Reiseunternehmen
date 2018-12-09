@@ -193,12 +193,31 @@ function CreateTable($trip)
     $this->Cell(30,5,'Insurance',0,0);
     $this->Cell(30,5,'CHF '.$this->insuranceRevenue,0,1,'R');    
     
-    $this->SetDrawColor(0, 0, 0);
+    
+    // Row with other costs and if additional costs were recorded
+    $this->Cell(22,5,'Other',0,0);
+    $this->Cell(30,5,'CHF '.$this->otherCalcCost,0,0,'R');
+    $this->Cell(30,5,'CHF '.$this->otherActualCost,0,0,'R');
+    
+// If delta is positive the font color becomes green, if delta is negative the font color becomes red.
+    if ($this->otherDelta < 0){
+        $this->SetTextColor(255, 0, 0);
+    } else if ($this->otherDelta > 0){
+        $this->SetTextColor(0, 153, 0);
+    }
+    $this->Cell(18,5,''.$this->otherDelta.'%',0,0,'R');
+    $this->Ln(5);   
+ 
+    $this->Line(10, 130, 110, 130);
     $this->Line(10, 135, 110, 135);
-    $this->Line(120, 135, 200, 135);    
+    
+    $this->SetDrawColor(0, 0, 0);
+    $this->Line(10, 140, 110, 140);
+    $this->Line(120, 140, 200, 140);    
     $this->Ln(5);    
-    $this->Line(10, 145, 110, 145);  
-    $this->Line(120, 145, 200, 145); 
+    $this->Line(10, 150, 110, 150);  
+    $this->Line(120, 150, 200, 150); 
+    
     
     
     // Row with subtotals    
@@ -234,8 +253,6 @@ function CreateTable($trip)
     $this->Cell(80,15,'CHF '.$this->grossProfit,0,0);   
 
 }
-
-
 }
 
 // Calculates how many 0 should be appended before the trip id. Trip id should always have 8 digits.
@@ -259,6 +276,8 @@ $busActualCost = ($trip->getInvoicePrice("bus"));
 $busDelta = (($busActualCost - $busCalcCost)/($busCalcCost/-100));
 $hotelRevenue = $trip->getTripTemplate()->getCustomerHotelPricePerPerson() * ($trip->getNumOfParticipation());
 $busRevenue = ($trip->getTripTemplate()->getCustomerBusPrice());
+$otherCalcCost = 0;
+$otherActualCost = 0;
 
 
 // Checks whether insurance has been booked. If there is none, the text is adjusted and the subtotal and gross profit are calculated differently.
@@ -290,6 +309,20 @@ if($trip->getInsurance()){
     $pdf->insuranceText = "No insurance";
 }
 
+
+// Checks whether other costs has been recorded. If there is none, the text is adjusted and the subtotal and gross profit are calculated differently.
+if($trip->getInvoicePrice('other')){ 
+    $otherActualCost = $trip->getInvoicePrice('other');
+    $actualCostTotal = $actualCostTotal + $otherActualCost;
+    $otherDelta = (($otherActualCost - $otherCalcCost)/($otherCalcCost/-100));
+    
+    $pdf->otherDelta = number_format($otherDelta,1);
+}
+else {
+    $pdf->otherDelta = "-";
+}
+
+
 // Filling Variables with values from the Database
 // Depends on the values that are filled in the if /else above, depending on whether it has insurance or not.
 $totalDelta = (($actualCostTotal - $calcCostTotal)/($calcCostTotal/-100));
@@ -309,6 +342,9 @@ $pdf->hotelDelta = number_format($hotelDelta,1);
 $pdf->busCalcCost = number_format($busCalcCost,2);
 $pdf->busActualCost = number_format($busActualCost,2);
 $pdf->busDelta = number_format($busDelta,1);
+
+$pdf->otherCalcCost = number_format($otherCalcCost,2);
+$pdf->otherActualCost = number_format($otherActualCost,2);
 
 $pdf->calcCostTotal = number_format($calcCostTotal,2);
 $pdf->actualCostTotal = number_format($actualCostTotal,2);
