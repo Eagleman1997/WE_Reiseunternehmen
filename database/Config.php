@@ -1,6 +1,11 @@
 <?php
 namespace database;
 /**
+ * Provides access to the database and email settings
+ * <ul>
+ * <li>local through config.env</li>
+ * <li>on cloud through the $_ENV['variable'] injection</li>
+ * </ul>
  * @author andreas.martin
  */
 class Config
@@ -8,6 +13,13 @@ class Config
     protected static $iniFile = "database/config.env";
     protected static $config = [];
 
+    /**
+     * Initializes the database variables
+     * <ul>
+     * <li>searches local for the config.env</li>
+     * <li>if config.env does not exists (e.g. on cloud), then load the variables from {@link loadENV()}</li>
+     * </ul>
+     */
     public static function init()
     {
         if (file_exists(self::$iniFile)) {
@@ -19,6 +31,11 @@ class Config
         }
     }
 
+    /**
+     * Gets the variables with the specified key
+     * @param String $key
+     * @return String
+     */
     public static function get($key)
     {   
         if (empty(self::$config)){
@@ -27,6 +44,9 @@ class Config
         return self::$config[$key];
     }
 
+    /**
+     * Loads the settings from the injected $_ENV from the cloud provider
+     */
     private static function loadENV(){        
         if (isset($_ENV["JAWSDB_MARIA_URL"])) {
             $dbopts = parse_url($_ENV["JAWSDB_MARIA_URL"]);

@@ -4,13 +4,16 @@ use database\Config;
 use \mysqli;
 
 /**
- * This class provides an appropriate access to the DB
+ * This class provides an access to the database through the singletion pattern
  * @author Lukas
  */
 class DBConnection {
     
     protected static $mysqliInstance = null;
     
+    /**
+     * Initializes the mysqliInstance
+     */
     public function __construct() {
         $host = Config::get("database.host");
         $user = Config::get("database.user");

@@ -10,18 +10,34 @@ use database\HotelDBC;
 use database\InsuranceDBC;
 use database\UserDBC;
 use database\InvoiceDBC;
-use helpers\Numbers;
 
 /**
- * Description of TripDBC
- *
+ * Provides secure access to the database of {@link Trip}, {@link TripTemplate} and {@link Dayprogram} releated queries
+ * <ul>
+ * <li>{@link createTripTemplate($tripTemplate)}</li>
+ * <li>{@link deleteTripTemplate($tripTemplate)}</li>
+ * <li>{@link getAllTripTemplates()}</li>
+ * <li>{@link getBookableTripTemplates()}</li>
+ * <li>{@link findTripTemplateById($templateId, $close)}</li>
+ * <li>{@link getDayprogramsFromTemplate($tripTemplate)}</li>
+ * <li>{@link createDayprogram($dayprogram)}</li>
+ * <li>{@link deleteDayprogram($dayprogram)}</li>
+ * <li>{@link findDayprogramById($dayprogramId, $close)}</li>
+ * <li>{@link changeBookable($tripTemplate)}</li>
+ * <li>{@link createTrip($trip)}</li>
+ * <li>{@link deleteTrip($trip)}</li>
+ * <li>{@link getBookedTrips($userId)}</li>
+ * <li>{@link findTripById($tripId, $shallow)}</li>
+ * <li>{@link lockInvoicesRegistered($trip)}</li>
+ * <li>{@link unlockInvoicesRegistered($trip)}</li>
+ * </ul>
  * @author Lukas
  */
 class TripDBC extends DBConnector {
     
-    /** (tested)
-     * Creates a new TripTemplate. Price is per default busPricePerDay * durationInDays
-     * @param type $tripTemplate
+    /**
+     * Stores the {@link TripTemplate} into the database
+     * @param TripTemplate $tripTemplate
      * @return boolean|int
      */
     public function createTripTemplate($tripTemplate){
@@ -35,7 +51,7 @@ class TripDBC extends DBConnector {
         $description = $tripTemplate->getDescription();
         $minAllocation = $tripTemplate->getMinAllocation();
         $maxAllocation = $tripTemplate->getMaxAllocation();
-        $durationInDays = $tripTemplate->getDurationInDays();//Important to show just TripTemplates which allocated  Dayprograms
+        $durationInDays = $tripTemplate->getDurationInDays();
         $price = $tripTemplate->getPrice();
         $picturePath = $tripTemplate->getPicturePath();
         $bookable = intval($tripTemplate->getBookable());//Converting boolean to int
@@ -43,9 +59,9 @@ class TripDBC extends DBConnector {
         return $this->executeInsert($stmt);
     }
     
-    /** (tested)
-     * Deletes the TripTemplate and all related Dayprograms from the database
-     * @param type $tripTemplate
+    /**
+     * Deletes the {@link TripTemplate} and all related {@link Dayprogram} from the database
+     * @param TripTemplate $tripTemplate
      * @return boolean
      */
     public function deleteTripTemplate($tripTemplate){
@@ -113,7 +129,7 @@ class TripDBC extends DBConnector {
     }
     
     /**
-     * Gets all available TripTemplates from the database order by name asc
+     * Gets all available {@link TripTemplate} from the database order by name asc
      * @return boolean|array
      */
     public function getAllTripTemplates(){
@@ -138,7 +154,7 @@ class TripDBC extends DBConnector {
     }
     
     /**
-     * Gets all TripTemplates which are bookable
+     * Gets all {@link TripTemplate} which are bookable
      * @return boolean|array
      */
     public function getBookableTripTemplates(){
@@ -163,9 +179,10 @@ class TripDBC extends DBConnector {
         return $templates;
     }
     
-    /** (tested)
-     * Finds the TripTemplate and the according Bus by the given id from the database.
-     * @param type $templateId, $close (false if closing of connection is NOT desired)
+    /**
+     * Finds the {@link TripTemplate} and the according {@link Bus} by the given id from the database
+     * @param int $templateId
+     * @param boolean $close (false if closing of connection is NOT desired)
      * @return boolean|TripTemplate
      */
     public function findTripTemplateById($templateId, $close = true){
@@ -193,9 +210,9 @@ class TripDBC extends DBConnector {
         }
     }
     
-    /** (tested)
-     * Gets all Dayprograms from the database which belongs to the TripTemplate
-     * @param type $tripTemplate
+    /**
+     * Gets all {@link Dayprogram} from the database which belongs to the {@link TripTemplate}
+     * @param TripTemplate $tripTemplate
      * @return boolean|array
      */
     public function getDayprogramsFromTemplate($tripTemplate){
@@ -222,9 +239,11 @@ class TripDBC extends DBConnector {
         return $dayprograms;
     }
     
-    /** (tested)
-     * Ensures rollback of the transaction if any exception occures in the creation of a Dayprogram
-     * @param type $dayprogram
+    /**
+     * Stores the {@link Dayprogram} into the database to the according {@link TripTemplate}<br>
+     * Updates automatically the price of the {@link TripTemplate} which belongs to the {@link Dayprogram}<br>
+     * Ensures rollback of the transaction if any exception occures in the creation of a {@link Dayprogram}
+     * @param Dayprogram $dayprogram
      * @return boolean
      */
     public function createDayprogram($dayprogram){
@@ -241,12 +260,12 @@ class TripDBC extends DBConnector {
         }
     }
 
-    /** (tested)
-     *  Stores a new Dayprogram into the database and updates the price and dutationInDays of the according TripTemplate
-     * @param type $dayprogram
+    /** 
+     * Stores the {@link Dayprogram} into the database and updates the price and dutationInDays of the according {@link TripTemplate}
+     * @param Dayprogram $dayprogram
      * @return boolean
      */
-    public function createDayprogram2($dayprogram){
+    private function createDayprogram2($dayprogram){
         //Insert of Dayprogram
         $stmt = $this->mysqliInstance->prepare("INSERT INTO dayprogram VALUES (NULL, ?, ?, ?, ?, ?, ?)");
         if(!$stmt){
@@ -320,9 +339,11 @@ class TripDBC extends DBConnector {
         return true;
     }
     
-    /** (tested)
-     * Ensures rollback of the transaction if any exception occures in the elimination of a Dayprogram
-     * @param type $dayprogram
+    /**
+     * Deletes the {@link Dayprogram} from the database<br>
+     * Updates automatically the price of the {@link TripTemplate} which belongs to the {@link Dayprogram}<br>
+     * Ensures rollback of the transaction if any exception occures in the deletion of a {@link Dayprogram}
+     * @param Dayprogram $dayprogram
      * @return boolean
      */
     public function deleteDayprogram($dayprogram){
@@ -339,12 +360,12 @@ class TripDBC extends DBConnector {
         }
     }
     
-    /** (tested)
-     * Deletes the Dayprogram from the TripTemplate
-     * @param type $dayprogram
+    /** 
+     * Deletes the {@link Dayprogram} from the database and updates the price and dutationInDays of the according {@link TripTemplate}
+     * @param Dayprogram $dayprogram
      * @return boolean
      */
-    public function deleteDayprogram2($dayprogram){
+    private function deleteDayprogram2($dayprogram){
         //Gets the real object of the Dayprogram
         $dayprogram = $this->findDayprogramById($dayprogram->getId(), false);
         if($dayprogram){
@@ -418,9 +439,9 @@ class TripDBC extends DBConnector {
         return true;
     }
     
-    /** (tested)
-     * Finds the Dayprogram by the given id from the database
-     * @param type $templateId, $close (false if closing of connection is NOT desired)
+    /**
+     * Finds the {@link Dayprogram} by the given id from the database
+     * @param int $templateId, $close (false if closing of connection is NOT desired)
      * @return boolean|Dayprogram
      */
     public function findDayprogramById($dayprogramId, $close = true){
@@ -446,8 +467,8 @@ class TripDBC extends DBConnector {
         }
     }
     
-    /** (tested)
-     * Changes the bookable of the given TripTemplate
+    /**
+     * Changes the bookability of the given {@link TripTemplate} to get the {@link User} the access to these {@link TripTemplate}
      * @param type $tripTemplate
      * @return boolean
      */
@@ -474,9 +495,10 @@ class TripDBC extends DBConnector {
         return $result;
     }
     
-    /** (tested)
-     * Ensures rollback of the transaction if any exception occures in the creation of the Trip
-     * @param type $trip
+    /**
+     * Stores the booked {@link Trip} into the database.
+     * Ensures rollback of the transaction if any exception occures in the creation of the {@link Trip}
+     * @param Trip $trip
      * @return boolean
      */
     public function createTrip($trip){
@@ -494,11 +516,13 @@ class TripDBC extends DBConnector {
     }
     
     /**
-     * Creates and stores the Trip and the Participants into the database
-     * @param type $trip
+     * Stores the {@link Trip} and the {@link Participants} into the database<br>
+     * Computes the total internal price of the {@link Trip}<br>
+     * Ensures rollback of the transaction if any data or query is corrupt
+     * @param Trip $trip
      * @return boolean
      */
-    public function createTrip2($trip){
+    private function createTrip2($trip){
         //Ensures that the User doesn't book several trips in 30 sec
         $userDBC = new UserDBC();
         $user = $userDBC->findUserById($_SESSION['userId']);
@@ -583,7 +607,7 @@ class TripDBC extends DBConnector {
         return $success;
     }
     
-    /** (tested)
+    /**
      * Ensures rollback of the transaction if any exception occures in the elimination of the Trip
      * @param type $trip
      * @return boolean
@@ -607,7 +631,7 @@ class TripDBC extends DBConnector {
      * @param type $trip
      * @return boolean
      */
-    public function deleteTrip2($trip){
+    private function deleteTrip2($trip){
         //Deletes the Trip
         $stmt = $this->mysqliInstance->prepare("DELETE FROM trip WHERE id = ?");
         if(!$stmt){

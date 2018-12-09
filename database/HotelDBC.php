@@ -2,19 +2,24 @@
 
 namespace database;
 
-use entities\Hotel;
 
 /**
- * Description of HotelDBC
+ * Provides secure access to the {@link Hotel} related queries
+ * <ul>
+ * <li>{@link createHotel($hotel)}</li>
+ * <li>{@link deleteHotel($hotel)}</li>
+ * <li>{@link findAllHotels()}</li>
+ * <li>{@link findHotelById($hotelId, $close)}</li>
+ * </ul>
  *
  * @author Lukas
  */
 class HotelDBC extends DBConnector {
     
-    /** (tested)
-     * Creates a new Hotel
-     * @param type $hotel
-     * @return boolean
+    /**
+     * Stores the {@link Hotel} into the database
+     * @param Hotel $hotel
+     * @return boolean|int
      */
     public function createHotel($hotel){
         $stmt = $this->mysqliInstance->prepare("INSERT INTO hotel VALUES (NULL, ?, ?, ?, ?)");
@@ -29,9 +34,9 @@ class HotelDBC extends DBConnector {
         return $this->executeInsert($stmt);
     }
     
-    /** (tested)
-     * Deletes a Hotel by the given id
-     * @param type $hotel
+    /**
+     * Deletes the {@link Hotel} by the given id
+     * @param Hotel $hotel
      * @return boolean
      */
     public function deleteHotel($hotel){
@@ -53,8 +58,8 @@ class HotelDBC extends DBConnector {
         return $result;
     }
     
-    /** (tested)
-     * Finds all Hotels ordered by name asc
+    /**
+     * Finds all {@link Hotel} ordered by name asc
      * @return boolean|array
      */
     public function findAllHotels(){
@@ -74,9 +79,9 @@ class HotelDBC extends DBConnector {
     }
     
     /**
-     * Finds the Hotel by the given id
-     * @param type $hotelId
-     * @param type $close (false if closing of the database connection is NOT desired)
+     * Finds the {@link Hotel} with the given id
+     * @param int $hotelId
+     * @param boolean $close false if closing of the database connection is NOT desired)
      * @return boolean
      */
     public function findHotelById($hotelId, $close = true){
@@ -93,7 +98,7 @@ class HotelDBC extends DBConnector {
             $stmt->close();
         }
         
-        //checks whether the User exists
+        //checks whether the Hotel exists
         if($hotelObj){
             return $hotelObj;
         }else{

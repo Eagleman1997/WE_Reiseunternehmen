@@ -7,22 +7,23 @@ use entities\Trip;
 use database\TripDBC;
 use helpers\Validation;
 use helpers\Upload;
-use http\HTTPHeader;
-use http\HTTPStatusCode;
-use views\LayoutRendering;
-use views\TemplateView;
 
 /**
- * Controlls the Invoice storage and querys
- *
+ * Controls the access to the functionalities of the {@link Invoice}
+ * <ul>
+ * <li>{@link createInvoice()}</li>
+ * <li>{@link deleteInvoice($invoiceId)}</li>
+ * <li>{@link getCustomerInvoice($tripId)}</li>
+ * <li>{@link getFinalSettlement($tripId)}</li>
+ * </ul>
  * @author Lukas
  */
 class InvoiceController{
     
     
     /**
-     * Creates an Invoice to the according Trip
-     * @return boolean
+     * Creates a new {@link Invoice} to the according {@link Trip}
+     * @return boolean|int
      */
     public static function createInvoice(){
         if(!isset($_SESSION['role']) or (isset($_SESSION['role']) and $_SESSION['role'] != "admin")){
@@ -68,7 +69,9 @@ class InvoiceController{
     }
     
     /**
-     * Gets the final Invoice of the Trip if invoiceRegistered is set on the Trip
+     * Provides the view to the finalSettlement of the specified {@link Trip}
+     * @param int $tripId
+     * @return boolean
      */
     public static function getFinalSettlement($tripId){
         if(!isset($_SESSION['role']) or (isset($_SESSION['role']) and $_SESSION['role'] != "admin")){
@@ -94,8 +97,9 @@ class InvoiceController{
     }
     
     /**
-     * Gets a specific Invoice
-     * @return boolean|Invoice
+     * Provides the view to the customerInvoice of the specified {@link Trip}
+     * @param int $tripId
+     * @return boolean
      */
     public static function getCustomersInvoice($tripId){
         if(!isset($_SESSION['role'])){
@@ -120,7 +124,8 @@ class InvoiceController{
     }
     
     /**
-     * Deletes an Invoice by the given id
+     * Deletes an {@link Invoice} by the given id
+     * @param int $invoiceId
      * @return boolean
      */
     public static function deleteInvoice($invoiceId){

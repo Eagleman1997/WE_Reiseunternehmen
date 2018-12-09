@@ -4,18 +4,23 @@ namespace database;
 
 use entities\Invoice;
 use database\TripDBC;
-use entities\Trip;
 
 /**
- * Description of InvoiceDBC
+ * Provides secure access to the database of {@link Invoice} releated queries
+ * <ul>
+ * <li>{@link createInvoice($invoice)}</li>
+ * <li>{@link deleteInvoice($invoice)}</li>
+ * <li>{@link findInvoiceById($invoiceId, $close)}</li>
+ * <li>{@link findTripInvoices($tripId, $checkInvoicesRegistered)}</li>
+ * </ul>
  *
  * @author Lukas
  */
 class InvoiceDBC extends DBConnector {
     
-    /** (tested)
-     * Creates a new Invoice in the database according to the Trip
-     * @param type $invoice
+    /**
+     * Stores the {@link Invoice} into the database
+     * @param Invoice $invoice
      * @return boolean|int
      */
     public function createInvoice($invoice){
@@ -48,9 +53,9 @@ class InvoiceDBC extends DBConnector {
         return $this->executeInsert($stmt);
     }
     
-    /** (tested)
-     * Deletes the Invoice from the database
-     * @param type $invoice
+    /** 
+     * Deletes the {@link Invoice} from the database
+     * @param Invoice $invoice
      * @return boolean
      */
     public function deleteInvoice($invoice){
@@ -63,9 +68,10 @@ class InvoiceDBC extends DBConnector {
         return $this->executeDelete($stmt);
     }
     
-    /** (tested)
-     * Finds the Invoice by the given id
-     * @param type $invoiceId
+    /**
+     * Finds the {@link Invoice} by the given id
+     * @param int $invoiceId
+     * @param boolean $close
      * @return boolean|Invoice
      */
     public function findInvoiceById($invoiceId, $close = true){
@@ -90,10 +96,10 @@ class InvoiceDBC extends DBConnector {
         }
     }
     
-    /** (tested)
-     * Finds all Invoices according to the given tripId
-     * @param type $tripId
-     * @param type $checkInvoicesRegistered
+    /**
+     * Finds all {@link Invoice} according to the given tripId
+     * @param int $tripId
+     * @param boolean $checkInvoicesRegistered
      * @return boolean|array
      */
     public function findTripInvoices($tripId, $checkInvoicesRegistered = false){

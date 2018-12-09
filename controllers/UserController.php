@@ -3,26 +3,34 @@
 namespace controllers;
 
 use entities\User;
-use entities\Trip;
 use entities\Participant;
 use database\UserDBC;
 use helpers\Validation;
 use views\LayoutRendering;
 use views\TemplateView;
-use http\HTTPException;
-use http\HTTPHeader;
-use http\HTTPStatusCode;
 
 /**
- * Controls the Login and Logout of a User
- *
+ * Controls the access to the functionalities of the {@link User}<br>
+ * <ul>
+ * <li>{@link register()}</li>
+ * <li>{@link login()}</li>
+ * <li>{@link logout()}</li>
+ * <li>{@link getAllUsers())}</li>
+ * <li>{@link deleteUser($userId)}</li>
+ * <li>{@link deleteSelf()}</li>
+ * <li>{@link createParticipant())}</li>
+ * <li>{@link deleteParticipant($participantId}</li>
+ * <li>{@link getParticipants()}</li>
+ * <li>{@link changeRole($userId)}</li>
+ * <li>{@link getHomepage()}</li>
+ * </ul>
  * @author Lukas
  */
 class UserController {
     
     /**
-     * Controlls the registration process of a new User
-     * 
+     * Registration process of a new {@link User}
+     * @return boolean|int
      */
     public static function register(){
         $user = new User();
@@ -58,10 +66,8 @@ class UserController {
     }
     
     /**
-     * Controlls the login process of a User
-     * 
-     * @param type $email
-     * @param type $password
+     * Login process of a {@link User}
+     * @return boolean|int
      */
     public static function login(){
         $user = new User();
@@ -80,7 +86,8 @@ class UserController {
     }
     
     /**
-     * Controlls the logout process of a User
+     * Logout process of a {@link User}
+     * @return boolean
      */
     public static function logout(){
         $user = new User();
@@ -93,7 +100,7 @@ class UserController {
     }
     
     /**
-     * Gets all Users
+     * Provides the overview of all {@link User}
      */
     public static function getAllUsers(){
         if(isset($_SESSION['role']) and $_SESSION['role'] == "admin"){
@@ -111,7 +118,9 @@ class UserController {
     
     
     /**
-     * Deletes a User
+     * Deletes a {@link User} with the specified id
+     * @param int $userId
+     * @return boolean
      */
     public static function deleteUser($userId){
         if(isset($_SESSION['role']) and $_SESSION['role'] == "admin"){
@@ -132,7 +141,8 @@ class UserController {
     }
     
     /**
-     * Deletes the own account
+     * Deletes the account itself of the {@link User}
+     * @return boolean
      */
     public static function deleteSelf(){
         $user = new User();
@@ -146,8 +156,8 @@ class UserController {
     }
     
     /**
-     * Creates ONE new Participant to the User
-     * @return type
+     * Creates a new {@link Participant} according to the {@link User} to make them ready for {@link Trip} booking
+     * @return boolean|int
      */
     public static function createParticipant(){
         $participant = new Participant();
@@ -169,7 +179,8 @@ class UserController {
     }
     
     /**
-     * Deletes the Participant
+     * Deletes a {@link Participant} by the given id
+     * @param int $participantId
      * @return boolean
      */
     public static function deleteParticipant($participantId){
@@ -189,7 +200,8 @@ class UserController {
     }
     
     /**
-     * Gets a complete User-object with the related Participants if available
+     * Provides an overview of a {@link User} with the related {@link Participants}
+     * @return boolean
      */
     public static function getParticipants(){
         if(!isset($_SESSION['role']) or (isset($_SESSION['role']) and $_SESSION['role'] != "user")){
@@ -206,7 +218,8 @@ class UserController {
     }
     
     /**
-     * Updates the role of a given User to the given role
+     * Changes teh role of the specified {@link User} to allow to make someone to an admin or user
+     * @param int $userId
      * @return boolean
      */
     public static function changeRole($userId){
@@ -229,7 +242,8 @@ class UserController {
     }
     
     /**
-     * Provides the homepage (after login) of a admin or user
+     * Provides view of the start-side (after login) of a admin or user
+     * @return boolean
      */
     public static function getHomepage(){
         if(isset($_SESSION['role']) and $_SESSION['role'] == "admin"){

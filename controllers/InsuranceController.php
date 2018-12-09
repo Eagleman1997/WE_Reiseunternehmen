@@ -7,18 +7,20 @@ use database\InsuranceDBC;
 use helpers\Validation;
 use views\LayoutRendering;
 use views\TemplateView;
-use http\HTTPHeader;
-use http\HTTPStatusCode;
 
 /**
- * Description of InsuranceController
- *
+ * Controls the access to the functionalities of the {@link Insurance}
+ * <ul>
+ * <li>{@link createInsurance()}</li>
+ * <li>{@link deleteInsurance($id)}</li>
+ * <li>{@link getAllInsurances()}</li>
+ * </ul>
  * @author Lukas
  */
 class InsuranceController {
     
     /**
-     * Creates the Insurance
+     * Creates a new {@link Insurance}
      * @return boolean|int
      */
     public static function createInsurance(){
@@ -43,7 +45,8 @@ class InsuranceController {
     }
     
     /**
-     * Deletes the Insurance
+     * Deletes an {@link Insurance}
+     * @param int $id
      * @return boolean
      */
     public static function deleteInsurance($id){
@@ -66,7 +69,8 @@ class InsuranceController {
     }
     
     /**
-     * Gets all Insurances
+     * Provides the view of all stored {@link Insurance} from the database
+     * @return boolean
      */
     public static function getAllInsurances(){
         if(isset($_SESSION['role']) and $_SESSION['role'] == "admin"){

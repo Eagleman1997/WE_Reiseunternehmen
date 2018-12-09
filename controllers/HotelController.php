@@ -8,19 +8,22 @@ use helpers\Upload;
 use helpers\Validation;
 use views\LayoutRendering;
 use views\TemplateView;
-use http\HTTPHeader;
-use http\HTTPStatusCode;
 
 /**
- * Controls the actions of a Hotel
+ * Controls the access to the functionalities of the {@link Hotel}
+ * <ul>
+ * <li>{@link createHotel()}</li>
+ * <li>{@link deleteHotel($id)}</li>
+ * <li>{@link getAllHotels()}</li>
+ * </ul>
  *
  * @author Lukas
  */
 class HotelController {
     
     /**
-     * Creates a new Hotel
-     * @return type
+     * Creates a new {@link Hotel}
+     * @return boolean|int
      */
     public static function createHotel(){
         if(!isset($_SESSION['role']) or (isset($_SESSION['role']) and $_SESSION['role'] != "admin")){
@@ -52,7 +55,8 @@ class HotelController {
     }
     
     /**
-     * Deletes the Hotel
+     * Deletes  a {@link Hotel} by the given id
+     * @param int $id
      * @return boolean
      */
     public static function deleteHotel($id){
@@ -75,7 +79,7 @@ class HotelController {
     }
     
     /**
-     * Get all Hotels
+     * Provides the view of all stored {@link Hotel} from the database
      * @return boolean
      */
     public static function getAllHotels(){

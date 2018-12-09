@@ -8,18 +8,22 @@ use helpers\Upload;
 use database\BusDBC;
 use views\LayoutRendering;
 use views\TemplateView;
-use http\HTTPHeader;
-use http\HTTPStatusCode;
 
 /**
- * Description of BusController
+ * Controls the access to the functionalities of the {@link Bus}
+ * <ul>
+ * <li>{@link createBus()}</li>
+ * <li>{@link deleteBus($busId)}</li>
+ * <li>{@link getAllBuses()}</li>
+ * <li>{@link getBus($id)}</li>
+ * </ul>
  *
  * @author Lukas
  */
 class BusController {
     
     /**
-     * Creates a new Bus
+     * Creates a new {@link Bus}
      * @return boolean|int
      */
     public static function createBus(){
@@ -58,7 +62,8 @@ class BusController {
     }
     
     /**
-     * Deletes a Bus by the given busId
+     * Deletes a {@link Bus} by the given id
+     * @param int $busId
      * @return boolean
      */
     public static function deleteBus($busId){
@@ -80,8 +85,8 @@ class BusController {
     }
     
     /**
-     * Gets all stored Buses from the database
-     * @return boolean|array
+     * Provides the View of all stored {@link Bus} from the database
+     * @return boolean
      */
     public static function getAllBuses(){
         if(!isset($_SESSION['role']) or (isset($_SESSION['role']) and $_SESSION['role'] != "admin")){
@@ -96,8 +101,9 @@ class BusController {
     }
     
     /**
-     * Gets the Bus
-     * @return boolean|Bus
+     * Gets the specified {@link Bus} by the given id
+     * @param int $id
+     * @return boolean
      */
     public static function getBus($id){
         $bus = new Bus();

@@ -2,18 +2,22 @@
 
 namespace database;
 
-use entities\Insurance;
 
 /**
- * Description of InsuranceDBC
- *
+ * Provides secure access to the {@link Insurance} related queries
+ * <ul>
+ * <li>{@link createInsurance($insurance)}</li>
+ * <li>{@link deleteInsurance($insurance)}</li>
+ * <li>{@link getAllInsurances()}</li>
+ * <li>{@link findInsuranceById($insuranceId)}</li>
+ * </ul>
  * @author Lukas
  */
 class InsuranceDBC extends DBConnector {
     
     /**
-     * Creates a new Insurance into the database
-     * @param type $insurance
+     * Stores the {@link Insurance} into the database
+     * @param Insurance $insurance
      * @return boolean|int
      */
     public function createInsurance($insurance){
@@ -29,9 +33,9 @@ class InsuranceDBC extends DBConnector {
         return $this->executeInsert($stmt);
     }
     
-    /** (tested)
-     * Deletes the Insurance by the given id
-     * @param type $insurance
+    /**
+     * Deletes the {@link Insurance} by the given id
+     * @param Insurance $insurance
      * @return boolean
      */
     public function deleteInsurance($insurance){
@@ -44,8 +48,8 @@ class InsuranceDBC extends DBConnector {
         return $this->executeDelete($stmt);
     }
     
-    /** (tested)
-     * Gets all available Insurances from the database
+    /**
+     * Gets all available {@link Insurance} from the database
      * @return boolean|array
      */
     public function getAllInsurances(){
@@ -64,11 +68,10 @@ class InsuranceDBC extends DBConnector {
         return $insurances;
     }
     
-    /** (tested)
-     * Finds the Insurance by the given id
-     * @param type $insuranceId
-     * @param type $close (false if closing of connection is NOT desired)
-     * @return boolean\Insurance
+    /**
+     * Finds the {@link Insurance} by the given id
+     * @param int $insuranceId
+     * @return boolean|Insurance
      */
     public function findInsuranceById($insuranceId){
         $stmt = $this->mysqliInstance->prepare("SELECT * FROM insurance where id = ?;");

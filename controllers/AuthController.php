@@ -7,8 +7,12 @@ use views\LayoutRendering;
 
 
 /**
- * Controls the registration of a new User
- *
+ * Controls the authentication of a user and provides access to:
+ * <ul>
+ * <li>{@link AuthController::authenticate()}</li>
+ * <li>{@link loginView()}</li>
+ * <li>{@link registerView()}</li>
+ * </ul>
  * @author Lukas
  */
 class AuthController {
@@ -25,16 +29,16 @@ class AuthController {
         }
     }
     
-    /** (tested)
-     * Gets the login-view
+    /**
+     * Provides the loginView
      */
     public static function loginView(){
         $homepage = new TemplateView("homepage.php");
         LayoutRendering::basicLayout($homepage, "headerLoggedOut");
     }
     
-    /** (tested)
-     * Gets the register-view
+    /**
+     * Provides the registerView
      */
     public static function registerView(){
         $homepage = new TemplateView("registration.php");

@@ -15,6 +15,12 @@ use controllers\TripController;
 use controllers\UserController;
 use controllers\ErrorController;
 
+/**
+ * Access point of all requests<br>
+ * Routes the given path with the given method to the correct Controller
+ * @author Lukas
+ */
+
 session_start();
 require_once 'helpers/Autoloader.php';
 

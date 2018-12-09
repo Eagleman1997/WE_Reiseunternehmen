@@ -14,18 +14,31 @@ use helpers\Validation;
 use helpers\Upload;
 use views\LayoutRendering;
 use views\TemplateView;
-use http\HTTPHeader;
-use http\HTTPStatusCode;
 
 /**
- * Controlls the storage and querys of Trips
- *
+ * Controls the access to the functionalities of the {@link Trip}, {@link TripTemplate} and {@link Dayprogram}
+ * <ul>
+ * <li>{@link createTripTemplate()}</li>
+ * <li>{@link getAllTrips()}</li>
+ * <li>{@link getAllTripTemplates()}</li>
+ * <li>{@link getTripTemplate($tripTemplateId)}</li>
+ * <li>{@link deleteTripTemplate($tripTemplateId)}</li>
+ * <li>{@link createDayprogram()}</li>
+ * <li>{@link deleteDayprogram($dayprogramId)}</li>
+ * <li>{@link changeBookableOfTripTemplate($tripTemplateId)}</li>
+ * <li>{@link bookTrip()}</li>
+ * <li>{@link cancelTrip($tripId)}</li>
+ * <li>{@link getBookedTrip($tripId)}</li>
+ * <li>{@link lockInvoicesRegistered($tripId)}</li>
+ * <li>{@link unlockInvoicesRegistered($tripId)}</li>
+ * </ul>
  * @author Lukas
  */
 class TripController {
     
     /**
-     * Stores a new TripTemplate
+     * Creates a new {@link TripTemplate}
+     * @return boolean|int
      */
     public static function createTripTemplate(){
         if(!isset($_SESSION['role']) or (isset($_SESSION['role']) and $_SESSION['role'] != "admin")){
@@ -67,7 +80,12 @@ class TripController {
     }
     
     /**
-     * Gets all TripTemplates (Admins all, the other roles all templates which are finished in creation)
+     * Provides the view of all {@link TripTemplate} dependant of the role
+     * <ul>
+     * <li>Admin: Gets all available {@link TripTemplate}(finished & unfinished)</li>
+     * <li>User & unregistered: Gets all {@link TripTemplate} which are bookable</li>
+     * </ul>
+     * @return boolean
      */
     public static function getAllTrips(){
         $tripDBC = new TripDBC();
@@ -92,7 +110,8 @@ class TripController {
     }
     
     /**
-     * Gets to the admins TripTemplate overview
+     * Provides the view of all {@link TripTemplate} for a good admin overview
+     * @return boolean
      */
     public static function getAllTripTemplates(){
         if(isset($_SESSION['role']) and $_SESSION['role'] == "admin"){
@@ -109,14 +128,15 @@ class TripController {
     }
     
     /**
-     * Gets the TripTemplate
-     * @return boolean|TripTemplate
+     * Provides the view of a specific {@link TripTemplate}<br>
+     * How the overview looks like is dependant of the role
+     * @param int $tripTemplateId
+     * @return boolean
      */
     public static function getTripTemplate($tripTemplateId){
         $tripTemplate = new TripTemplate();
         $id = Validation::positiveInt($tripTemplateId);
         if(!$id){
-            HTTPHeader::setStatusHeader(HTTPStatusCode::HTTP_204_NO_CONTENT);
             return false;
         }
         $tripTemplate->setId($id);
@@ -151,7 +171,8 @@ class TripController {
     }
     
     /**
-     * Deletes the TripTemplate
+     * Deletes a {@link TripTemplate} by the given id
+     * @param int $tripTemplateId
      * @return boolean
      */
     public static function deleteTripTemplate($tripTemplateId){
@@ -173,8 +194,8 @@ class TripController {
     }
     
     /**
-     * Stores any number of Dayprograms in relation to the TripTemplate and Hotel
-     * @return boolean
+     * Creates a new {@link Dayprogram} according to the specified {@link TripTemplate}
+     * @return boolean|id
      */
     public static function createDayprogram(){
         if(!isset($_SESSION['role']) or (isset($_SESSION['role']) and $_SESSION['role'] != "admin")){
@@ -218,7 +239,8 @@ class TripController {
     }
     
     /**
-     * Deletes the selected Dayprogram
+     * Deletes a {@link Dayprogram} by the given id
+     * @param int $dayprogramId
      * @return boolean
      */
     public static function deleteDayprogram($dayprogramId){
@@ -241,7 +263,8 @@ class TripController {
     }
     
     /**
-     * Changes the bookable of the TripTemplate
+     * Changes the bookability of the specified {@link TripTemplate} to provide access to the {@link User} to book it
+     * @param int $tripTemplateId
      * @return boolean
      */
     public static function changeBookableOfTripTemplate($tripTemplateId){
@@ -264,8 +287,8 @@ class TripController {
     }
     
     /**
-     * Books a Trip
-     * @return boolean
+     * Books a {@link Trip} with the {@link User} logged in
+     * @return boolean|int
      */
     public static function bookTrip(){
         if(!isset($_SESSION['login'])){
@@ -313,7 +336,8 @@ class TripController {
     }
     
     /**
-     * Deletes the Trip
+     * Deletes a {@link Trip} by the given id
+     * @param int $tripId
      * @return boolean
      */
     public static function cancelTrip($tripId){
@@ -335,7 +359,10 @@ class TripController {
     }
     
     /**
-     * Get the requested booked Trip (TripTemplate, Bus, Hotel, Dayprograms, Insurance inclusive)
+     * Provides the view of the specified booked {@link Trip}<br>
+     * Also access to {@link TripTemplate}, {@link Bus}, {@link Hotel}, {@link Dayprogram} and {@link Insurance}
+     * @param int $tripId
+     * @return boolean
      */
     public static function getBookedTrip($tripId){
         $id = Validation::positiveInt($tripId);
@@ -359,8 +386,8 @@ class TripController {
     }
     
     /**
-     * Locks the InvoiceRegistered
-     * @param type $tripId
+     * Locks the InvoiceRegistered of the specified {@link Trip} to close the {@link Invoice} allocation
+     * @param int $tripId
      * @return boolean
      */
     public static function lockInvoicesRegistered($tripId){
@@ -382,8 +409,8 @@ class TripController {
     }
     
     /**
-     * Locks the InvoiceRegistered
-     * @param type $tripId
+     * Locks the InvoiceRegistered of the specified {@link Trip} to allow to allocate more {@link Invoice}
+     * @param int $tripId
      * @return boolean
      */
     public static function unlockInvoicesRegistered($tripId){

@@ -5,16 +5,22 @@ namespace database;
 use entities\Bus;
 
 /**
- * Description of BusDBC
+ * Provides secure access to the database of {@link Bus} releated queries
+ * <ul>
+ * <li>{@link createBus($bus)}</li>
+ * <li>{@link findBusById($busId, $close)}</li>
+ * <li>{@link deleteBus($bus)}</li>
+ * <li>{@link getAllBuses()}</li>
+ * </ul>
  *
  * @author Lukas
  */
 class BusDBC extends DBConnector {
     
-    /** (tested)
-     * Creates a new Bus into the database
-     * @param type $bus
-     * @return boolean\int
+    /**
+     * Stores the {@link Bus} into the database
+     * @param Bus $bus
+     * @return boolean|int
      */
     public function createBus($bus){
         $stmt = $this->mysqliInstance->prepare("INSERT INTO bus VALUES (NULL, ?, ?, ?, ?, ?)");
@@ -29,9 +35,11 @@ class BusDBC extends DBConnector {
         $picturePath = $bus->getPicturePath();
         return $this->executeInsert($stmt);
     }
+    
     /**
-     * Finds the Bus by the given id
-     * @param type $busId, $close (false if closing of connection is NOT desired)
+     * Finds the {@link Bus} by the given id
+     * @param int $busId
+     * @param boolean $close (false if closing of connection is NOT desired)
      * @return boolean|Bus
      */
     public function findBusById($busId, $close = true){
@@ -56,9 +64,9 @@ class BusDBC extends DBConnector {
         }
     }
     
-    /** (tested)
-     * Deletes the Bus by the given id
-     * @param type $bus
+    /**
+     * Deletes the {@link Bus} by the given id
+     * @param Bus $bus
      * @return boolean
      */
     public function deleteBus($bus){
@@ -78,8 +86,8 @@ class BusDBC extends DBConnector {
         return $result;
     }
     
-    /** (tested)
-     * Gets all available Buses from the database
+    /**
+     * Gets all available {@link Bus} from the database
      * @return boolean|array
      */
     public function getAllBuses(){
