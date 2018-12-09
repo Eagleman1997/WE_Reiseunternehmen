@@ -240,7 +240,7 @@ $pdf->totalCost  = number_format(round($trip->getCustomerPrice(),2),2);
 
 
 // Checks whether insurance has been booked. If there is none, the text is adjusted and the subtotal is calculated differently.
-if($trip->getInsurance()) {
+if(!$trip->getInsurance()) {
     $pdf->tripCostPerPerson = number_format(round(($trip->getCustomerPrice())/$trip->getNumOfParticipation(),2),2);
     $pdf->tripSubtotal = number_format(($trip->getCustomerPrice()),2);
     $pdf->insuranceDescription = "No insurance";
@@ -260,6 +260,14 @@ $pdf->AddPage();
 $pdf->CreateTable();
 $pdf->SetTitle('Customer invoice');
 
-$pdf->Output();
+$pdfOutput = "I";
+if(isset($_SESSION['pdfOutput']) AND isset($_SESSION['tripId'])){
+    $pdfOutput = $_SESSION['pdfOutput'];
+    if($pdfOutput == 'F'){
+        $pdf->Output('F','pdf/tempInvoices/'.$_SESSION['tripId'].'.pdf');
+    }        
+}else{
+    $pdf->Output($pdfOutput);
+}
 ob_end_flush();
 ?>
