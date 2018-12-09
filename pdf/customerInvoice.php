@@ -260,6 +260,9 @@ $pdf->AddPage();
 $pdf->CreateTable();
 $pdf->SetTitle('Customer invoice');
 
+
+// The invoice can either be displayed in the browser or sent as a PDF file.
+// If the invoice is to be sent as PDF, the session variable 'pdfOutput' is set to F.
 $pdfOutput = "I";
 if(isset($_SESSION['pdfOutput']) AND isset($_SESSION['tripId'])){
     $pdfOutput = $_SESSION['pdfOutput'];
