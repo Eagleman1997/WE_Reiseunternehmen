@@ -330,6 +330,7 @@ class TripController {
 
         $success = $trip->book();
         if($success){
+                if($GLOBALS['ROOT_URL'] == 'http://localhost/WE_Reiseunternehmen'){
                 $trip->getId();
                 $_SESSION['pdfOutput'] = 'F';
                 $_SESSION['tripId'] = $success;
@@ -340,7 +341,7 @@ class TripController {
                 if(file_exists('pdf/tempInvoices/'.$success.'.pdf')){
                     unlink('pdf/tempInvoices/'.$success.'.pdf');
                 }
-            
+                }
             return $success;
         }
         return false;
