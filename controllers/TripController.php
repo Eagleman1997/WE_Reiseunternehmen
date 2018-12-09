@@ -329,6 +329,13 @@ class TripController {
         $trip->setFkInsuranceId($insuranceId);
 
         $success = $trip->book();
+        
+        /**
+        * PHPMailer does not work with herokuapp. For this reason we check if we are on the herokuapp or on localhost.
+        * If we are on localhost we send the invoice.
+         * 
+        * @author Vanessa Cajochen
+        */
         if($success){
                 if($GLOBALS['ROOT_URL'] == 'http://localhost/WE_Reiseunternehmen'){
                 $trip->getId();
