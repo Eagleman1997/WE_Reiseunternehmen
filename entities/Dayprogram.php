@@ -1,6 +1,7 @@
 <?php
 
 namespace entities;
+use database\TripDBC;
 
 /**
  * Ensure easy access to {@link Dayprogram} related functionalities and data
