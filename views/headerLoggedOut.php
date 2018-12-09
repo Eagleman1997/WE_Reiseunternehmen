@@ -68,7 +68,7 @@ use views\TemplateView;
                             <li class="nav-item" role="presentation"><a class="nav-link" href="<?php echo $GLOBALS['ROOT_URL'] ?>/packageOverview" style="color: #000000;">Trip overview</a></li>
                         </ul><span class="ml-auto navbar-text actions"> <div class="topnav">
                                 <div class="login-container" style="font-family:Capriola">
-                                    <form action="<?php echo $GLOBALS['ROOT_URL'] ?>/login" method="post">
+                                    <form id="loginForm" action="<?php echo $GLOBALS['ROOT_URL'] ?>/login" method="post">
                                         <input type="email" required placeholder="Email" name="email">
                                         <input type="password" required placeholder="Password" name="password">
                                         <button id=loginButton type="submit">Login</button>
@@ -90,4 +90,31 @@ use views\TemplateView;
         <script src="https://cdnjs.cloudflare.com/ajax/libs/pikaday/1.6.1/pikaday.min.js"></script>
         <script src="https://unpkg.com/@bootstrapstudio/bootstrap-better-nav/dist/bootstrap-better-nav.min.js"></script>
         <script src="assets/js/Sidebar-Menu.js"></script>
+        
+        <script>
+            
+            $('#loginForm').on('submit', function(event){
+                    
+                    event.preventDefault();
+                    var form = $("#loginForm").serialize();
+                    $.ajax({
+                        type:'POST',
+                        url:'ajaxLogin',
+                        data: form,
+                        success:function(data){
+                            if(data.status == 'success'){
+                                $('#loginForm').unbind().submit();
+                             }else if(data.status == 'error'){
+                                alert("Wrong email or password")
+                            }
+                        }
+                       });
+                       
+                   });
+                   
+            
+        </script>
+        
+        
+        
         <noscript style="background-color: red; color: white; margin:10px;">Turn on your damned JavaScript! What is this, 1999?</noscript>
