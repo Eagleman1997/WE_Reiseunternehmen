@@ -87,6 +87,32 @@ class User {
         }
     }
     
+    
+    
+    /**
+    * Checks if the email already exists.
+    * If the email exists, it will check if the entered password is correct.
+    *
+    * @author Vanessa Cajochen
+    */
+    public function loginPreCheck(){
+        $userObj = $this->userDBC->findUserByEmail($this);
+        if($userObj){
+            $password = $userObj->getPassword();
+        }else{
+            //User doesn't exist
+            return false;
+        }
+        
+        if (password_verify($this->password, $password)) {                        
+            return true;
+        }else{
+            //password is incorrect
+            return false;
+        }
+    }
+    
+    
     /**
      * Logs the User out and kills the session if he is logged in
      */
