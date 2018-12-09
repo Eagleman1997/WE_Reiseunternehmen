@@ -3,7 +3,7 @@
 namespace helpers;
 
 /**
- * Computes the margins of the Trip and Insurance
+ * Computes the margins of the {@link Trip} and {@link Insurance} to provide single point of truth to margins
  *
  * @author Lukas
  */
@@ -13,7 +13,7 @@ class Margin {
     private static $tripMargin = 1.2;
     
     /**
-     * Computes Insurance margin
+     * Computes {@link Insurance} margin of 10%
      * @param type $money
      * @return type
      */
@@ -22,7 +22,7 @@ class Margin {
     }
     
     /**
-     * Computes Trip margin
+     * Computes {@link Trip} margin of 20%
      * @param type $money
      * @return type
      */

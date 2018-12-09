@@ -1,1 +1,0 @@
-helpers: This folder will contain specific functions which all the files would be using, the biggest example would be database connection. Have you ever written mysqli_connect() on top of each file in a big-ass project and then had to change the password in 20 different files? I have.

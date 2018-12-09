@@ -608,7 +608,8 @@ class TripDBC extends DBConnector {
     }
     
     /**
-     * Ensures rollback of the transaction if any exception occures in the elimination of the Trip
+     * Deletes the {@link Trip} from the database<br>
+     * Ensures rollback of the transaction if any exception occures in the deletion of a {@link Trip}
      * @param type $trip
      * @return boolean
      */
@@ -626,9 +627,10 @@ class TripDBC extends DBConnector {
         }
     }
     
-    /** (tested)
-     * Deletes the Trip and the according Participants (from the Trip-booking)
-     * @param type $trip
+    /**
+     * Deletes the {@link Trip and the according {@link Participant} from the Trip-booking<br>
+     * Ensures rollback of the transaction if there is any corrupt data
+     * @param Trip $trip
      * @return boolean
      */
     private function deleteTrip2($trip){
@@ -663,9 +665,9 @@ class TripDBC extends DBConnector {
         return true;
     }
     
-    /** (tested)
-     * Gets the booked Trips
-     * @param type $userId (if request is restricted to a single User)
+    /**
+     * Gets the booked {@link Trip} to get an overview of them
+     * @param int $userId (if request is restricted to a single User)
      * @return boolean|array
      */
     public function getBookedTrips($userId = null){
@@ -709,9 +711,10 @@ class TripDBC extends DBConnector {
         return $trips;
     }
     
-    /** (tested)
-     * Finds the Trip and all (User, Participant, Insurance, Invoices, TripTemplate, Bus, Dayprograms, Hotels) data according to the Trip
-     * @param type $tripId
+    /**
+     * Finds the {@link Trip} and all {@link User}, {@link Participant}, {@link Insurance}, {@link Invoices}, 
+     * {@link TripTemplate}, {@link Bus}, {@link Dayprograms}, {@link Hotels} data according to the {@link Trip}
+     * @param int $tripId
      * @return boolean|Trip
      */
     public function findTripById($tripId, $shallow = false){
@@ -765,8 +768,8 @@ class TripDBC extends DBConnector {
         
     }
     
-    /** (tested)
-     * Locks InvoicesRegistered in the Trip
+    /**
+     * Locks InvoicesRegistered in the {@link Trip} to prepare the cost-calculation
      * @param type $trip
      * @return boolean
      */
@@ -783,9 +786,10 @@ class TripDBC extends DBConnector {
         return $result;
     }
     
-    /** (tested)
-     * Unocks InvoicesRegistered in the Trip
-     * @param type $trip
+    /**
+     * Unocks InvoicesRegistered in the {@link Trip} to provide access to the upload if the locking of the
+     * invoiceregistered was made too early
+     * @param Trip $trip
      * @return boolean
      */
     public function unlockInvoicesRegistered($trip){

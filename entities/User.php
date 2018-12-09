@@ -5,8 +5,17 @@ namespace entities;
 use database\UserDBC;
 
 /**
- * User Entity
- *
+ * Ensure easy access to {@link User} related functionalities and data
+ * <ul>
+ * <li>{@link register()}</li>
+ * <li>{@link login()}</li>
+ * <li>{@link loginPreCheck()}</li>
+ * <li>{@link logout()}</li>
+ * <li>{@link delete()}</li>
+ * <li>{@link findParticipants()}</li>
+ * <li>{@link changeRole()}</li>
+ * <li>{@link bookTrip($trip, $insurance)}</li>
+ * </ul>
  * @author Lukas
  */
 class User {
@@ -30,13 +39,19 @@ class User {
         $this->userDBC = new UserDBC();
     }
 
-    /** (tested)
-     * Registers a new User
+    /**
+     * Registers the {@link User}<br>
+     * Validation if the {@link User} email does already exist<br>
+     * If registration is successful, then settings of the $_SESSION variables will be performed:
+     * <ul>
+     * <li>userId int</li>
+     * <li>login boolean</li>
+     * <li>role String</li>
+     * </ul>
      */
     public function register(){
         if($this->userDBC->findUserByEmail($this)){
             //doublicate of e-mails are not allowed
-            //AJAX to tell this to the User
             return false;
         }
         
@@ -58,8 +73,15 @@ class User {
         }
     }
     
-    /** (tested)
-     * Logs the User in if email and password are correct
+    /** 
+     * Logs the {@link User} in if email and password are valid<br>
+     * Rehash of the password if necessary inclusive<br>
+     * If login is successful, then settings of the $_SESSION variables will be performed:
+     * <ul>
+     * <li>userId int</li>
+     * <li>login boolean</li>
+     * <li>role String</li>
+     * </ul>
      */
     public function login(){
         $userObj = $this->userDBC->findUserByEmail($this);
@@ -114,7 +136,7 @@ class User {
     
     
     /**
-     * Logs the User out and kills the session if he is logged in
+     * Logs the {@link User} out and kills the session if he or she is logged in
      */
     public function logout(){
         //set this on starting page
@@ -132,16 +154,17 @@ class User {
         return true;
     }
     
-    /** (tested)
-     * Deletes the User
-     * @return type
+    /**
+     * Deletes the {@link User}<br>
+     * id must be set
+     * @return boolean
      */
     public function delete(){
         return $this->userDBC->deleteUser($this);
     }
     
     /**
-     * Finds any Participant in relation to the User
+     * Finds any {@link Participant} in relation to the {@link User}
      * @return boolean|User
      */
     public function findParticipants(){
@@ -155,8 +178,8 @@ class User {
     }
     
     /**
-     * Changes and updates the role of a User
-     * @return type
+     * Changes and updates the role of the {@link User}
+     * @return boolean
      */
     public function changeRole(){
         $user = $this->userDBC->findUserById($this->getId());
@@ -176,9 +199,10 @@ class User {
     }
     
     /**
-     * Books a Trip
-     * @param type $trip
-     * @param type $insurance
+     * Books a {@link Trip}
+     * @param Trip $trip
+     * @param Insurance $insurance
+     * @return boolean|int
      */
     public function bookTrip($trip, $insurance){
         $insuranceId = null;

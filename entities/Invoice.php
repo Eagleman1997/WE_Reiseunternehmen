@@ -5,8 +5,12 @@ namespace entities;
 use database\InvoiceDBC;
 
 /**
- * Invoice Entity
- *
+ * Ensure easy access to {@link Invoice} related functionalities and data
+ * <ul>
+ * <li>{@link create()}</li>
+ * <li>{@link delete()}</li>
+ * <li>{@link find()}</li>
+ * </ul>
  * @author Lukas
  */
 class Invoice {
@@ -25,7 +29,8 @@ class Invoice {
     }
     
     /**
-     * Creates a new Invoice
+     * Creates the {@link Invoice}<br>
+     * Variables must be set
      * @return boolean|int
      */
     public function create(){
@@ -33,7 +38,8 @@ class Invoice {
     }
     
     /**
-     * Deletes the Invoice
+     * Deletes the {@link Invoice}<br>
+     * id must be set
      * @return boolean
      */
     public function delete(){
@@ -41,7 +47,8 @@ class Invoice {
     }
     
     /**
-     * Finds the invoice
+     * Finds the {@link Invoice}<br>
+     * id must be set
      * @return boolean|Invoice
      */
     public function find(){

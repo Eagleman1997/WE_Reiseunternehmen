@@ -8,6 +8,10 @@
 
 namespace helpers;
 
+/**
+ * Provides access to the use statements in a way the namespaces are defined
+ * @author Andreas Martin
+ */
 class Autoloader
 {
     public static function autoload($className) {
