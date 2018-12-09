@@ -93,6 +93,10 @@ use views\TemplateView;
         
         <script>
             
+            /**
+                 * When the submit button is pressed, the system first checks whether the email already exists and if the login information is correct without sending the entire form to the server.
+                * @author Vanessa Cajochen
+                */
             $('#loginForm').on('submit', function(event){
                     
                     event.preventDefault();
@@ -108,10 +112,8 @@ use views\TemplateView;
                                 alert("Wrong email or password")
                             }
                         }
-                       });
-                       
-                   });
-                   
+                       });                       
+                   });         
             
         </script>
         
