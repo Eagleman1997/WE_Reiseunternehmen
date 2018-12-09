@@ -3,6 +3,7 @@
 namespace controllers;
 
 use database\UserDBC;
+use entities\User;
 
 
 /**
@@ -14,6 +15,8 @@ use database\UserDBC;
 class AjaxController {
     
     public static function checkEmail(){
+       
+        
         $email = filter_input(\INPUT_POST, 'email', \FILTER_VALIDATE_EMAIL);
         if(!$email){
             return false;
@@ -32,23 +35,26 @@ class AjaxController {
      
      
      public static function checkLogin(){
+           
         $email = filter_input(\INPUT_POST, 'email', \FILTER_VALIDATE_EMAIL);
         if(!$email){
             return false;
         }
         
-        $user = new UserDBC();
+        $user = new User();
         header('Content-type: application/json');
-        if($user->checkByEmail($email)){
-            $response_array['status'] = 'error';  
-        }else {
+                 
+        $user->setEmail($email);
+        $user->setPassword(\filter_input(\INPUT_POST, 'password', \FILTER_SANITIZE_STRING));
+                       
+        if($user->loginPreCheck()){
             $response_array['status'] = 'success';  
+        }else {
+            $response_array['status'] = 'error';  
+        
         }
         echo json_encode($response_array);
-        return true;
-         
-         
-     }
-     
-     
+        return true;  
+
+     }     
 }
