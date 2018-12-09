@@ -197,14 +197,7 @@ function CreateTable($trip)
     // Row with other costs and if additional costs were recorded
     $this->Cell(22,5,'Other',0,0);
     $this->Cell(30,5,'CHF '.$this->otherCalcCost,0,0,'R');
-    $this->Cell(30,5,'CHF '.$this->otherActualCost,0,0,'R');
-    
-// If delta is positive the font color becomes green, if delta is negative the font color becomes red.
-    if ($this->otherDelta < 0){
-        $this->SetTextColor(255, 0, 0);
-    } else if ($this->otherDelta > 0){
-        $this->SetTextColor(0, 153, 0);
-    }
+    $this->Cell(30,5,'CHF '.$this->otherActualCost,0,0,'R');    
     $this->Cell(18,5,''.$this->otherDelta.'%',0,0,'R');
     $this->Ln(5);   
  
@@ -314,12 +307,6 @@ if($trip->getInsurance()){
 if($trip->getInvoicePrice('other')){ 
     $otherActualCost = $trip->getInvoicePrice('other');
     $actualCostTotal = $actualCostTotal + $otherActualCost;
-    $otherDelta = (($otherActualCost - $otherCalcCost)/($otherCalcCost/-100));
-    
-    $pdf->otherDelta = number_format($otherDelta,1);
-}
-else {
-    $pdf->otherDelta = "-";
 }
 
 
@@ -345,6 +332,7 @@ $pdf->busDelta = number_format($busDelta,1);
 
 $pdf->otherCalcCost = number_format($otherCalcCost,2);
 $pdf->otherActualCost = number_format($otherActualCost,2);
+$pdf->otherDelta = "-";
 
 $pdf->calcCostTotal = number_format($calcCostTotal,2);
 $pdf->actualCostTotal = number_format($actualCostTotal,2);
