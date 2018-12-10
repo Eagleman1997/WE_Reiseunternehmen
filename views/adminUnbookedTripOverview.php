@@ -103,7 +103,7 @@ if(isset($this->tripTemplate) and $this->tripTemplate and $tripTemplate->getDayp
                                                         <td><?php echo TemplateView::noHTML($dayprogram->getDescription()); ?> </td>
                                                         <td><?php if($dayprogram->getHotel()){echo TemplateView::noHTML($dayprogram->getHotel()->getName());} ?> </td>
                                                         <td><?php if($dayprogram->getHotel()): ?><img src="<?php if(file_exists($dayprogram->getHotel()->getPicturePath())){echo TemplateView::noHTML($dayprogram->getHotel()->getPicturePath());}else{echo DefaultPath::getHotel();} ?>" alt="Not available" border=3 width=150><?php endif; ?></td>
-                                                        <td><?php if($dayprogram->getHotel()){echo TemplateView::noHTML($dayprogram->getHotel()->getDescription());} ?> </td>
+                                                        <td style="min-width: 200px;"><?php if($dayprogram->getHotel()){echo TemplateView::noHTML($dayprogram->getHotel()->getDescription());} ?> </td>
                                                         <td><?php if($dayprogram->getHotel()){echo TemplateView::noHTML(number_format($dayprogram->getHotel()->getPricePerPerson(),2));} ?> </td>
                                                         <?php if(!$tripTemplate->getBookable()): ?>
                                                         <td><form style="background-color: transparent; padding: 0px; margin: 0px; min-width: 0px; min-height: 0px" id="deleteDayprogram<?php echo $dayprogram->getId(); ?>" action="<?php echo $GLOBALS['ROOT_URL'] ?>/admin/tripTemplates/package/<?php echo $dayprogram->getId()."/".$tripTemplate->getId(); ?>" method="post">
