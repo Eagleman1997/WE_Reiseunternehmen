@@ -33,7 +33,8 @@ function export_table_to_csv(html, filename) {
             
         for (var j = 0; j < cols.length-2; j++)
             // Replace commas inside cells in order to prevent incorrect delimits
-            row.push(cols[j].innerText.replace(",", " "));    
+            //row.push(cols[j].innerText.replace(",", " "));
+            row.push(cols[j].innerText.replace(/,/g, " ")); 
         
             // Without replacing commas
             // row.push(cols[j].innerText);
