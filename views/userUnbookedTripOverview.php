@@ -94,7 +94,7 @@ if (isset($this->tripTemplate) and $this->tripTemplate and $tripTemplate->getDay
                                                     <th>Description</th>
                                                     <th>Hotel name</th>
                                                     <th>Hotel image</th>
-                                                    <th>Hotel description</th>
+                                                    <th style="min-width: 170px;">Hotel description</th>
                                                 </tr>
                                             </thead>
                                             <tbody id="dayProgramsTableBody">
