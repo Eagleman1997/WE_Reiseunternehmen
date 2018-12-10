@@ -178,10 +178,10 @@ if (isset($this->trip) and $trip) {
                                                     <th>Day</th>
                                                     <th>Image</th>
                                                     <th>Name</th>
-                                                    <th style="min-width: 280px;">Description</th>
+                                                    <th>Description</th>
                                                     <th>Hotel name</th>
                                                     <th>Hotel image</th>
-                                                    <th>Hotel description</th>
+                                                    <th style="min-width: 220px;">Hotel description</th>
                                                     <th>Hotel price</th>
                                                 </tr>
                                             </thead>
