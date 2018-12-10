@@ -160,7 +160,7 @@ if(isset($this->trip) and $trip){
                                                     <th>Description</th>
                                                     <th>Hotel name</th>
                                                     <th>Hotel image</th>
-                                                    <th style="min-width: 170px;">Hotel description</th>
+                                                    <th style="min-width: 200px;">Hotel description</th>
                                                 </tr>
                                             </thead>
                                             <tbody id="dayProgramsTableBody">
